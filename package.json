@@ -1,0 +1,25 @@
+{
+  "name": "ebay-manager",
+  "version": "1.0.0",
+  "description": "Uses ebay's api along with own database to display profits",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lhphancs/ebay-manager.git"
+  },
+  "author": "lhphancs",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lhphancs/ebay-manager/issues"
+  },
+  "homepage": "https://github.com/lhphancs/ebay-manager#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.3",
+    "mongoose": "^5.2.3"
+  }
+}
