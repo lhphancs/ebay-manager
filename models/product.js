@@ -9,7 +9,7 @@ const productSchema = Schema({
     ASINS: {
         type:
         [{ ASIN: { type: String, required: true },
-            packAmt: { type: Number, required: true, min: [1, 'packAmt must be greater than 0'], } }]
+            packAmt: { type: Number, required: true, min: 1, } }]
         , default: []
     }
 });
@@ -25,5 +25,9 @@ module.exports.addProduct = function(body, callback){
         ASINS: body.ASINS
     });
     newProduct.save(callback);
+};
+
+module.exports.deleteProducts = function(UPCS, callback){
+    Product.remove({ UPC: UPCS}, callback);
 };
 
