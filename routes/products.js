@@ -17,4 +17,11 @@ router.delete('/api/delete-products', (req, res, next) => {
     });
 });
 
+router.put('/api/update-product', (req, res, next) => {
+    Product.updateProduct(req.body, (err, updatedProduct) => {
+        if(err) res.status(400).send(err);
+        else res.status(200).send(`Update successful: ${updatedProduct}`);
+    });
+});
+
 module.exports = router;

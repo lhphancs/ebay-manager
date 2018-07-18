@@ -27,7 +27,21 @@ module.exports.addProduct = function(body, callback){
     newProduct.save(callback);
 };
 
+function modifyProduct(product, body){
+    //;
+}
+
 module.exports.deleteProducts = function(UPCS, callback){
     Product.remove({ UPC: UPCS}, callback);
 };
 
+module.exports.updateProduct = function(body, callback){
+    Product.findOne({UPC: body.UPC}, (err, product) => {
+        if(err) callback(err);
+        else if(!product) callback('UPC not found');
+        else{
+            modifyProduct(product, body);
+            product.save(callback);
+        } 
+    });
+};
