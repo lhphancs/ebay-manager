@@ -16,6 +16,10 @@ const productSchema = Schema({
 
 const Product = module.exports = mongoose.model('Product', productSchema);
 
+module.exports.getProducts = function(offset, limit, callback){
+    Product.find({}, null, {skip:offset, limit: limit}, callback);
+};
+
 module.exports.addProduct = function(body, callback){
     let newProduct = new Product({
         brand: body.brand,
@@ -27,21 +31,10 @@ module.exports.addProduct = function(body, callback){
     newProduct.save(callback);
 };
 
-function modifyProduct(product, body){
-    //;
-}
-
 module.exports.deleteProducts = function(UPCS, callback){
     Product.remove({ UPC: UPCS}, callback);
 };
 
-module.exports.updateProduct = function(body, callback){
-    Product.findOne({UPC: body.UPC}, (err, product) => {
-        if(err) callback(err);
-        else if(!product) callback('UPC not found');
-        else{
-            modifyProduct(product, body);
-            product.save(callback);
-        } 
-    });
+module.exports.updateProduct = function(oldUPC, newProduct, callback){
+    Product.findOneAndUpdate({UPC: oldUPC}, newProduct, callback);
 };
