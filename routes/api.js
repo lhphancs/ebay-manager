@@ -2,6 +2,22 @@ const express = require('express');
 const router = express.Router();
 const Product = require('../models/product');
 
+function getProductJSON(body){
+    return {
+        brand: body.brand,
+        subbrand: body.subbrand,
+        name: body.name,
+        costPerBox: body.costPerBox,
+        quantityPerBox: body.quantityPerBox,
+        locationPurchased: body.locationPurchased,
+        UPC: body.UPC,
+        ASINS: body.ASINS
+    };
+}
+function getNewProduct(body){
+    return new Product(getProductJSON(body));
+}
+
 router.get('/products/:offset/:limit?', (req, res, next) => {
     let DEFAULT_LIMIT = 20;
 
@@ -16,7 +32,8 @@ router.get('/products/:offset/:limit?', (req, res, next) => {
 });
 
 router.post('/products/add', (req, res, next) => {
-    Product.addProduct(req.body, (err, product) => {
+    let newProduct = getNewProduct(req.body);
+    Product.addProduct(newProduct, (err, product) => {
         if(err) res.status(400).send(err.message);
         else res.json(product);
     });
@@ -32,8 +49,8 @@ router.delete('/products/delete', (req, res, next) => {
 
 router.put('/products/update', (req, res, next) => {
     let oldUPC = req.body.oldUPC;
-    let newProduct = req.body.newProduct;
-    Product.updateProduct(oldUPC, newProduct, (err, updatedProduct) => {
+    let newProductJSON = getNewProduct(req.body.newProduct)
+    Product.updateProduct(oldUPC, getProductJSON(newProductJSON), (err, updatedProduct) => {
         if(err) res.status(400).send(err);
         else if(!updatedProduct) res.status(400).send('Old upc not found in database');
         else res.status(200).send(`Update successful: ${updatedProduct}`);

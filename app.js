@@ -11,11 +11,14 @@ const port = process.env.PORT || 3000;
 const mongoPath = 'mongodb://localhost:27017/ebay'
 const mongoose = require('mongoose');
 mongoose.connect(mongoPath);
-mongoose.connection.on('connected', () => {
-    console.log(`Connected to database: ${mongoPath}`);
-});
-mongoose.connection.on('error', (err) => {
+const db = mongoose.connection;
+
+db.on('error', (err) => {
     console.log(`Database error: ${err}`);
+});
+
+db.once('connected', () => {
+    console.log(`Connected to database: ${mongoPath}`);
 });
 
 app.use(bodyParser.json());
