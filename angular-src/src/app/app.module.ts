@@ -10,7 +10,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { ProductsComponent } from './components/products/products.component';
 import { EbayComponent } from './components/ebay/ebay.component';
 import { CalculatorComponent } from './components/calculator/calculator.component';
-
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -21,6 +21,7 @@ import { CalculatorComponent } from './components/calculator/calculator.componen
     CalculatorComponent
   ],
   imports: [
+    NgbModule.forRoot(),
     AppRoutingModule,
     BrowserModule,
     MatTabsModule
