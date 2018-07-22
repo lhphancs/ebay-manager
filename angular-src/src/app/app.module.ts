@@ -1,30 +1,50 @@
+import { DatabaseComponent } from './components/database/database.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 
-import { MatTabsModule } from '@angular/material/tabs';
-import { ProductsComponent } from './components/products/products.component';
+
 import { EbayComponent } from './components/ebay/ebay.component';
 import { CalculatorComponent } from './components/calculator/calculator.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
+import { DatabaseAddComponent } from './components/database/database-add/database-add.component';
+import { DatabaseProductsComponent } from './components/database/database-products/database-products.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule } from '@angular/material';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
-    ProductsComponent,
     EbayComponent,
-    CalculatorComponent
+    CalculatorComponent,
+    DatabaseComponent,
+    DatabaseAddComponent,
+    DatabaseProductsComponent
   ],
   imports: [
     NgbModule.forRoot(),
     AppRoutingModule,
     BrowserModule,
-    MatTabsModule
+    BrowserAnimationsModule,
+    MatTabsModule,
+    FormsModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatTabsModule,
+    MatOptionModule,
+    MatSelectModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
