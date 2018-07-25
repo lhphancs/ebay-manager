@@ -101,4 +101,8 @@ export class DatabaseAddComponent implements OnInit {
     else
     entriesASIN.splice(listOfCheckedIndexes[index], 1);
   }
+
+  onSubmit(){
+    console.log("MEOW");
+  }
 }

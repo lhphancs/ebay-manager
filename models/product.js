@@ -3,11 +3,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const productSchema = Schema({
     brand: {type: String, required: true},
-    subbrand: {type: String},
     name: {type: String, required: true},
     costPerBox: {type: Number, required: true, min: 0},
     quantityPerBox: {type: Number, required: true, min: 1},
-    locationPurchased: {type: String},
     UPC: {type: String, unique: true, required: true},
     ASINS: {
         type:

@@ -5,11 +5,9 @@ const Product = require('../models/product');
 function getProductJSON(body){
     return {
         brand: body.brand,
-        subbrand: body.subbrand,
         name: body.name,
         costPerBox: body.costPerBox,
         quantityPerBox: body.quantityPerBox,
-        locationPurchased: body.locationPurchased,
         UPC: body.UPC,
         ASINS: body.ASINS
     };

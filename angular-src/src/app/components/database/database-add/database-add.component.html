@@ -1,15 +1,9 @@
-<form class="entire-form" ngNativeValidate>
+<form class="entire-form" ngNativeValidate (ngSubmit)="onSubmit()">
   <div class="container" fxLayout="row" fxLayoutWrap fxLayoutGap="0.5%" FxLayoutAlign="center">
     <div fxFlex="33%">
         <mat-form-field fxFlex>
           <input matInput placeholder="Brand" required>
         </mat-form-field>
-    </div>
-  
-    <div fxFlex="33%">
-      <mat-form-field fxFlex>
-          <input matInput placeholder="Sub-brand">
-      </mat-form-field>
     </div>
 
     <div fxFlex="33%">
@@ -17,9 +11,16 @@
         <input matInput placeholder="Product name" required>
       </mat-form-field>
     </div>
+
+    <div fxFlex="33%">
+      <mat-form-field fxFlex>
+        <input matInput placeholder="UPC" required>
+        <span matPrefix>$&nbsp;</span>
+      </mat-form-field>
+    </div>
   </div>
 
-  <div class="container" fxLayout="row" fxLayoutWrap fxLayoutGap="0.5%" FxLayoutAlign="center">
+  <div class="container" fxLayout="row" fxLayoutWrap fxLayoutGap="0.5%" FxLayoutAlign="center">    
     <div fxFlex="33%">
       <mat-form-field fxFlex>
         <input matInput placeholder="Cost/Box" type="number" min="0" required>
@@ -31,20 +32,6 @@
       <mat-form-field fxFlex>
         <input matInput placeholder="Quantity/Box" type="number" min="1" required>
         </mat-form-field>
-    </div>
-    <div fxFlex="33%">
-      <mat-form-field fxFlex>
-        <input matInput placeholder="Location Purchase" required>
-      </mat-form-field>
-    </div>
-  </div>
-
-  <div class="container" fxLayout="row" fxLayoutWrap fxLayoutGap="0.5%" FxLayoutAlign="center">
-    <div fxFlex="33%">
-      <mat-form-field fxFlex>
-        <input matInput placeholder="UPC" required>
-        <span matPrefix>$&nbsp;</span>
-      </mat-form-field>
     </div>
   </div>
 
