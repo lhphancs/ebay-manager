@@ -102,7 +102,30 @@ export class DatabaseAddComponent implements OnInit {
     entriesASIN.splice(listOfCheckedIndexes[index], 1);
   }
 
-  onSubmit(){
-    console.log("MEOW");
+  isBlankValue(value){
+    return value == null || value == "";
+  }
+
+  getValidEntriesASIN(entries){
+    let validEntriesASIN = [];
+    entries.forEach(entry => {
+      if( !this.isBlankValue(entry.ASIN) && !this.isBlankValue(entry.packAmt) )
+        validEntriesASIN.push(entry);
+    });
+    return validEntriesASIN;
+  }
+
+  onSubmit(formValues){
+    let validEntriesASIN = this.getValidEntriesASIN(entriesASIN);
+
+    let json = {
+      brand: formValues.brand,
+      name: formValues.name,
+      costPerBox: formValues.costPerBox,
+      quantityPerBox: formValues.quantityPerBox,
+      UPC: formValues.UPC,
+      ASINS: validEntriesASIN
+    }
+    
   }
 }
