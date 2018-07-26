@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-calculator',
+  selector: 'calculator',
   templateUrl: './calculator.component.html',
   styleUrls: ['./calculator.component.css']
 })

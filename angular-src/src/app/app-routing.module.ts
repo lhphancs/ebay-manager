@@ -1,3 +1,5 @@
+import { DatabaseExportComponent } from './components/database/database-export/database-export.component';
+import { DatabaseImportComponent } from './components/database/database-import/database-import.component';
 import { DatabaseProductsComponent } from './components/database/database-products/database-products.component';
 import { DatabaseAddComponent } from './components/database/database-add/database-add.component';
 import { DatabaseComponent } from './components/database/database.component';
@@ -15,7 +17,10 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'products', pathMatch: 'full' },
       { path: 'products', component: DatabaseProductsComponent },
-      { path: 'add', component: DatabaseAddComponent }]},
+      { path: 'add', component: DatabaseAddComponent },
+      { path: 'import', component: DatabaseImportComponent },
+      { path: 'export', component: DatabaseExportComponent }
+    ]},
   { path: 'calculator', component: CalculatorComponent }
 ];
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-database',
+  selector: 'database',
   templateUrl: './database.component.html',
   styleUrls: ['./database.component.css']
 })

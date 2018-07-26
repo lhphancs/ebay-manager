@@ -16,7 +16,7 @@ let entriesASIN: EntryASIN[] = [
 let listOfCheckedIndexes:number[] = [];
 
 @Component({
-  selector: 'app-database-add',
+  selector: 'database-add',
   templateUrl: './database-add.component.html',
   styleUrls: ['./database-add.component.css']
 })

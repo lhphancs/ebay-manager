@@ -20,7 +20,9 @@ import { MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule } 
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { HttpClientModule } from '@angular/common/http'; 
+import { HttpClientModule } from '@angular/common/http';
+import { DatabaseImportComponent } from './components/database/database-import/database-import.component';
+import { DatabaseExportComponent } from './components/database/database-export/database-export.component'; 
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import { HttpClientModule } from '@angular/common/http';
     CalculatorComponent,
     DatabaseComponent,
     DatabaseAddComponent,
-    DatabaseProductsComponent
+    DatabaseProductsComponent,
+    DatabaseImportComponent,
+    DatabaseExportComponent
   ],
   imports: [
     NgbModule.forRoot(),

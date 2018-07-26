@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-ebay',
+  selector: 'ebay',
   templateUrl: './ebay.component.html',
   styleUrls: ['./ebay.component.css']
 })
