@@ -2,6 +2,7 @@ import { DatabaseService } from './../../../services/database.service';
 import { Component, OnInit } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material';
+import { Router } from '@angular/router';
 
 interface EntryASIN {
   ASIN: string;
@@ -47,7 +48,7 @@ export class DatabaseAddComponent implements OnInit {
     }
   }
 
-  constructor(private databaseService: DatabaseService) { }
+  constructor(private databaseService: DatabaseService, private router: Router) { }
 
   ngOnInit() {
   }
@@ -132,6 +133,12 @@ export class DatabaseAddComponent implements OnInit {
     return validEntriesASIN;
   }
 
+  successResponse(){
+    this.addSuccessful = true;
+    this.statusMsg = "Successfully added product";
+    entriesASIN = [];
+  }
+
   addProduct(formValues, processedEntriesASIN){
     let productJson = {
       brand: formValues.brand,
@@ -144,8 +151,8 @@ export class DatabaseAddComponent implements OnInit {
     
     this.databaseService.addProduct(productJson).subscribe(data => {
       if(data['success']){
-        this.addSuccessful = true;
-        this.statusMsg = "Successfully added product"
+        this.successResponse();
+        this.router.navigate(['dashboard']);
       }
         
       else{

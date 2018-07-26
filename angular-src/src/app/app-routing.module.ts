@@ -1,3 +1,5 @@
+import { DatabaseProductsComponent } from './components/database/database-products/database-products.component';
+import { DatabaseAddComponent } from './components/database/database-add/database-add.component';
 import { DatabaseComponent } from './components/database/database.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -9,7 +11,11 @@ const routes: Routes = [
   { path: '', redirectTo: 'ebay', pathMatch: 'full' },
 
   { path: 'ebay', component: EbayComponent },
-  { path: 'database', component: DatabaseComponent },
+  { path: 'database', component: DatabaseComponent, 
+    children: [
+      { path: '', redirectTo: 'products', pathMatch: 'full' },
+      { path: 'products', component: DatabaseProductsComponent },
+      { path: 'add', component: DatabaseAddComponent }]},
   { path: 'calculator', component: CalculatorComponent }
 ];
 

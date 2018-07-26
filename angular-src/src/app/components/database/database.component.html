@@ -1,12 +1,9 @@
-<ngb-tabset #t="ngbTabset">
-  <ngb-tab id="tab-products" title="Products">
-    <ng-template ngbTabContent>
-      <app-database-products></app-database-products>
-    </ng-template>
-  </ngb-tab>
-  <ngb-tab id="tab-add" title="Add">
-    <ng-template ngbTabContent>
-        <app-database-add></app-database-add>
-    </ng-template>
-  </ngb-tab>
-</ngb-tabset>
+<ul class="nav nav-tabs">
+  <li class="nav-item" >
+    <a class="nav-link" [routerLink]="['products']" [routerLinkActive]="['anchor-active']">Products</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" [routerLink]="['add']" [routerLinkActive]="['anchor-active']">Add</a>
+  </li>
+</ul>
+<router-outlet></router-outlet>
