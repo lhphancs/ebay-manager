@@ -24,24 +24,24 @@ router.get('/products/:offset/:limit?', (req, res, next) => {
     let limit = strLimit ? parseInt(strLimit):DEFAULT_LIMIT;
 
     Product.getProducts(offset, limit, (err, products) => {
-        if(err) res.status(400).send(err.message);
-        else res.json(products);
+        if(err) res.json({success: false, msg: `Failed to grab products: ${err.message}`});
+        else res.json({success:true, products: products});
     });
 });
 
 router.post('/products/add', (req, res, next) => {
     let newProduct = getNewProduct(req.body);
     Product.addProduct(newProduct, (err, product) => {
-        if(err) res.status(400).send(err.message);
-        else res.json(product);
+        if(err) res.json({success: false, msg: `Failed to add product: ${err.message}`});
+        else res.json({success:true, msg: `Successfully added product: ${product}`});
     });
 });
 
 router.delete('/products/delete', (req, res, next) => {
     UPCS = req.body.UPCS;
     Product.deleteProducts(UPCS, (err) => {
-        if(err) res.status(400).send(err.message);
-        else res.status(200).send(`Deletion successful: ${UPCS}`);
+        if(err) res.json({success: false, msg: `Failed to delete product: ${err.message}`});
+        else res.json({success:true, msg: `Successfully deleted product: ${UPCS}`});
     });
 });
 
@@ -49,9 +49,9 @@ router.put('/products/update', (req, res, next) => {
     let oldUPC = req.body.oldUPC;
     let newProductJSON = getNewProduct(req.body.newProduct)
     Product.updateProduct(oldUPC, getProductJSON(newProductJSON), (err, updatedProduct) => {
-        if(err) res.status(400).send(err);
-        else if(!updatedProduct) res.status(400).send('Old upc not found in database');
-        else res.status(200).send(`Update successful: ${updatedProduct}`);
+        if(err) res.json({success: false, msg: `Failed to update product: ${err.message}`});
+        else if(!updatedProduct) res.json({success:false, msg: `Failed to update product: UPC of ${UPCS} not found in database`});
+        else res.json({success:true, msg: `Successfully updated product: ${updatedProduct}`});
     });
 });
 

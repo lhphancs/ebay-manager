@@ -11,7 +11,7 @@ export class DatabaseService {
   addProduct(product){
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
-    return this.httpClient.post('http://localhost:3000/products/add'
+    return this.httpClient.post('http://localhost:3000/api/products/add'
     , product, {headers: headers});
   }
 }

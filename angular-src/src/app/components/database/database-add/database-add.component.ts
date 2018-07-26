@@ -1,3 +1,4 @@
+import { DatabaseService } from './../../../services/database.service';
 import { Component, OnInit } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material';
@@ -19,6 +20,8 @@ let listOfCheckedIndexes:number[] = [];
   styleUrls: ['./database-add.component.css']
 })
 export class DatabaseAddComponent implements OnInit {
+  statusMsg:String = "PLACE HOLDER MSG";
+  addSuccessful:Boolean = null;
   displayedColumns: string[] = ['select', 'ASIN', 'packAmt'];
   dataSource = new MatTableDataSource<EntryASIN>(entriesASIN);
   selection = new SelectionModel<EntryASIN>(true, []);
@@ -44,7 +47,7 @@ export class DatabaseAddComponent implements OnInit {
     }
   }
 
-  constructor() { }
+  constructor(private databaseService: DatabaseService) { }
 
   ngOnInit() {
   }
@@ -102,30 +105,63 @@ export class DatabaseAddComponent implements OnInit {
     entriesASIN.splice(listOfCheckedIndexes[index], 1);
   }
 
-  isBlankValue(value){
-    return value == null || value == "";
+  isEmptyASIN(value){
+    if(value == null) return true;
+    return value.trim() == "";
   }
 
-  getValidEntriesASIN(entries){
+  isEmptyEntry(entry){
+    return this.isEmptyASIN(entry.ASIN) && entry.packAmt == null;
+  }
+
+  isCompleteEntry(entry){
+    return !this.isEmptyASIN(entry.ASIN) && entry.packAmt != null;
+  }
+
+  //Gets all the entries. Returns null if half complete entry exist
+  getEntriesASIN(entriesASIN){
     let validEntriesASIN = [];
-    entries.forEach(entry => {
-      if( !this.isBlankValue(entry.ASIN) && !this.isBlankValue(entry.packAmt) )
+    for(let entry of entriesASIN){
+      if(this.isEmptyEntry(entry))
+        continue;
+      if( this.isCompleteEntry(entry) )
         validEntriesASIN.push(entry);
-    });
+      else
+        return null;
+    };
     return validEntriesASIN;
   }
 
-  onSubmit(formValues){
-    let validEntriesASIN = this.getValidEntriesASIN(entriesASIN);
-
-    let json = {
+  addProduct(formValues, processedEntriesASIN){
+    let productJson = {
       brand: formValues.brand,
       name: formValues.name,
       costPerBox: formValues.costPerBox,
       quantityPerBox: formValues.quantityPerBox,
       UPC: formValues.UPC,
-      ASINS: validEntriesASIN
+      ASINS: processedEntriesASIN
     }
     
+    this.databaseService.addProduct(productJson).subscribe(data => {
+      if(data['success']){
+        this.addSuccessful = true;
+        this.statusMsg = "Successfully added product"
+      }
+        
+      else{
+        this.addSuccessful = false;
+        this.statusMsg = `Failed to add product: ${data['msg']}`
+      }
+    });
+  }
+  
+  onSubmit(formValues){
+    let processedEntriesASIN = this.getEntriesASIN(entriesASIN);
+    if(processedEntriesASIN == null){
+      this.addSuccessful = false;
+      this.statusMsg = 'Failed to add product: Half filled ASIN entry exists'
+    }
+    else
+      this.addProduct(formValues, processedEntriesASIN);
   }
 }

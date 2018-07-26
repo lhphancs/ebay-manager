@@ -3,7 +3,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const api = require('./routes/api');
-
+const cors = require('cors');
 
 const app = express(express);
 const port = process.env.PORT || 3000;
@@ -21,6 +21,7 @@ db.once('connected', () => {
     console.log(`Connected to database: ${mongoPath}`);
 });
 
+app.use(cors()); //Allows any domain name to access
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());

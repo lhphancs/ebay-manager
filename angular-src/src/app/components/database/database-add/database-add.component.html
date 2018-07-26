@@ -1,4 +1,9 @@
 <form class="entire-form" ngNativeValidate #productForm="ngForm" (ngSubmit)="onSubmit(productForm.form.value)">
+  <div class='alert' [class.hidden]='!productForm.submitted'
+    [class.alert-success]='addSuccessful'
+    [class.alert-danger]='!addSuccessful' role="alert">
+    {{statusMsg}}
+  </div>
   <div class="container" fxLayout="row" fxLayoutWrap fxLayoutGap="0.5%" FxLayoutAlign="center">
     <div fxFlex="33%">
         <mat-form-field fxFlex>
