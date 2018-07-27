@@ -105,7 +105,7 @@ export class DatabaseAddComponent implements OnInit {
     if(isChecked)
       listOfCheckedIndexes.push(index);
     else
-      entriesASIN.splice(listOfCheckedIndexes[index], 1);
+      listOfCheckedIndexes.splice(index, 1);
   }
 
   isEmptyStringField(value){
@@ -148,9 +148,6 @@ export class DatabaseAddComponent implements OnInit {
     this.dataSource = new MatTableDataSource<EntryASIN>(entriesASIN);
     this.resetCheckedSelection();
   }
-
-
-
 
   successResponse(form){
     this.resetEntriesASIN();

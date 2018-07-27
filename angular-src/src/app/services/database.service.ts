@@ -21,4 +21,12 @@ export class DatabaseService {
     return this.httpClient.get('http://localhost:3000/api/products/'
     , {headers: headers});
   }
+
+  deleteProducts(UPCs){
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }), body: {UPCs: UPCs}
+    };
+    return this.httpClient.delete('http://localhost:3000/api/products/delete'
+    , httpOptions);
+  }
 }

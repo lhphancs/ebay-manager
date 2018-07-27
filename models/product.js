@@ -28,8 +28,8 @@ module.exports.addProduct = function(newProduct, callback){
     newProduct.save(callback);
 };
 
-module.exports.deleteProducts = function(UPCS, callback){
-    Product.remove({ UPC: UPCS}, callback);
+module.exports.deleteProducts = function(UPCs, callback){
+    Product.remove({ UPC: UPCs}, callback);
 };
 
 module.exports.updateProduct = function(oldUPC, newProductJSON, callback){

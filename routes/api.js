@@ -43,10 +43,10 @@ router.post('/products/add', (req, res, next) => {
 });
 
 router.delete('/products/delete', (req, res, next) => {
-    UPCS = req.body.UPCS;
-    Product.deleteProducts(UPCS, (err) => {
+    UPCs = req.body.UPCs;
+    Product.deleteProducts(UPCs, (err) => {
         if(err) res.json({success: false, msg: `Failed to delete product: ${err.message}`});
-        else res.json({success:true, msg: `Successfully deleted product: ${UPCS}`});
+        else res.json({success:true, msg: `Successfully deleted product: ${UPCs}`});
     });
 });
 
@@ -55,7 +55,7 @@ router.put('/products/update', (req, res, next) => {
     let newProductJSON = getNewProduct(req.body.newProduct)
     Product.updateProduct(oldUPC, getProductJSON(newProductJSON), (err, updatedProduct) => {
         if(err) res.json({success: false, msg: `Failed to update product: ${err.message}`});
-        else if(!updatedProduct) res.json({success:false, msg: `Failed to update product: UPC of ${UPCS} not found in database`});
+        else if(!updatedProduct) res.json({success:false, msg: `Failed to update product: ${oldUPC} not found in database`});
         else res.json({success:true, msg: `Successfully updated product: ${updatedProduct}`});
     });
 });
