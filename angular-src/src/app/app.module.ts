@@ -23,6 +23,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 import { DatabaseImportComponent } from './components/database/database-import/database-import.component';
 import { DatabaseExportComponent } from './components/database/database-export/database-export.component'; 
+import { MatSortModule } from '@angular/material/sort';
+import  {MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -52,7 +54,9 @@ import { DatabaseExportComponent } from './components/database/database-export/d
     MatOptionModule,
     MatSelectModule,
     FlexLayoutModule,
-    HttpClientModule
+    HttpClientModule,
+    MatSortModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

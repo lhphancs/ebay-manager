@@ -7,10 +7,13 @@ const productSchema = Schema({
     costPerBox: {type: Number, required: true, min: 0},
     quantityPerBox: {type: Number, required: true, min: 1},
     UPC: {type: String, unique: true, required: true},
+    purchasedLocation: {type: String},
+    stockNo: {type: String},
     ASINS: {
         type:
         [{ ASIN: { type: String, required: true },
-            packAmt: { type: Number, required: true, min: 1, } }]
+            packAmt: { type: Number, required: true, min: 1, },
+            preparation: { type: String} }]
         , default: []
     }
 });

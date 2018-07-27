@@ -1,9 +1,4 @@
-<form class="entire-form" ngNativeValidate #productForm="ngForm" (ngSubmit)="onSubmit(productForm.form.value)">
-  <div class='alert' [class.hidden]='!productForm.submitted'
-    [class.alert-success]='addSuccessful'
-    [class.alert-danger]='!addSuccessful' role="alert">
-    {{statusMsg}}
-  </div>
+<form class="entire-form" ngNativeValidate #productForm="ngForm" (ngSubmit)="onSubmit(productForm)">
   <div class="container" fxLayout="row" fxLayoutWrap fxLayoutGap="0.5%" FxLayoutAlign="center">
     <div fxFlex="33%">
         <mat-form-field fxFlex>
@@ -28,12 +23,26 @@
   <div class="container" fxLayout="row" fxLayoutWrap fxLayoutGap="0.5%" FxLayoutAlign="center">    
     <div fxFlex="33%">
       <mat-form-field fxFlex>
+        <input ngModel name="purchasedLocation" matInput placeholder="Purchased Location">
+      </mat-form-field>
+    </div>
+    
+    <div fxFlex="10%">
+      <mat-form-field fxFlex>
+        <input ngModel name="stockNo" matInput placeholder="Stock No.">
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="container" fxLayout="row" fxLayoutWrap fxLayoutGap="0.5%" FxLayoutAlign="center">    
+    <div fxFlex="33%">
+      <mat-form-field fxFlex>
         <input ngModel name="costPerBox" matInput placeholder="Cost/Box" type="number" min="0" required>
         <span matPrefix>$&nbsp;</span>
       </mat-form-field>
     </div>
     
-    <div fxFlex="33%">
+    <div fxFlex="10%">
       <mat-form-field fxFlex>
         <input ngModel name="quantityPerBox" matInput placeholder="Quantity/Box" type="number" min="1" step="1" required>
         </mat-form-field>
@@ -44,7 +53,7 @@
     [disabled]="selection.selected.length == 0" (click)="deleteCheckedEntries()">Delete
   </button>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    <!-- Checkbox Column -->
+    <!-- checkbox column -->
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef>
         <mat-checkbox (change)="$event ? masterToggle() : null"
@@ -61,7 +70,7 @@
       </td>
     </ng-container>
   
-    <!-- ASIN Column -->
+    <!-- ASIN column -->
     <ng-container matColumnDef="ASIN">
       <th mat-header-cell *matHeaderCellDef>ASIN</th>
       <td mat-cell *matCellDef="let entry">
@@ -71,13 +80,23 @@
       </td>
     </ng-container>
   
-    <!-- packAmt Column -->
+    <!-- packAmt column -->
     <ng-container matColumnDef="packAmt">
       <th mat-header-cell *matHeaderCellDef>Pack Amount</th>
       <td mat-cell *matCellDef="let entry">
         <input [(ngModel)]="entry.packAmt"
         ngModel [ngModelOptions]="{standalone: true}"
         (ngModelChange)="addBlankEntryIfNeeded()" type="number" min="1" step="1">
+      </td>
+    </ng-container>
+
+    <!-- preparation column -->
+    <ng-container matColumnDef="preparation">
+      <th mat-header-cell *matHeaderCellDef>Preparation</th>
+      <td mat-cell *matCellDef="let entry">
+        <input [(ngModel)]="entry.preparation"
+        ngModel [ngModelOptions]="{standalone: true}"
+        (ngModelChange)="addBlankEntryIfNeeded()">
       </td>
     </ng-container>
   
@@ -90,3 +109,4 @@
     type="submit" class="btn-block btn-submit">Submit
   </button>
 </form>
+

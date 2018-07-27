@@ -8,10 +8,13 @@ function getProductJSON(body){
         name: body.name,
         costPerBox: body.costPerBox,
         quantityPerBox: body.quantityPerBox,
+        purchasedLocation: body.purchasedLocation,
+        stockNo: body.stockNo,
         UPC: body.UPC,
         ASINS: body.ASINS
     };
 }
+
 function getNewProduct(body){
     return new Product(getProductJSON(body));
 }

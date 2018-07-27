@@ -1,16 +1,15 @@
-import { DatabaseService } from './../../../services/database.service';
+import { EntryASIN } from './../../../classesAndInterfaces/entryASIN';
+
+import { DatabaseService } from '../../../services/database.service';
 import { Component, OnInit } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material';
 import { Router } from '@angular/router';
-
-interface EntryASIN {
-  ASIN: string;
-  packAmt: number;
-}
+import { Product } from '../../../classesAndInterfaces/product';
+import { MatSnackBar } from '@angular/material';
 
 let entriesASIN: EntryASIN[] = [
-  {ASIN: null, packAmt: null}
+  {ASIN: null, packAmt: null, preparation: null}
 ];
 
 let listOfCheckedIndexes:number[] = [];
@@ -21,11 +20,17 @@ let listOfCheckedIndexes:number[] = [];
   styleUrls: ['./database-add.component.css']
 })
 export class DatabaseAddComponent implements OnInit {
-  statusMsg:String = "PLACE HOLDER MSG";
-  addSuccessful:Boolean = null;
-  displayedColumns: string[] = ['select', 'ASIN', 'packAmt'];
+  displayedColumns: string[] = ['select', 'ASIN', 'packAmt', 'preparation'];
   dataSource = new MatTableDataSource<EntryASIN>(entriesASIN);
   selection = new SelectionModel<EntryASIN>(true, []);
+
+  constructor(private databaseService: DatabaseService
+      , private router: Router
+      , public snackBar: MatSnackBar)
+  { }
+
+  ngOnInit() {
+  }
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
@@ -48,13 +53,8 @@ export class DatabaseAddComponent implements OnInit {
     }
   }
 
-  constructor(private databaseService: DatabaseService, private router: Router) { }
-
-  ngOnInit() {
-  }
-
   addBlankEntry(): void{
-    entriesASIN.push( {ASIN:null, packAmt:null} as EntryASIN );
+    entriesASIN.push( {ASIN:null, packAmt:null, preparation: null} as EntryASIN );
     this.dataSource = new MatTableDataSource<EntryASIN>(entriesASIN);
   }
 
@@ -68,9 +68,11 @@ export class DatabaseAddComponent implements OnInit {
     let lastEntryIndex = entriesASIN.length-1;
     let lastASIN:string = entriesASIN[lastEntryIndex].ASIN;
     let lastPackAmt:number = entriesASIN[lastEntryIndex].packAmt;
+    let lastPreparation:string = entriesASIN[lastEntryIndex].preparation;
     let isLastASINFilled:boolean = !(lastASIN == null);
     let isLastPackAmtFilled:boolean = !(lastPackAmt == null);
-    return isLastASINFilled || isLastPackAmtFilled;
+    let isLastPreparationFilled:boolean = !(lastPreparation == null);
+    return isLastASINFilled || isLastPackAmtFilled || isLastPreparationFilled;
   }
 
   addBlankEntryIfNeeded(): void{
@@ -81,42 +83,43 @@ export class DatabaseAddComponent implements OnInit {
   deleteEntries(amtToDelete:number): void{
     listOfCheckedIndexes.sort();
     for(let i=amtToDelete-1; i>=0; --i)
-    entriesASIN.splice(listOfCheckedIndexes[i], 1);
+      entriesASIN.splice(listOfCheckedIndexes[i], 1);
   }
 
   deleteCheckedEntries(): void{
     let amtToDelete:number = listOfCheckedIndexes.length;
     if(amtToDelete >= entriesASIN.length)
-    entriesASIN = [];
+      entriesASIN = [];
       
     else{
       this.deleteEntries(amtToDelete);
       this.addBlankEntryIfNeeded();
     }
     this.addBlankEntryIfNeeded();
-    listOfCheckedIndexes = [];
     this.dataSource = new MatTableDataSource<EntryASIN>(entriesASIN);
-    this.selection = new SelectionModel<EntryASIN>(true, []);
+    this.resetCheckedSelection();
   }
 
   updateCheckedList(index, isChecked): void{
     if(isChecked)
       listOfCheckedIndexes.push(index);
     else
-    entriesASIN.splice(listOfCheckedIndexes[index], 1);
+      entriesASIN.splice(listOfCheckedIndexes[index], 1);
   }
 
-  isEmptyASIN(value){
+  isEmptyStringField(value){
     if(value == null) return true;
-    return value.trim() == "";
+      return value.trim() == "";
   }
 
   isEmptyEntry(entry){
-    return this.isEmptyASIN(entry.ASIN) && entry.packAmt == null;
+    return this.isEmptyStringField(entry.ASIN)
+      && entry.packAmt == null && this.isEmptyStringField(entry.preparation);
   }
 
   isCompleteEntry(entry){
-    return !this.isEmptyASIN(entry.ASIN) && entry.packAmt != null;
+    return !this.isEmptyStringField(entry.ASIN)
+      && entry.packAmt != null && !this.isEmptyStringField(entry.preparation);
   }
 
   //Gets all the entries. Returns null if half complete entry exist
@@ -133,42 +136,49 @@ export class DatabaseAddComponent implements OnInit {
     return validEntriesASIN;
   }
 
-  successResponse(){
-    this.addSuccessful = true;
-    this.statusMsg = "Successfully added product";
-    entriesASIN = [];
+  resetCheckedSelection(){
+    listOfCheckedIndexes = [];
+    this.selection.clear();
   }
 
-  addProduct(formValues, processedEntriesASIN){
-    let productJson = {
-      brand: formValues.brand,
-      name: formValues.name,
-      costPerBox: formValues.costPerBox,
-      quantityPerBox: formValues.quantityPerBox,
-      UPC: formValues.UPC,
-      ASINS: processedEntriesASIN
-    }
-    
-    this.databaseService.addProduct(productJson).subscribe(data => {
-      if(data['success']){
-        this.successResponse();
-        this.router.navigate(['dashboard']);
-      }
-        
-      else{
-        this.addSuccessful = false;
-        this.statusMsg = `Failed to add product: ${data['msg']}`
-      }
+  resetEntriesASIN(){
+    entriesASIN = [];
+    this.addBlankEntryIfNeeded();
+    this.dataSource = new MatTableDataSource<EntryASIN>(entriesASIN);
+    this.resetCheckedSelection();
+  }
+
+  openSnackbar(msg){
+    this.snackBar.open(msg, null, {
+      duration: 4000
+    });
+  }
+
+  successResponse(form){
+    this.resetEntriesASIN();
+    this.openSnackbar('Successfully added product');
+    form.resetForm();
+  }
+
+  addProduct(form, processedEntriesASIN){
+    let formValues = form.form.value;
+    let product = new Product(formValues.brand, formValues.name, formValues.costPerBox
+    , formValues.quantityPerBox, formValues.purchasedLocation, formValues.stockNo
+    , formValues.UPC, processedEntriesASIN);
+
+    this.databaseService.addProduct(product).subscribe(data => {
+      if(data['success'])
+        this.successResponse(form);
+      else
+        this.openSnackbar(`Failed to add product: ${data['msg']}`);
     });
   }
   
-  onSubmit(formValues){
+  onSubmit(form){
     let processedEntriesASIN = this.getEntriesASIN(entriesASIN);
-    if(processedEntriesASIN == null){
-      this.addSuccessful = false;
-      this.statusMsg = 'Failed to add product: Half filled ASIN entry exists'
-    }
+    if(processedEntriesASIN == null)
+      this.openSnackbar('Failed to add product: Partially filled ASIN entry exists. Complete or remove the entry.');
     else
-      this.addProduct(formValues, processedEntriesASIN);
+      this.addProduct(form, processedEntriesASIN);
   }
 }
