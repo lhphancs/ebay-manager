@@ -60,4 +60,26 @@ router.put('/products/update', (req, res, next) => {
     });
 });
 
+
+//To Delete
+router.post('/products/debug-fill', (req, res, next) => {
+    let products = [
+        {brand: '1', name: '1', costPerBox: 1, quantityPerBox: 1, purchasedLocation: '1'
+            , stockNo: '1', UPC: '1', ASINS: []}
+        ,{
+        brand: '2', name: '2', costPerBox: 2, quantityPerBox: 2, purchasedLocation: '2'
+            , stockNo: '2', UPC: '2', ASINS: []}
+        ,{brand: '3', name: '3', costPerBox: 3, quantityPerBox: 3, purchasedLocation: '3'
+            , stockNo: '3', UPC: '3', ASINS: []}
+        ,{brand: '4', name: '4', costPerBox: 3, quantityPerBox: 4, purchasedLocation: '4'
+        , stockNo: '4', UPC: '4', ASINS: []}
+    ];
+    Product.debugAdd(products, (err, products) => {
+        if(err) res.json({success: false, msg: `Failed to add product: ${err.message}`});
+        else res.json({success:true, msg: `Successfully added product: ${products}`});
+    });
+    
+});
+//End To Delete
+
 module.exports = router;

@@ -9,20 +9,17 @@ import { Product } from '../../../classesAndInterfaces/product';
 import { MatSnackBar } from '@angular/material';
 import { openSnackbar } from '../../snackbar';
 
-let entriesASIN: EntryASIN[] = [
-  {ASIN: null, packAmt: null, preparation: null}
-];
-
-let listOfCheckedIndexes:number[] = [];
-
 @Component({
   selector: 'database-add',
   templateUrl: './database-add.component.html',
   styleUrls: ['./database-add.component.css']
 })
 export class DatabaseAddComponent implements OnInit {
+  entriesASIN: EntryASIN[] = [
+    {ASIN: null, packAmt: null, preparation: null}
+  ];
   displayedColumns: string[] = ['select', 'ASIN', 'packAmt', 'preparation'];
-  dataSource = new MatTableDataSource<EntryASIN>(entriesASIN);
+  dataSource = new MatTableDataSource<EntryASIN>(this.entriesASIN);
   selection = new SelectionModel<EntryASIN>(true, []);
 
   constructor(private databaseService: DatabaseService
@@ -42,34 +39,21 @@ export class DatabaseAddComponent implements OnInit {
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
-    listOfCheckedIndexes = [];
-    if(this.isAllSelected())
-      this.selection.clear();
-
-    else{
-      this.dataSource.data.forEach(row => this.selection.select(row));
-      listOfCheckedIndexes = new Array(entriesASIN.length);
-      for(let i=0; i<entriesASIN.length; ++i)
-        listOfCheckedIndexes[i] = i;
-    }
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
   addBlankEntry(): void{
-    entriesASIN.push( {ASIN:null, packAmt:null, preparation: null} as EntryASIN );
-    this.dataSource = new MatTableDataSource<EntryASIN>(entriesASIN);
+    this.entriesASIN.push( {ASIN:null, packAmt:null, preparation: null} as EntryASIN );
+    this.dataSource = new MatTableDataSource<EntryASIN>(this.entriesASIN);
   }
-
-  addBlankEntryIfDeleteAll(): void{
-    if(entriesASIN.length < 0 ){
-      this.addBlankEntry();
-    }
-  }
-
+  
   isFilledLastEntry(): boolean{
-    let lastEntryIndex = entriesASIN.length-1;
-    let lastASIN:string = entriesASIN[lastEntryIndex].ASIN;
-    let lastPackAmt:number = entriesASIN[lastEntryIndex].packAmt;
-    let lastPreparation:string = entriesASIN[lastEntryIndex].preparation;
+    let lastEntryIndex = this.entriesASIN.length-1;
+    let lastASIN:string = this.entriesASIN[lastEntryIndex].ASIN;
+    let lastPackAmt:number = this.entriesASIN[lastEntryIndex].packAmt;
+    let lastPreparation:string = this.entriesASIN[lastEntryIndex].preparation;
     let isLastASINFilled:boolean = !(lastASIN == null);
     let isLastPackAmtFilled:boolean = !(lastPackAmt == null);
     let isLastPreparationFilled:boolean = !(lastPreparation == null);
@@ -77,37 +61,21 @@ export class DatabaseAddComponent implements OnInit {
   }
 
   addBlankEntryIfNeeded(): void{
-    if(entriesASIN.length == 0 || this.isFilledLastEntry())
+    if(this.entriesASIN.length <= 0 || this.isFilledLastEntry())
       this.addBlankEntry();
   }
 
-  deleteEntries(amtToDelete:number): void{
-    listOfCheckedIndexes.sort();
-    for(let i=amtToDelete-1; i>=0; --i)
-      entriesASIN.splice(listOfCheckedIndexes[i], 1);
-  }
-
-  deleteCheckedEntries(): void{
-    let amtToDelete:number = listOfCheckedIndexes.length;
-    if(amtToDelete >= entriesASIN.length)
-      entriesASIN = [];
-      
-    else{
-      this.deleteEntries(amtToDelete);
-      this.addBlankEntryIfNeeded();
-    }
+  removeSelectedRows(){
+    this.selection.selected.forEach(item => {
+      let index: number = this.entriesASIN.findIndex(d => d === item);
+      this.dataSource.data.splice(index, 1);
+      this.dataSource = new MatTableDataSource<EntryASIN>(this.dataSource.data);
+    });
     this.addBlankEntryIfNeeded();
-    this.dataSource = new MatTableDataSource<EntryASIN>(entriesASIN);
-    this.resetCheckedSelection();
+    this.selection = new SelectionModel<EntryASIN>(true, []);
   }
 
-  updateCheckedList(index, isChecked): void{
-    if(isChecked)
-      listOfCheckedIndexes.push(index);
-    else
-      listOfCheckedIndexes.splice(index, 1);
-  }
-
+  
   isEmptyStringField(value){
     if(value == null) return true;
       return value.trim() == "";
@@ -137,20 +105,7 @@ export class DatabaseAddComponent implements OnInit {
     return validEntriesASIN;
   }
 
-  resetCheckedSelection(){
-    listOfCheckedIndexes = [];
-    this.selection.clear();
-  }
-
-  resetEntriesASIN(){
-    entriesASIN = [];
-    this.addBlankEntryIfNeeded();
-    this.dataSource = new MatTableDataSource<EntryASIN>(entriesASIN);
-    this.resetCheckedSelection();
-  }
-
   successResponse(form){
-    this.resetEntriesASIN();
     openSnackbar(this.snackBar, 'Successfully added product');
     form.resetForm();
   }
@@ -170,7 +125,7 @@ export class DatabaseAddComponent implements OnInit {
   }
   
   onSubmit(form){
-    let processedEntriesASIN = this.getEntriesASIN(entriesASIN);
+    let processedEntriesASIN = this.getEntriesASIN(this.entriesASIN);
     if(processedEntriesASIN == null)
       openSnackbar(this.snackBar, 'Failed to add product: Partially filled ASIN entry exists. Complete or remove the entry.');
     else

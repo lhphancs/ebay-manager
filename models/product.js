@@ -36,3 +36,10 @@ module.exports.updateProduct = function(oldUPC, newProductJSON, callback){
     Product.findOneAndUpdate({UPC: oldUPC}, newProductJSON
         , { runValidators: true }, callback);
 };
+
+
+//To Delete
+module.exports.debugAdd = function(products, callback){
+    Product.insertMany(products, callback);
+};
+//End To Delete

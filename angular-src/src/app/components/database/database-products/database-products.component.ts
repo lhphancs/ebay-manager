@@ -6,8 +6,6 @@ import { MatSort, MatTableDataSource, MatSnackBar } from '@angular/material';
 import { DatabaseService } from '../../../services/database.service';
 import { openSnackbar } from '../../snackbar';
 
-let listOfCheckedIndexes:number[] = [];
-
 @Component({
   selector: 'database-products',
   templateUrl: './database-products.component.html',
@@ -16,8 +14,8 @@ let listOfCheckedIndexes:number[] = [];
 export class DatabaseProductsComponent implements OnInit {
   products: Product[];
   displayedColumns: string[] = ['select', 'brand', 'name', 'stockNo', 'costPerBox', 'quantityPerBox', 'UPC', 'purchasedLocation'];
-  dataSource;
-  selection = new SelectionModel<EntryASIN>(true, []);
+  dataSource: MatTableDataSource<Product>;
+  selection = new SelectionModel<Product>(true, []);
 
   constructor(private databaseService: DatabaseService
     , public snackBar: MatSnackBar) {
@@ -47,60 +45,31 @@ export class DatabaseProductsComponent implements OnInit {
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
-    listOfCheckedIndexes = [];
-    if(this.isAllSelected())
-      this.selection.clear();
-
-    else{
-      this.dataSource.data.forEach(row => this.selection.select(row));
-      listOfCheckedIndexes = new Array(this.products.length);
-      for(let i=0; i<this.products.length; ++i)
-        listOfCheckedIndexes[i] = i;
-    }
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
-  updateCheckedList(index, isChecked): void{
-    if(isChecked)
-      listOfCheckedIndexes.push(index);
-    else
-      listOfCheckedIndexes.splice(index, 1);
+  deleteFromView(){
+    this.selection.selected.forEach(item => {
+      let index: number = this.products.findIndex(d => d === item);
+      this.dataSource.data.splice(index, 1);
+      this.dataSource = new MatTableDataSource<Product>(this.dataSource.data);
+    });
+    this.selection = new SelectionModel<Product>(true, []);
   }
 
-  deleteProducts(amtToDelete:number): void{
-    listOfCheckedIndexes.sort();
-    for(let i=amtToDelete-1; i>=0; --i)
-      this.products.splice(listOfCheckedIndexes[i], 1);
-  }
+  removeSelectedRows() {
+    let UPCsToDelete = [];
+    this.selection.selected.forEach(item => {
+      UPCsToDelete.push(item.UPC);
+    });
 
-  resetCheckedSelection(){
-    listOfCheckedIndexes = [];
-    this.selection.clear();
-  }
-
-  getUPCsOfSelected(amtToDelete){
-    let UPCsToDelete = new Array(amtToDelete);
-    for(let i=0; i<amtToDelete; ++i){
-      let productIndex = listOfCheckedIndexes[i];
-      UPCsToDelete[i] = this.products[productIndex].UPC;
-    }
-    return UPCsToDelete;
-  }
-
-  deleteCheckedProducts(): void{
-    let amtToDelete:number = listOfCheckedIndexes.length;
-    let UPCsToDelete = this.getUPCsOfSelected(amtToDelete);
-
-    //Delete in database
     this.databaseService.deleteProducts(UPCsToDelete).subscribe( (data) =>{
       if(data['success']){
-        //Update view
-        this.deleteProducts(amtToDelete);
-        this.dataSource = new MatTableDataSource<Product>(this.products);
-        this.resetCheckedSelection();
+        this.deleteFromView();
       }
       openSnackbar(this.snackBar, data['msg']);
     });
-
-    
   }
 }
