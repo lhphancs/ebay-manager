@@ -19,10 +19,12 @@ function getNewProduct(body){
     return new Product(getProductJSON(body));
 }
 
-router.get('/products/:offset/:limit?', (req, res, next) => {
-    let DEFAULT_LIMIT = 20;
+router.get('/products/:offset?/:limit?', (req, res, next) => {
+    let DEFAULT_OFFSET = 0;
+    let DEFAULT_LIMIT = 100;
 
-    let offset = parseInt(req.params.offset);
+    strOffset = req.params.offset;
+    let offset = strOffset ? parseInt(strOffset): DEFAULT_OFFSET;
     let strLimit = req.params.limit;
     let limit = strLimit ? parseInt(strLimit):DEFAULT_LIMIT;
 

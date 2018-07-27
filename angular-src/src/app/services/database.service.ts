@@ -14,4 +14,11 @@ export class DatabaseService {
     return this.httpClient.post('http://localhost:3000/api/products/add'
     , product, {headers: headers});
   }
+
+  getProducts(){
+    let headers = new HttpHeaders();
+    headers.append('Content-Type', 'application/json');
+    return this.httpClient.get('http://localhost:3000/api/products/'
+    , {headers: headers});
+  }
 }

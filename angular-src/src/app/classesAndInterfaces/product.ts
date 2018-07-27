@@ -1,13 +1,13 @@
 import { EntryASIN } from './entryASIN';
 
 export class Product {
-    brand: String;
-    name: String;
+    brand: string;
+    name: string;
     costPerBox: Number;
     quantityPerBox: Number;
-    purchasedLocation: String;
-    stockNo: String;
-    UPC: String;
+    purchasedLocation: string;
+    stockNo: string;
+    UPC: string;
     ASINS: EntryASIN[];
 
     constructor(brand, name, costPerBox, quantityPerBox, purchasedLocation, stockNo, UPC, ASINS){

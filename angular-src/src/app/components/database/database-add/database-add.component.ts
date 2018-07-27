@@ -7,6 +7,7 @@ import { MatTableDataSource } from '@angular/material';
 import { Router } from '@angular/router';
 import { Product } from '../../../classesAndInterfaces/product';
 import { MatSnackBar } from '@angular/material';
+import { openSnackbar } from '../../snackbar';
 
 let entriesASIN: EntryASIN[] = [
   {ASIN: null, packAmt: null, preparation: null}
@@ -148,15 +149,12 @@ export class DatabaseAddComponent implements OnInit {
     this.resetCheckedSelection();
   }
 
-  openSnackbar(msg){
-    this.snackBar.open(msg, null, {
-      duration: 4000
-    });
-  }
+
+
 
   successResponse(form){
     this.resetEntriesASIN();
-    this.openSnackbar('Successfully added product');
+    openSnackbar(this.snackBar, 'Successfully added product');
     form.resetForm();
   }
 
@@ -170,14 +168,14 @@ export class DatabaseAddComponent implements OnInit {
       if(data['success'])
         this.successResponse(form);
       else
-        this.openSnackbar(`Failed to add product: ${data['msg']}`);
+        openSnackbar(this.snackBar, `Failed to add product: ${data['msg']}`);
     });
   }
   
   onSubmit(form){
     let processedEntriesASIN = this.getEntriesASIN(entriesASIN);
     if(processedEntriesASIN == null)
-      this.openSnackbar('Failed to add product: Partially filled ASIN entry exists. Complete or remove the entry.');
+      openSnackbar(this.snackBar, 'Failed to add product: Partially filled ASIN entry exists. Complete or remove the entry.');
     else
       this.addProduct(form, processedEntriesASIN);
   }
