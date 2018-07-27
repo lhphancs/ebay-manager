@@ -25,6 +25,7 @@ import { DatabaseImportComponent } from './components/database/database-import/d
 import { DatabaseExportComponent } from './components/database/database-export/database-export.component'; 
 import { MatSortModule } from '@angular/material/sort';
 import  {MatSnackBarModule } from '@angular/material/snack-bar';
+import { DatabaseProductInfoComponent } from './components/database/database-product-info/database-product-info.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import  {MatSnackBarModule } from '@angular/material/snack-bar';
     DatabaseAddComponent,
     DatabaseProductsComponent,
     DatabaseImportComponent,
-    DatabaseExportComponent
+    DatabaseExportComponent,
+    DatabaseProductInfoComponent
   ],
   imports: [
     NgbModule.forRoot(),
