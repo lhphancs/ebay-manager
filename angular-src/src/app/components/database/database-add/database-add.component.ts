@@ -15,9 +15,8 @@ import { openSnackbar } from '../../snackbar';
   styleUrls: ['./database-add.component.css']
 })
 export class DatabaseAddComponent implements OnInit {
-  entriesASIN: EntryASIN[] = [
-    {ASIN: null, packAmt: null, preparation: null}
-  ];
+  // updating dataSource.data will update entriesASIN
+  entriesASIN: EntryASIN[] = [{ASIN: null, packAmt: null, preparation: null}];
   displayedColumns: string[] = ['select', 'ASIN', 'packAmt', 'preparation'];
   dataSource = new MatTableDataSource<EntryASIN>(this.entriesASIN);
   selection = new SelectionModel<EntryASIN>(true, []);
@@ -44,37 +43,32 @@ export class DatabaseAddComponent implements OnInit {
         this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
-  addBlankEntry(): void{
-    this.entriesASIN.push( {ASIN:null, packAmt:null, preparation: null} as EntryASIN );
-    this.dataSource = new MatTableDataSource<EntryASIN>(this.entriesASIN);
-  }
-  
   isFilledLastEntry(): boolean{
-    let lastEntryIndex = this.entriesASIN.length-1;
-    let lastASIN:string = this.entriesASIN[lastEntryIndex].ASIN;
-    let lastPackAmt:number = this.entriesASIN[lastEntryIndex].packAmt;
-    let lastPreparation:string = this.entriesASIN[lastEntryIndex].preparation;
-    let isLastASINFilled:boolean = !(lastASIN == null);
-    let isLastPackAmtFilled:boolean = !(lastPackAmt == null);
-    let isLastPreparationFilled:boolean = !(lastPreparation == null);
+    let data = this.dataSource.data;
+
+    let lastEntryIndex = data.length-1;
+    let isLastASINFilled = !(data[lastEntryIndex].ASIN == null);
+    let isLastPackAmtFilled = !(data[lastEntryIndex].packAmt == null);
+    let isLastPreparationFilled = !(data[lastEntryIndex].preparation == null);
     return isLastASINFilled || isLastPackAmtFilled || isLastPreparationFilled;
   }
 
   addBlankEntryIfNeeded(): void{
-    if(this.entriesASIN.length <= 0 || this.isFilledLastEntry())
-      this.addBlankEntry();
+    if(this.dataSource.data.length <= 0 || this.isFilledLastEntry()){
+      this.dataSource.data.push({ASIN:null, packAmt:null, preparation: null});
+      this.dataSource = new MatTableDataSource<EntryASIN>(this.dataSource.data);
+    }  
   }
 
   removeSelectedRows(){
     this.selection.selected.forEach(item => {
-      let index: number = this.entriesASIN.findIndex(d => d === item);
+      let index: number = this.dataSource.data.findIndex(d => d === item);
       this.dataSource.data.splice(index, 1);
       this.dataSource = new MatTableDataSource<EntryASIN>(this.dataSource.data);
     });
     this.addBlankEntryIfNeeded();
     this.selection = new SelectionModel<EntryASIN>(true, []);
   }
-
   
   isEmptyStringField(value){
     if(value == null) return true;
@@ -92,9 +86,9 @@ export class DatabaseAddComponent implements OnInit {
   }
 
   //Gets all the entries. Returns null if half complete entry exist
-  getEntriesASIN(entriesASIN){
+  getEntriesASIN(){
     let validEntriesASIN = [];
-    for(let entry of entriesASIN){
+    for(let entry of this.dataSource.data){
       if(this.isEmptyEntry(entry))
         continue;
       if( this.isCompleteEntry(entry) )
@@ -107,6 +101,10 @@ export class DatabaseAddComponent implements OnInit {
 
   successResponse(form){
     openSnackbar(this.snackBar, 'Successfully added product');
+
+    //Clear form completely
+    this.dataSource.data = [{ASIN: null, packAmt: null, preparation: null}];
+    this.dataSource = new MatTableDataSource<EntryASIN>(this.dataSource.data);
     form.resetForm();
   }
 
@@ -125,7 +123,7 @@ export class DatabaseAddComponent implements OnInit {
   }
   
   onSubmit(form){
-    let processedEntriesASIN = this.getEntriesASIN(this.entriesASIN);
+    let processedEntriesASIN = this.getEntriesASIN();
     if(processedEntriesASIN == null)
       openSnackbar(this.snackBar, 'Failed to add product: Partially filled ASIN entry exists. Complete or remove the entry.');
     else
