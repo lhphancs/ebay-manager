@@ -15,7 +15,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'products', pathMatch: 'full' },
       { path: 'products', component: DatabaseProductsComponent },
-      { path: 'products/update/:UPC', component: DatabaseAddOrUpdateComponent },
+      { path: 'update/:UPC', component: DatabaseAddOrUpdateComponent },
       { path: 'add', component: DatabaseAddOrUpdateComponent }
     ]},
   { path: 'calculator', component: CalculatorComponent }

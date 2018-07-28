@@ -20,6 +20,10 @@ const productSchema = Schema({
 
 const Product = module.exports = mongoose.model('Product', productSchema);
 
+module.exports.getProductByUPC = function(productUPC, callback){
+    Product.findOne({UPC: productUPC}, callback);
+};
+
 module.exports.getProducts = function(offset, limit, callback){
     Product.find({}, null, {skip:offset, limit: limit}, callback);
 };
@@ -34,7 +38,7 @@ module.exports.deleteProducts = function(UPCs, callback){
 
 module.exports.updateProduct = function(oldUPC, newProductJSON, callback){
     Product.findOneAndUpdate({UPC: oldUPC}, newProductJSON
-        , { runValidators: true }, callback);
+        , { new: true, runValidators: true }, callback);
 };
 
 

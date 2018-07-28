@@ -1,13 +1,17 @@
+import { ViewChild, ElementRef } from '@angular/core';
+//Add and update page do almost the same thing, so just clump code together
+
 import { EntryASIN } from '../../../classesAndInterfaces/entryASIN';
 
 import { DatabaseService } from '../../../services/database.service';
 import { Component, OnInit } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../../../classesAndInterfaces/product';
 import { MatSnackBar } from '@angular/material';
 import { openSnackbar } from '../../snackbar';
+
 
 @Component({
   selector: 'database-add-or-update',
@@ -15,18 +19,58 @@ import { openSnackbar } from '../../snackbar';
   styleUrls: ['./database-add-or-update.component.css']
 })
 export class DatabaseAddOrUpdateComponent implements OnInit {
+  inputBrand;
+  inputName;
+  inputUPC;
+  inputPurchasedLocation;
+  inputStockNo;
+  inputCostPerBox;
+  inputQuantityPerBox;
+
   // updating dataSource.data will update entriesASIN
   entriesASIN: EntryASIN[] = [{ASIN: null, packAmt: null, preparation: null}];
   displayedColumns: string[] = ['select', 'ASIN', 'packAmt', 'preparation'];
   dataSource = new MatTableDataSource<EntryASIN>(this.entriesASIN);
   selection = new SelectionModel<EntryASIN>(true, []);
+  oldProductUPC: string;
 
   constructor(private databaseService: DatabaseService
-      , private router: Router
-      , public snackBar: MatSnackBar)
+      , private route: ActivatedRoute
+      , public snackBar: MatSnackBar
+      , private router: Router)
+      
   { }
 
+  fillInForm(product){
+    this.inputBrand = product.brand;
+    this.inputName = product.name;
+    this.inputUPC = product.UPC;
+    this.inputPurchasedLocation = product.purchasedLocation;
+    this.inputStockNo = product.stockNo;
+    this.inputCostPerBox = product.costPerBox;
+    this.inputQuantityPerBox = product.quantityPerBox;
+
+    this.dataSource.data = product.ASINS;
+    this.dataSource.data.push({ASIN:null, packAmt:null, preparation: null});
+    this.dataSource = new MatTableDataSource<EntryASIN>(this.dataSource.data);
+  }
+  
+  prepareProductUpdate(){
+    this.databaseService.getProductByUPC(this.oldProductUPC).subscribe((data) =>{
+      if(data['success']){
+        this.fillInForm(data['product']);
+      }
+      else
+        ;// Do something to say error
+    });
+  }
+
   ngOnInit() {
+    this.route.paramMap.subscribe(params => {
+      this.oldProductUPC = params.get('UPC');
+      if(this.oldProductUPC)
+        this.prepareProductUpdate();
+    });
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -100,20 +144,21 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
   }
 
   successResponse(form){
-    openSnackbar(this.snackBar, 'Successfully added product');
-
     //Clear form completely
     this.dataSource.data = [{ASIN: null, packAmt: null, preparation: null}];
     this.dataSource = new MatTableDataSource<EntryASIN>(this.dataSource.data);
     form.resetForm();
+
+    openSnackbar(this.snackBar, 'Successfully added product');
   }
 
-  addProduct(form, processedEntriesASIN){
-    let formValues = form.form.value;
-    let product = new Product(formValues.brand, formValues.name, formValues.costPerBox
-    , formValues.quantityPerBox, formValues.purchasedLocation, formValues.stockNo
-    , formValues.UPC, processedEntriesASIN);
+  getNewProductObject(processedEntriesASIN){
+    return new Product(this.inputBrand, this.inputName, this.inputCostPerBox
+    , this.inputQuantityPerBox, this.inputPurchasedLocation, this.inputStockNo
+    , this.inputUPC, processedEntriesASIN);
+  }
 
+  addProduct(product, form){
     this.databaseService.addProduct(product).subscribe(data => {
       if(data['success'])
         this.successResponse(form);
@@ -121,12 +166,27 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
         openSnackbar(this.snackBar, `Failed to add product: ${data['msg']}`);
     });
   }
+
+  updateProduct(product){
+    this.databaseService.updateProduct(this.oldProductUPC, product).subscribe(data => {
+      if(data['success'])
+        openSnackbar(this.snackBar, `Update successful: ${data['msg']}`);
+      else
+        openSnackbar(this.snackBar, `Failed to add product: ${data['msg']}`);
+    });
+    this.router.navigateByUrl('/database/products');
+  }
   
   onSubmit(form){
     let processedEntriesASIN = this.getEntriesASIN();
     if(processedEntriesASIN == null)
       openSnackbar(this.snackBar, 'Failed to add product: Partially filled ASIN entry exists. Complete or remove the entry.');
-    else
-      this.addProduct(form, processedEntriesASIN);
+    else{
+      let product = this.getNewProductObject(processedEntriesASIN);
+      if(this.oldProductUPC)
+        this.updateProduct(product)
+      else
+        this.addProduct(product, form);
+    }
   }
 }

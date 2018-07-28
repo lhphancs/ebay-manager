@@ -19,6 +19,13 @@ function getNewProduct(body){
     return new Product(getProductJSON(body));
 }
 
+router.get('/products/info/:UPC', (req, res, next) => {
+    Product.getProductByUPC( req.param('UPC'), (err, product) => {
+        if(err) res.json({success: false, msg: `Failed to grab products: ${err.message}`});
+        else res.json({success:true, product: product});
+    });
+});
+
 router.get('/products/:offset?/:limit?', (req, res, next) => {
     let DEFAULT_OFFSET = 0;
     let DEFAULT_LIMIT = 100;
@@ -35,7 +42,7 @@ router.get('/products/:offset?/:limit?', (req, res, next) => {
 });
 
 router.post('/products/add', (req, res, next) => {
-    let newProduct = getNewProduct(req.body);
+    let newProduct = getNewProduct(req.body.product);
     Product.addProduct(newProduct, (err, product) => {
         if(err) res.json({success: false, msg: `Failed to add product: ${err.message}`});
         else res.json({success:true, msg: `Successfully added product: ${product}`});
@@ -52,11 +59,11 @@ router.delete('/products/delete', (req, res, next) => {
 
 router.put('/products/update', (req, res, next) => {
     let oldUPC = req.body.oldUPC;
-    let newProductJSON = getNewProduct(req.body.newProduct)
+    let newProductJSON = getNewProduct(req.body.product)
     Product.updateProduct(oldUPC, getProductJSON(newProductJSON), (err, updatedProduct) => {
         if(err) res.json({success: false, msg: `Failed to update product: ${err.message}`});
         else if(!updatedProduct) res.json({success:false, msg: `Failed to update product: ${oldUPC} not found in database`});
-        else res.json({success:true, msg: `Successfully updated product: ${updatedProduct}`});
+        else res.json({success:true, msg: `Successfully updated product: ${updatedProduct.UPC}`});
     });
 });
 

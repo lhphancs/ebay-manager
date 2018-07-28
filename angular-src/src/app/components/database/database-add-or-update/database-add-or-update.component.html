@@ -1,20 +1,20 @@
-<form class="entire-form" ngNativeValidate #productForm="ngForm" (ngSubmit)="onSubmit(productForm)">
+<form #productForm="ngForm" class="entire-form" ngNativeValidate (ngSubmit)="onSubmit(productForm)">
   <div class="container" fxLayout="row" fxLayoutWrap fxLayoutGap="0.5%" FxLayoutAlign="center">
     <div fxFlex="33%">
         <mat-form-field fxFlex>
-          <input ngModel name="brand" matInput placeholder="Brand" required>
+          <input [(ngModel)]='inputBrand' name="brand" matInput placeholder="Brand" required>
         </mat-form-field>
     </div>
 
     <div fxFlex="33%">
       <mat-form-field fxFlex>
-        <input ngModel name="name" matInput placeholder="Product name" required>
+        <input [(ngModel)]='inputName' name="name" matInput placeholder="Product name" required>
       </mat-form-field>
     </div>
 
     <div fxFlex="33%">
       <mat-form-field fxFlex>
-        <input ngModel name="UPC" matInput placeholder="UPC" required>
+        <input [(ngModel)]='inputUPC' name="UPC" matInput placeholder="UPC" required>
         <span matPrefix>&nbsp;</span>
       </mat-form-field>
     </div>
@@ -23,13 +23,13 @@
   <div class="container" fxLayout="row" fxLayoutWrap fxLayoutGap="0.5%" FxLayoutAlign="center">    
     <div fxFlex="33%">
       <mat-form-field fxFlex>
-        <input ngModel name="purchasedLocation" matInput placeholder="Purchased Location">
+        <input [(ngModel)]='inputPurchasedLocation' name="purchasedLocation" matInput placeholder="Purchased Location">
       </mat-form-field>
     </div>
     
     <div fxFlex="10%">
       <mat-form-field fxFlex>
-        <input ngModel name="stockNo" matInput placeholder="Stock No.">
+        <input [(ngModel)]='inputStockNo' name="stockNo" matInput placeholder="Stock No.">
       </mat-form-field>
     </div>
   </div>
@@ -37,14 +37,14 @@
   <div class="container" fxLayout="row" fxLayoutWrap fxLayoutGap="0.5%" FxLayoutAlign="center">    
     <div fxFlex="33%">
       <mat-form-field fxFlex>
-        <input ngModel name="costPerBox" matInput placeholder="Cost/Box" type="number" min="0" required>
+        <input [(ngModel)]='inputCostPerBox' name="costPerBox" matInput placeholder="Cost/Box" type="number" min="0" required>
         <span matPrefix>$&nbsp;</span>
       </mat-form-field>
     </div>
     
     <div fxFlex="10%">
       <mat-form-field fxFlex>
-        <input ngModel name="quantityPerBox" matInput placeholder="Quantity/Box" type="number" min="1" step="1" required>
+        <input [(ngModel)]='inputQuantityPerBox' name="quantityPerBox" matInput placeholder="Quantity/Box" type="number" min="1" step="1" required>
         </mat-form-field>
     </div>
   </div>
