@@ -1,2 +1,9 @@
-<input class="ng-hide" id="input-file-id" multiple type="file"/>
+<form (ngSubmit)="onSubmit(fileInput)">
+    <input id="input-file" type="file" #fileInput/>
+    <button mat-raised-button color="primary" type="submit">Upload</button>
+</form>
 
+
+
+
+    

@@ -12,4 +12,7 @@ export class DatabaseExportComponent implements OnInit {
   ngOnInit() {
   }
 
+  onExport(){
+    
+  }
 }
