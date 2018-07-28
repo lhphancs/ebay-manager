@@ -60,6 +60,34 @@
     <td mat-cell *matCellDef="let element"> {{element.purchasedLocation}} </td>
   </ng-container>
 
+  <ng-container matColumnDef="update">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>ASINS</th>
+    <td mat-cell *matCellDef="let element">
+        <ng-template #popContent>
+            <table class="table table-striped table-dark">
+                <thead>
+                  <tr>
+                    <th scope="col">ASIN</th>
+                    <th scope="col">Pack Amt</th>
+                    <th scope="col">Preparation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let entry of element.ASINS">
+                    <td>{{entry.ASIN}}</td>
+                    <td>{{entry.packAmt}}</td>
+                    <td>{{entry.preparation}}</td>
+                  </tr>
+                </tbody>
+              </table>
+        </ng-template>
+          
+          <button class="btn btn-secondary btn-sm" type="button"
+            popoverTitle="ASINS" [ngbPopover]="popContent"
+            placement="left" triggers="mouseenter:mouseleave">ASINS</button>
+    </td>
+  </ng-container>
+
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>

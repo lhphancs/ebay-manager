@@ -13,7 +13,7 @@ import { openSnackbar } from '../../snackbar';
 })
 export class DatabaseProductsComponent implements OnInit {
   products: Product[];
-  displayedColumns: string[] = ['select', 'brand', 'name', 'stockNo', 'costPerBox', 'quantityPerBox', 'UPC', 'purchasedLocation'];
+  displayedColumns: string[] = ['select', 'brand', 'name', 'stockNo', 'costPerBox', 'quantityPerBox', 'UPC', 'purchasedLocation', 'update'];
   dataSource: MatTableDataSource<Product>;
   selection = new SelectionModel<Product>(true, []);
 
