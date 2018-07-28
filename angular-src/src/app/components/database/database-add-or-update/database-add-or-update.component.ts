@@ -19,6 +19,10 @@ import { openSnackbar } from '../../snackbar';
   styleUrls: ['./database-add-or-update.component.css']
 })
 export class DatabaseAddOrUpdateComponent implements OnInit {
+  //used for update page
+  displayRdy = false;
+  errorMsg: string = null;
+
   inputBrand;
   inputName;
   inputUPC;
@@ -58,10 +62,14 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
   prepareProductUpdate(){
     this.databaseService.getProductByUPC(this.oldProductUPC).subscribe((data) =>{
       if(data['success']){
-        this.fillInForm(data['product']);
+        if(data['product'])
+          this.fillInForm(data['product']);
+        else
+          this.errorMsg = "Error: UPC not found in database";
       }
       else
-        ;// Do something to say error
+        this.errorMsg = data['msg'];
+      this.displayRdy = true;
     });
   }
 
@@ -70,6 +78,8 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
       this.oldProductUPC = params.get('UPC');
       if(this.oldProductUPC)
         this.prepareProductUpdate();
+      else
+        this.displayRdy = true;
     });
   }
 

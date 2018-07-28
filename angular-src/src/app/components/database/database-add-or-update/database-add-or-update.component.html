@@ -1,4 +1,14 @@
-<form #productForm="ngForm" class="entire-form" ngNativeValidate (ngSubmit)="onSubmit(productForm)">
+<div *ngIf="errorMsg && displayRdy" class="alert alert-danger" role="alert">
+  {{errorMsg}}
+</div>
+
+<div *ngIf="oldProductUPC">
+  <div class="alert alert-secondary" role="alert" style="text-align: center">
+      Updating product of UPC: {{oldProductUPC}}
+  </div>
+</div>
+
+<form *ngIf="!errorMsg && displayRdy" #productForm="ngForm" class="entire-form" ngNativeValidate (ngSubmit)="onSubmit(productForm)">
   <div class="container" fxLayout="row" fxLayoutWrap fxLayoutGap="0.5%" FxLayoutAlign="center">
     <div fxFlex="33%">
         <mat-form-field fxFlex>
