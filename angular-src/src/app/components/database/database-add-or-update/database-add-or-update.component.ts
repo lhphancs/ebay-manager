@@ -1,4 +1,4 @@
-import { EntryASIN } from './../../../classesAndInterfaces/entryASIN';
+import { EntryASIN } from '../../../classesAndInterfaces/entryASIN';
 
 import { DatabaseService } from '../../../services/database.service';
 import { Component, OnInit } from '@angular/core';
@@ -10,11 +10,11 @@ import { MatSnackBar } from '@angular/material';
 import { openSnackbar } from '../../snackbar';
 
 @Component({
-  selector: 'database-add',
-  templateUrl: './database-add.component.html',
-  styleUrls: ['./database-add.component.css']
+  selector: 'database-add-or-update',
+  templateUrl: './database-add-or-update.component.html',
+  styleUrls: ['./database-add-or-update.component.css']
 })
-export class DatabaseAddComponent implements OnInit {
+export class DatabaseAddOrUpdateComponent implements OnInit {
   // updating dataSource.data will update entriesASIN
   entriesASIN: EntryASIN[] = [{ASIN: null, packAmt: null, preparation: null}];
   displayedColumns: string[] = ['select', 'ASIN', 'packAmt', 'preparation'];

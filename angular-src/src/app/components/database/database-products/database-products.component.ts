@@ -1,6 +1,6 @@
-import { EntryASIN } from './../../../classesAndInterfaces/entryASIN';
+import { EntryASIN } from '../../../classesAndInterfaces/entryASIN';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Product } from './../../../classesAndInterfaces/product';
+import { Product } from '../../../classesAndInterfaces/product';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatTableDataSource, MatSnackBar } from '@angular/material';
 import { DatabaseService } from '../../../services/database.service';

@@ -1,8 +1,5 @@
-import { DatabaseProductInfoComponent } from './components/database/database-product-info/database-product-info.component';
-import { DatabaseExportComponent } from './components/database/database-export/database-export.component';
-import { DatabaseImportComponent } from './components/database/database-import/database-import.component';
 import { DatabaseProductsComponent } from './components/database/database-products/database-products.component';
-import { DatabaseAddComponent } from './components/database/database-add/database-add.component';
+import { DatabaseAddOrUpdateComponent } from './components/database/database-add-or-update/database-add-or-update.component';
 import { DatabaseComponent } from './components/database/database.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -18,10 +15,8 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'products', pathMatch: 'full' },
       { path: 'products', component: DatabaseProductsComponent },
-      { path: 'products/:UPC', component: DatabaseProductInfoComponent },
-      { path: 'add', component: DatabaseAddComponent },
-      { path: 'import', component: DatabaseImportComponent },
-      { path: 'export', component: DatabaseExportComponent }
+      { path: 'products/update/:UPC', component: DatabaseAddOrUpdateComponent },
+      { path: 'add', component: DatabaseAddOrUpdateComponent }
     ]},
   { path: 'calculator', component: CalculatorComponent }
 ];

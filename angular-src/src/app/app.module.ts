@@ -12,7 +12,7 @@ import { EbayComponent } from './components/ebay/ebay.component';
 import { CalculatorComponent } from './components/calculator/calculator.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
-import { DatabaseAddComponent } from './components/database/database-add/database-add.component';
+import { DatabaseAddOrUpdateComponent } from './components/database/database-add-or-update/database-add-or-update.component';
 import { DatabaseProductsComponent } from './components/database/database-products/database-products.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -21,11 +21,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
-import { DatabaseImportComponent } from './components/database/database-import/database-import.component';
-import { DatabaseExportComponent } from './components/database/database-export/database-export.component'; 
 import { MatSortModule } from '@angular/material/sort';
 import  {MatSnackBarModule } from '@angular/material/snack-bar';
-import { DatabaseProductInfoComponent } from './components/database/database-product-info/database-product-info.component';
 
 @NgModule({
   declarations: [
@@ -34,11 +31,8 @@ import { DatabaseProductInfoComponent } from './components/database/database-pro
     EbayComponent,
     CalculatorComponent,
     DatabaseComponent,
-    DatabaseAddComponent,
-    DatabaseProductsComponent,
-    DatabaseImportComponent,
-    DatabaseExportComponent,
-    DatabaseProductInfoComponent
+    DatabaseAddOrUpdateComponent,
+    DatabaseProductsComponent
   ],
   imports: [
     NgbModule.forRoot(),
