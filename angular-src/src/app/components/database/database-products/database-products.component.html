@@ -1,5 +1,5 @@
 <button type="button" mat-raised-button class="mt-3"
-  [disabled]="selection.selected.length == 0" (click)="removeSelectedRows()">Delete
+  [disabled]="selection.selected.length == 0" (click)="openConfirmDialog()">Delete
 </button>
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
   <!-- checkbox column -->

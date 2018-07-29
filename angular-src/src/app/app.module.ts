@@ -11,18 +11,19 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { EbayComponent } from './components/ebay/ebay.component';
 import { CalculatorComponent } from './components/calculator/calculator.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatabaseAddOrUpdateComponent } from './components/database/database-add-or-update/database-add-or-update.component';
 import { DatabaseProductsComponent } from './components/database/database-products/database-products.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule } from '@angular/material';
+import { MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule, MatDialogModule } from '@angular/material';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 import { MatSortModule } from '@angular/material/sort';
 import  {MatSnackBarModule } from '@angular/material/snack-bar';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import  {MatSnackBarModule } from '@angular/material/snack-bar';
     CalculatorComponent,
     DatabaseComponent,
     DatabaseAddOrUpdateComponent,
-    DatabaseProductsComponent
+    DatabaseProductsComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     NgbModule.forRoot(),
@@ -52,9 +54,12 @@ import  {MatSnackBarModule } from '@angular/material/snack-bar';
     FlexLayoutModule,
     HttpClientModule,
     MatSortModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule,
+    ReactiveFormsModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [ConfirmDialogComponent]
 })
 export class AppModule { }

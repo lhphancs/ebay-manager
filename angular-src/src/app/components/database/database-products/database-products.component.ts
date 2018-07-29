@@ -2,9 +2,10 @@ import { EntryASIN } from '../../../classesAndInterfaces/entryASIN';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Product } from '../../../classesAndInterfaces/product';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatSort, MatTableDataSource, MatSnackBar } from '@angular/material';
+import { MatSort, MatTableDataSource, MatSnackBar, MatDialog, MatDialogRef } from '@angular/material';
 import { DatabaseService } from '../../../services/database.service';
 import { openSnackbar } from '../../snackbar';
+import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'database-products',
@@ -18,7 +19,7 @@ export class DatabaseProductsComponent implements OnInit {
   selection = new SelectionModel<Product>(true, []);
 
   constructor(private databaseService: DatabaseService
-    , public snackBar: MatSnackBar) {
+    , public snackBar: MatSnackBar, private dialog: MatDialog) {
   }
 
   @ViewChild(MatSort) sort: MatSort;
@@ -70,6 +71,16 @@ export class DatabaseProductsComponent implements OnInit {
         this.deleteFromView();
       }
       openSnackbar(this.snackBar, data['msg']);
+    });
+  }
+
+  openConfirmDialog(){
+    const confirmDialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data:{title: "Confirmation", msg: "Are you sure you want to delete?"}
+    });
+    confirmDialogRef.afterClosed().subscribe(result => {
+      if(result)
+        this.removeSelectedRows();
     });
   }
 }
