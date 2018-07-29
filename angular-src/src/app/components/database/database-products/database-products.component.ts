@@ -1,4 +1,4 @@
-import { EntryASIN } from '../../../classesAndInterfaces/entryASIN';
+import { Stack } from './../../../classesAndInterfaces/stack';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Product } from '../../../classesAndInterfaces/product';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -17,14 +17,15 @@ export class DatabaseProductsComponent implements OnInit {
   displayedColumns: string[] = ['select', 'brand', 'name', 'stockNo', 'costPerBox', 'quantityPerBox', 'UPC', 'purchasedLocation', 'update'];
   dataSource: MatTableDataSource<Product>;
   selection = new SelectionModel<Product>(true, []);
+  deletedGroupsStack: Stack; // Used to undo delete
 
   constructor(private databaseService: DatabaseService
     , public snackBar: MatSnackBar, private dialog: MatDialog) {
+      this.deletedGroupsStack = new Stack();
   }
 
   @ViewChild(MatSort) sort: MatSort;
   
-
   ngOnInit() {
     this.databaseService.getProducts().subscribe( (data) => {
       if(data['success']){
@@ -55,20 +56,48 @@ export class DatabaseProductsComponent implements OnInit {
     this.selection.selected.forEach(item => {
       let index: number = this.products.findIndex(d => d === item);
       this.dataSource.data.splice(index, 1);
-      this.dataSource = new MatTableDataSource<Product>(this.dataSource.data);
+      this.dataSource.filter = "";
     });
     this.selection = new SelectionModel<Product>(true, []);
   }
 
+  getUPCsFromProducts(produts){
+    let UPCs = [];
+    produts.forEach(item => {
+      UPCs.push(item.UPC);
+    });
+    return UPCs;
+  }
+
   removeSelectedRows() {
-    let UPCsToDelete = [];
+    let productsToDelete = [];
     this.selection.selected.forEach(item => {
-      UPCsToDelete.push(item.UPC);
+      productsToDelete.push(item);
     });
 
+    let UPCsToDelete = this.getUPCsFromProducts(productsToDelete);
     this.databaseService.deleteProducts(UPCsToDelete).subscribe( (data) =>{
       if(data['success']){
         this.deleteFromView();
+        this.deletedGroupsStack.push(productsToDelete);
+      }
+      openSnackbar(this.snackBar, data['msg']);
+    });
+  }
+
+  addToView(productsToAdd){
+    productsToAdd.forEach(item => {
+      this.dataSource.data.push(item);
+    });
+    this.dataSource.filter = "";
+  }
+
+  undoDelete(){
+    let productsToAddBack = this.deletedGroupsStack.peek();
+    this.databaseService.addManyProducts(productsToAddBack).subscribe( (data) =>{
+      if(data['success']){
+        this.addToView(productsToAddBack);
+        this.deletedGroupsStack.pop();
       }
       openSnackbar(this.snackBar, data['msg']);
     });

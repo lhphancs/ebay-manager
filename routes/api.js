@@ -49,6 +49,13 @@ router.post('/products/add', (req, res, next) => {
     });
 });
 
+router.post('/products/add-many', (req, res, next) => {
+    Product.addManyProducts(req.body.products, (err, products) => {
+        if(err) res.json({success: false, msg: `Failed to add products: ${err.message}`});
+        else res.json({success:true, msg: `Successfully added products: ${products}`});
+    });
+});
+
 router.delete('/products/delete', (req, res, next) => {
     UPCs = req.body.UPCs;
     Product.deleteProducts(UPCs, (err) => {
@@ -85,7 +92,6 @@ router.post('/products/debug-fill', (req, res, next) => {
         if(err) res.json({success: false, msg: `Failed to add product: ${err.message}`});
         else res.json({success:true, msg: `Successfully added product: ${products}`});
     });
-    
 });
 //End To Delete
 

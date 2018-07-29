@@ -1,6 +1,14 @@
-<button type="button" mat-raised-button color="warn" class="mt-3"
-  [disabled]="selection.selected.length == 0" (click)="openConfirmDialog()">Delete
-</button>
+<div class="d-flex mt-3">
+  <button type="button" mat-raised-button color="warn" class="mr-auto p-2"
+    [disabled]="selection.selected.length == 0" (click)="openConfirmDialog()">Delete
+  </button>
+
+  <button type="button" mat-raised-button color="warn" class="p-2"
+    [disabled]="deletedGroupsStack.isEmpty()" (click)="undoDelete()">Undo Delete
+  </button>
+</div>
+
+
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
   <!-- checkbox column -->
   <ng-container matColumnDef="select">

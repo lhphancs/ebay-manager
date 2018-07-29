@@ -32,6 +32,10 @@ module.exports.addProduct = function(newProduct, callback){
     newProduct.save(callback);
 };
 
+module.exports.addManyProducts = function(newProducts, callback){
+    Product.insertMany(newProducts, callback);
+};
+
 module.exports.deleteProducts = function(UPCs, callback){
     Product.remove({ UPC: UPCs}, callback);
 };

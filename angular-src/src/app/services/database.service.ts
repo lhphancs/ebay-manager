@@ -15,6 +15,13 @@ export class DatabaseService {
     , {product: product}, {headers: headers});
   }
 
+  addManyProducts(products){
+    let headers = new HttpHeaders();
+    headers.append('Content-Type', 'application/json');
+    return this.httpClient.post('http://localhost:3000/api/products/add-many'
+    , {products: products}, {headers: headers});
+  }
+
   updateProduct(oldUPC, product){
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
