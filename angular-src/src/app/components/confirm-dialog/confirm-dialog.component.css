@@ -1,9 +1,3 @@
-.mat-cancel {
-    background-color: #7e7e7e;
-    color: #fff;
-}
-
-.mat-proceed {
-    background-color: blue;
-    color: #fff;
+.mat-raised-button{
+    border: 1px solid black;
 }
