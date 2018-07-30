@@ -1,4 +1,4 @@
-import { Stack } from './../../../classesAndInterfaces/stack';
+import { Stack } from '../../../classesAndInterfaces/stack';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Product } from '../../../classesAndInterfaces/product';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';

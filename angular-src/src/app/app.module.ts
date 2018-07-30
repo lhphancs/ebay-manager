@@ -5,7 +5,7 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
+import { NavbarLoggedComponent } from './components/navbar-logged/navbar-logged.component';
 
 
 import { EbayComponent } from './components/ebay/ebay.component';
@@ -22,19 +22,21 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 import { MatSortModule } from '@angular/material/sort';
-import  {MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { NavbarLoginComponent } from './components/navbar-login/navbar-login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent,
+    NavbarLoggedComponent,
     EbayComponent,
     CalculatorComponent,
     DatabaseComponent,
     DatabaseAddOrUpdateComponent,
     DatabaseProductsComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    NavbarLoginComponent
   ],
   imports: [
     NgbModule.forRoot(),
