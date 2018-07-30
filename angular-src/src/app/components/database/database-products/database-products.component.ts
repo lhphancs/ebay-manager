@@ -1,7 +1,7 @@
 import { Stack } from './../../../classesAndInterfaces/stack';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Product } from '../../../classesAndInterfaces/product';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MatSort, MatTableDataSource, MatSnackBar, MatDialog, MatDialogRef } from '@angular/material';
 import { DatabaseService } from '../../../services/database.service';
 import { openSnackbar } from '../../snackbar';
@@ -13,6 +13,7 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
   styleUrls: ['./database-products.component.css']
 })
 export class DatabaseProductsComponent implements OnInit {
+  filterValue: string;
   products: Product[];
   displayedColumns: string[] = ['select', 'brand', 'name', 'stockNo', 'costPerBox', 'quantityPerBox', 'UPC', 'purchasedLocation', 'update'];
   dataSource: MatTableDataSource<Product>;
@@ -56,7 +57,7 @@ export class DatabaseProductsComponent implements OnInit {
     this.selection.selected.forEach(item => {
       let index: number = this.products.findIndex(d => d === item);
       this.dataSource.data.splice(index, 1);
-      this.dataSource.filter = "";
+      this.dataSource.filter = this.filterValue;
     });
     this.selection = new SelectionModel<Product>(true, []);
   }
@@ -89,7 +90,7 @@ export class DatabaseProductsComponent implements OnInit {
     productsToAdd.forEach(item => {
       this.dataSource.data.push(item);
     });
-    this.dataSource.filter = "";
+    this.dataSource.filter = this.filterValue;
   }
 
   undoDelete(){
@@ -111,5 +112,9 @@ export class DatabaseProductsComponent implements OnInit {
       if(result)
         this.removeSelectedRows();
     });
+  }
+
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 }

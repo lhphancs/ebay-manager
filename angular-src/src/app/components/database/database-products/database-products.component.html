@@ -1,13 +1,15 @@
-<div class="d-flex mt-3">
-  <button type="button" mat-raised-button color="warn" class="mr-auto p-2"
+<div class="d-flex justify-content-between mt-3">
+  <button type="button" mat-raised-button color="warn"
     [disabled]="selection.selected.length == 0" (click)="openConfirmDialog()">Delete
   </button>
 
-  <button type="button" mat-raised-button color="warn" class="p-2"
+  <input [(ngModel)]="filterValue" class="form-control mx-5 mb-3 border border-primary"
+    placeholder="Filter" (keyup)="applyFilter($event.target.value)">
+  
+  <button type="button" mat-raised-button color="warn"
     [disabled]="deletedGroupsStack.isEmpty()" (click)="undoDelete()">Undo Delete
   </button>
 </div>
-
 
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
   <!-- checkbox column -->
