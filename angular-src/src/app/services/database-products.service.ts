@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders} from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-export class DatabaseService {
+export class DatabaseProductsService {
 
   constructor(private httpClient: HttpClient) { }
 

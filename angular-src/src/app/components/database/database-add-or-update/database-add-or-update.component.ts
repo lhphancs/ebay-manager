@@ -3,7 +3,6 @@ import { ViewChild, ElementRef } from '@angular/core';
 
 import { EntryASIN } from '../../../classesAndInterfaces/entryASIN';
 
-import { DatabaseService } from '../../../services/database.service';
 import { Component, OnInit } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material';
@@ -11,17 +10,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../../../classesAndInterfaces/product';
 import { MatSnackBar } from '@angular/material';
 import { openSnackbar } from '../../snackbar';
-
+import { DatabaseProductsService } from '../../../services/database-products.service';
 
 @Component({
   selector: 'database-add-or-update',
   templateUrl: './database-add-or-update.component.html',
   styleUrls: ['./database-add-or-update.component.css']
 })
+
 export class DatabaseAddOrUpdateComponent implements OnInit {
   //used for update page
   displayRdy = false;
-  errorMsg: string = null;
 
   inputBrand;
   inputName;
@@ -39,7 +38,7 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
   selection = new SelectionModel<EntryASIN>(true, []);
   oldProductUPC: string;
 
-  constructor(private databaseService: DatabaseService
+  constructor(private databaseProductsService: DatabaseProductsService
       , private route: ActivatedRoute
       , public snackBar: MatSnackBar
       , private router: Router)
@@ -62,15 +61,15 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
   }
   
   prepareProductUpdate(){
-    this.databaseService.getProductByUPC(this.oldProductUPC).subscribe((data) =>{
+    this.databaseProductsService.getProductByUPC(this.oldProductUPC).subscribe((data) =>{
       if(data['success']){
         if(data['product'])
           this.fillInForm(data['product']);
         else
-          this.errorMsg = "Error: UPC not found in database";
+          openSnackbar(this.snackBar, "Error: UPC not found in database");
       }
       else
-        this.errorMsg = data['msg'];
+        openSnackbar(this.snackBar, data['msg']);
       this.displayRdy = true;
     });
   }
@@ -172,7 +171,7 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
   }
 
   addProduct(product, form){
-    this.databaseService.addProduct(product).subscribe(data => {
+    this.databaseProductsService.addProduct(product).subscribe(data => {
       if(data['success'])
         this.successResponse(form);
       else
@@ -181,7 +180,7 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
   }
 
   updateProduct(product){
-    this.databaseService.updateProduct(this.oldProductUPC, product).subscribe(data => {
+    this.databaseProductsService.updateProduct(this.oldProductUPC, product).subscribe(data => {
       if(data['success'])
         openSnackbar(this.snackBar, `Update successful: ${data['msg']}`);
       else

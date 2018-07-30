@@ -3,9 +3,10 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Product } from '../../../classesAndInterfaces/product';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MatSort, MatTableDataSource, MatSnackBar, MatDialog, MatDialogRef } from '@angular/material';
-import { DatabaseService } from '../../../services/database.service';
+
 import { openSnackbar } from '../../snackbar';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
+import { DatabaseProductsService } from '../../../services/database-products.service';
 
 @Component({
   selector: 'database-products',
@@ -20,7 +21,7 @@ export class DatabaseProductsComponent implements OnInit {
   selection = new SelectionModel<Product>(true, []);
   deletedGroupsStack: Stack; // Used to undo delete
 
-  constructor(private databaseService: DatabaseService
+  constructor(private databaseProductsService: DatabaseProductsService
     , public snackBar: MatSnackBar, private dialog: MatDialog) {
       this.deletedGroupsStack = new Stack();
   }
@@ -28,7 +29,7 @@ export class DatabaseProductsComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   
   ngOnInit() {
-    this.databaseService.getProducts().subscribe( (data) => {
+    this.databaseProductsService.getProducts().subscribe( (data) => {
       if(data['success']){
         this.products = data['products'];
         this.dataSource = new MatTableDataSource<Product>(this.products);
@@ -77,7 +78,7 @@ export class DatabaseProductsComponent implements OnInit {
     });
 
     let UPCsToDelete = this.getUPCsFromProducts(productsToDelete);
-    this.databaseService.deleteProducts(UPCsToDelete).subscribe( (data) =>{
+    this.databaseProductsService.deleteProducts(UPCsToDelete).subscribe( (data) =>{
       if(data['success']){
         this.deleteFromView();
         this.deletedGroupsStack.push(productsToDelete);
@@ -95,7 +96,7 @@ export class DatabaseProductsComponent implements OnInit {
 
   undoDelete(){
     let productsToAddBack = this.deletedGroupsStack.peek();
-    this.databaseService.addManyProducts(productsToAddBack).subscribe( (data) =>{
+    this.databaseProductsService.addManyProducts(productsToAddBack).subscribe( (data) =>{
       if(data['success']){
         this.addToView(productsToAddBack);
         this.deletedGroupsStack.pop();

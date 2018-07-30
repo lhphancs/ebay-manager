@@ -1,8 +1,4 @@
-<div *ngIf="errorMsg && displayRdy" class="alert alert-danger" role="alert">
-    {{errorMsg}}
-</div>
-
-<form *ngIf="!errorMsg" class="entire-form" ngNativeValidate #userForm="ngForm" (ngSubmit)="onSubmit(userForm)">
+<form class="entire-form" ngNativeValidate #userForm="ngForm" (ngSubmit)="onSubmit(userForm)">
     <div class="container">
         <div fxFlex="100%">
             <mat-form-field fxFlex>
@@ -10,7 +6,7 @@
             </mat-form-field>
         </div>
     </div>
-    <div class="container mt-3">
+    <div class="container">
         <div fxFlex="100%">
             <mat-form-field fxFlex>
             <input ngModel name="password" type="password"
@@ -18,7 +14,15 @@
             </mat-form-field>
         </div>
     </div>
+    <div class="container">
+        <div fxFlex="100%">
+            <mat-form-field fxFlex>
+            <input ngModel name="confirm-password" type="password"
+                matInput placeholder="Confirm Password" required>
+            </mat-form-field>
+        </div>
+    </div>
     <button mat-raised-button color="primary"
-        type="submit" class="btn-block btn-submit mt-3">Submit
+        type="submit" class="btn-block btn-submit mt-2">Submit
     </button>
 </form>
