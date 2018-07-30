@@ -28,6 +28,7 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
   inputUPC;
   inputPurchasedLocation;
   inputStockNo;
+  inputOz;
   inputCostPerBox;
   inputQuantityPerBox;
 
@@ -51,6 +52,7 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
     this.inputUPC = product.UPC;
     this.inputPurchasedLocation = product.purchasedLocation;
     this.inputStockNo = product.stockNo;
+    this.inputOz = product.oz;
     this.inputCostPerBox = product.costPerBox;
     this.inputQuantityPerBox = product.quantityPerBox;
 
@@ -163,9 +165,10 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
   }
 
   getNewProductObject(processedEntriesASIN){
-    return new Product(this.inputBrand, this.inputName, this.inputCostPerBox
-    , this.inputQuantityPerBox, this.inputPurchasedLocation, this.inputStockNo
-    , this.inputUPC, processedEntriesASIN);
+    return new Product(this.inputBrand, this.inputName, this.inputUPC
+      , this.inputCostPerBox, this.inputQuantityPerBox
+        , this.inputPurchasedLocation, this.inputStockNo, this.inputOz
+        , processedEntriesASIN);
   }
 
   addProduct(product, form){

@@ -10,6 +10,7 @@ function getProductJSON(body){
         quantityPerBox: body.quantityPerBox,
         purchasedLocation: body.purchasedLocation,
         stockNo: body.stockNo,
+        oz: body.oz,
         UPC: body.UPC,
         ASINS: body.ASINS
     };
@@ -19,14 +20,14 @@ function getNewProduct(body){
     return new Product(getProductJSON(body));
 }
 
-router.get('/products/info/:UPC', (req, res, next) => {
+router.get('/info/:UPC', (req, res, next) => {
     Product.getProductByUPC( req.param('UPC'), (err, product) => {
         if(err) res.json({success: false, msg: `Failed to grab products: ${err.message}`});
         else res.json({success:true, product: product});
     });
 });
 
-router.get('/products/:offset?/:limit?', (req, res, next) => {
+router.get('/:offset?/:limit?', (req, res, next) => {
     let DEFAULT_OFFSET = 0;
     let DEFAULT_LIMIT = 100;
 
@@ -41,22 +42,22 @@ router.get('/products/:offset?/:limit?', (req, res, next) => {
     });
 });
 
-router.post('/products/add', (req, res, next) => {
-    let newProduct = getNewProduct(req.body.product);
+router.post('/add', (req, res, next) => {
+    let newProduct = getNewProduct(req.body);
     Product.addProduct(newProduct, (err, product) => {
         if(err) res.json({success: false, msg: `Failed to add product: ${err.message}`});
         else res.json({success:true, msg: `Successfully added product: ${product}`});
     });
 });
 
-router.post('/products/add-many', (req, res, next) => {
+router.post('/add-many', (req, res, next) => {
     Product.addManyProducts(req.body.products, (err, products) => {
         if(err) res.json({success: false, msg: `Failed to add products: ${err.message}`});
         else res.json({success:true, msg: `Successfully added products: ${products}`});
     });
 });
 
-router.delete('/products/delete', (req, res, next) => {
+router.delete('/delete', (req, res, next) => {
     UPCs = req.body.UPCs;
     Product.deleteProducts(UPCs, (err) => {
         if(err) res.json({success: false, msg: `Failed to delete product: ${err.message}`});
@@ -64,7 +65,7 @@ router.delete('/products/delete', (req, res, next) => {
     });
 });
 
-router.put('/products/update', (req, res, next) => {
+router.put('/update', (req, res, next) => {
     let oldUPC = req.body.oldUPC;
     let newProductJSON = getNewProduct(req.body.product)
     Product.updateProduct(oldUPC, getProductJSON(newProductJSON), (err, updatedProduct) => {
@@ -76,17 +77,17 @@ router.put('/products/update', (req, res, next) => {
 
 
 //To Delete
-router.post('/products/debug-fill', (req, res, next) => {
+router.post('/debug-fill', (req, res, next) => {
     let products = [
         {brand: '1', name: '1', costPerBox: 1, quantityPerBox: 1, purchasedLocation: '1'
-            , stockNo: '1', UPC: '1', ASINS: []}
+            , stockNo: '1', oz: 1, UPC: '1', ASINS: []}
         ,{
         brand: '2', name: '2', costPerBox: 2, quantityPerBox: 2, purchasedLocation: '2'
-            , stockNo: '2', UPC: '2', ASINS: []}
+            , stockNo: '2', oz: 1,UPC: '2', ASINS: []}
         ,{brand: '3', name: '3', costPerBox: 3, quantityPerBox: 3, purchasedLocation: '3'
-            , stockNo: '3', UPC: '3', ASINS: []}
+            , stockNo: '3', oz: 1,UPC: '3', ASINS: []}
         ,{brand: '4', name: '4', costPerBox: 3, quantityPerBox: 4, purchasedLocation: '4'
-        , stockNo: '4', UPC: '4', ASINS: []}
+            , stockNo: '4', oz: 1, UPC: '4', ASINS: []}
     ];
     Product.debugAdd(products, (err, products) => {
         if(err) res.json({success: false, msg: `Failed to add product: ${err.message}`});

@@ -9,7 +9,7 @@
 </div>
 
 <form *ngIf="!errorMsg && displayRdy" #productForm="ngForm" class="entire-form" ngNativeValidate (ngSubmit)="onSubmit(productForm)">
-  <div class="container" fxLayout="row" fxLayoutWrap fxLayoutGap="0.5%" FxLayoutAlign="center">
+  <div class="container"fxLayoutWrap fxLayoutGap="0.5%">
     <div fxFlex="33%">
         <mat-form-field fxFlex>
           <input [(ngModel)]='inputBrand' name="brand" matInput placeholder="Brand" required>
@@ -30,21 +30,7 @@
     </div>
   </div>
 
-  <div class="container" fxLayout="row" fxLayoutWrap fxLayoutGap="0.5%" FxLayoutAlign="center">    
-    <div fxFlex="33%">
-      <mat-form-field fxFlex>
-        <input [(ngModel)]='inputPurchasedLocation' name="purchasedLocation" matInput placeholder="Purchased Location">
-      </mat-form-field>
-    </div>
-    
-    <div fxFlex="10%">
-      <mat-form-field fxFlex>
-        <input [(ngModel)]='inputStockNo' name="stockNo" matInput placeholder="Stock No.">
-      </mat-form-field>
-    </div>
-  </div>
-
-  <div class="container" fxLayout="row" fxLayoutWrap fxLayoutGap="0.5%" FxLayoutAlign="center">    
+  <div class="container" fxLayoutWrap fxLayoutGap="0.5%" >    
     <div fxFlex="33%">
       <mat-form-field fxFlex>
         <input [(ngModel)]='inputCostPerBox' name="costPerBox" matInput placeholder="Cost/Box" type="number" min="0" required>
@@ -52,12 +38,34 @@
       </mat-form-field>
     </div>
     
-    <div fxFlex="10%">
+    <div fxFlex="33%">
       <mat-form-field fxFlex>
         <input [(ngModel)]='inputQuantityPerBox' name="quantityPerBox" matInput placeholder="Quantity/Box" type="number" min="1" step="1" required>
         </mat-form-field>
     </div>
   </div>
+
+  <div class="container" fxLayoutWrap fxLayoutGap="0.5%">    
+    <div fxFlex="33%">
+      <mat-form-field fxFlex>
+        <input [(ngModel)]='inputPurchasedLocation' name="purchasedLocation" matInput placeholder="Purchased Location">
+      </mat-form-field>
+    </div>
+    
+    <div fxFlex="33%">
+      <mat-form-field fxFlex>
+        <input [(ngModel)]='inputStockNo' name="stockNo" matInput placeholder="Stock No.">
+      </mat-form-field>
+    </div>
+
+    <div fxFlex="10%">
+      <mat-form-field fxFlex>
+        <input [(ngModel)]='inputOz' name="oz" matInput placeholder="Weight (oz)" type="number" min="0">
+      </mat-form-field>
+    </div>
+  </div>
+
+  
 
   <button type="button" mat-raised-button
     [disabled]="selection.selected.length == 0" (click)="removeSelectedRows()">Delete

@@ -4,11 +4,12 @@ const Schema = mongoose.Schema;
 const productSchema = Schema({
     brand: {type: String, required: true},
     name: {type: String, required: true},
+    UPC: {type: String, unique: true, required: true},
     costPerBox: {type: Number, required: true, min: 0},
     quantityPerBox: {type: Number, required: true, min: 1},
-    UPC: {type: String, unique: true, required: true},
     purchasedLocation: {type: String},
     stockNo: {type: String},
+    oz: {type: Number},
     ASINS: {
         type:
         [{ ASIN: { type: String, required: true },

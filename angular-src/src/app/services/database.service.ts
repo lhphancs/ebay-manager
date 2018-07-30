@@ -12,7 +12,7 @@ export class DatabaseService {
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
     return this.httpClient.post('http://localhost:3000/api/products/add'
-    , {product: product}, {headers: headers});
+    , product, {headers: headers});
   }
 
   addManyProducts(products){

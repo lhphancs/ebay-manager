@@ -16,7 +16,7 @@ import { DatabaseAddOrUpdateComponent } from './components/database/database-add
 import { DatabaseProductsComponent } from './components/database/database-products/database-products.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule, MatDialogModule } from '@angular/material';
+import { MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule, MatDialogModule, MatIconModule } from '@angular/material';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -25,6 +25,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { NavbarLoginComponent } from './components/navbar-login/navbar-login.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import { NavbarLoginComponent } from './components/navbar-login/navbar-login.com
     DatabaseAddOrUpdateComponent,
     DatabaseProductsComponent,
     ConfirmDialogComponent,
-    NavbarLoginComponent
+    NavbarLoginComponent,
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     NgbModule.forRoot(),
@@ -58,7 +62,8 @@ import { NavbarLoginComponent } from './components/navbar-login/navbar-login.com
     MatSortModule,
     MatSnackBarModule,
     MatDialogModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent],

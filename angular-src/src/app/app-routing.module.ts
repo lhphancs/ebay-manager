@@ -1,3 +1,4 @@
+import { RegisterComponent } from './components/register/register.component';
 import { DatabaseProductsComponent } from './components/database/database-products/database-products.component';
 import { DatabaseAddOrUpdateComponent } from './components/database/database-add-or-update/database-add-or-update.component';
 import { DatabaseComponent } from './components/database/database.component';
@@ -6,10 +7,13 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { CalculatorComponent } from './components/calculator/calculator.component';
 import { EbayComponent } from './components/ebay/ebay.component';
+import { LoginComponent } from './components/login/login.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'ebay', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
 
+  { path: '', redirectTo: 'ebay', pathMatch: 'full' },
   { path: 'ebay', component: EbayComponent },
   { path: 'database', component: DatabaseComponent, 
     children: [
