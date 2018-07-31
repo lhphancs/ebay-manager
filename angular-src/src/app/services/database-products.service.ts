@@ -11,35 +11,35 @@ export class DatabaseProductsService {
   addProduct(product){
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
-    return this.httpClient.post('http://localhost:3000/api/products/add'
+    return this.httpClient.post('/api/products/add'
     , product, {headers: headers});
   }
 
   addManyProducts(products){
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
-    return this.httpClient.post('http://localhost:3000/api/products/add-many'
+    return this.httpClient.post('/api/products/add-many'
     , {products: products}, {headers: headers});
   }
 
   updateProduct(oldUPC, product){
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
-    return this.httpClient.put('http://localhost:3000/api/products/update'
+    return this.httpClient.put('/api/products/update'
     , {oldUPC: oldUPC, product: product}, {headers: headers});
   }
 
   getProductByUPC(productUPC){
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
-    return this.httpClient.get(`http://localhost:3000/api/products/info/${productUPC}`
+    return this.httpClient.get(`/api/products/info/${productUPC}`
     , {headers: headers});
   }
 
   getProducts(){
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
-    return this.httpClient.get('http://localhost:3000/api/products/'
+    return this.httpClient.get('/api/products/'
     , {headers: headers});
   }
 
@@ -47,7 +47,7 @@ export class DatabaseProductsService {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }), body: {UPCs: UPCs}
     };
-    return this.httpClient.delete('http://localhost:3000/api/products/delete'
+    return this.httpClient.delete('/api/products/delete'
     , httpOptions);
   }
 }

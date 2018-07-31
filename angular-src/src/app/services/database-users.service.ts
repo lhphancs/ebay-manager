@@ -11,7 +11,7 @@ export class DatabaseUsersService {
   addUser(user){
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
-    return this.httpClient.post('http://localhost:3000/api/users/add'
+    return this.httpClient.post('/api/users/add'
     , user, {headers: headers});
   }
 }
