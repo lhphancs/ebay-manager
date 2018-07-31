@@ -4,7 +4,10 @@ const Schema = mongoose.Schema;
 const userSchema = Schema({
     email: {type: String, required: true},
     password: {type: String, required: true},
-    ebayKey: {type: String}
+    ebayKey: {type: String},
+    siteSettings:{
+        
+    }
 });
 
 const User = module.exports = mongoose.model('User', userSchema);
