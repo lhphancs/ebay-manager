@@ -1,3 +1,5 @@
+import { MatSnackBar } from '@angular/material';
+import { DatabaseUsersService } from './../../services/database-users.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -6,10 +8,21 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  errorMsg = null;
 
-  constructor() { }
+  constructor(private databaseUserService:DatabaseUsersService) { }
 
   ngOnInit() {
   }
 
+  onSubmit(loginForm){
+    let formValues = loginForm.value;
+    this.databaseUserService.auth(formValues['email']
+      , formValues['password']).subscribe( (data) =>{
+        if(data['success'])
+          console.log("success");
+        else
+          this.errorMsg = data['msg'];
+    });
+  }
 }

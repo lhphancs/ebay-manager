@@ -22,4 +22,17 @@ router.post('/add', (req, res, next) => {
     });
 });
 
+router.post('/auth', (req, res, next) => {
+    let body = req.body;
+    User.auth(body.email, body.password, (err, user) =>{
+        if(err) res.json({success: false, msg: 'Error: Database error'});
+        else{
+            if(user)
+                res.json({success:true, msg: 'Valid login information'});
+            else
+                res.json({success: false, msg: `Error: Invalid email/password`});
+        } 
+    });
+});
+
 module.exports = router;

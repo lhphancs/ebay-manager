@@ -1,14 +1,31 @@
-<form class="form-signin">
-  <label for="inputEmail" class="sr-only">Email address</label>
-  <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-  <label for="inputPassword" class="sr-only">Password</label>
-  <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-  <div class="checkbox mb-3">
+<div class="d-flex justify-content-center">
+  <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" ngNativeValidate class="entire-form">
+    <mat-form-field class="full-width">
+      <input matInput type="email" name="email"
+        ngModel placeholder="Email address" required>
+    </mat-form-field>
+  
+    <mat-form-field class="full-width">
+      <input matInput type="password" name="password"
+        ngModel placeholder="Password" required>
+    </mat-form-field>
+  
     <label>
-      <input type="checkbox" value="remember-me"> Remember me
+      <input name="chkRemember" type="checkbox"
+        value="remember-me" ngModel >Remember me
     </label>
-  </div>
-  <button mat-raised-button color="primary"
+  
+    <button mat-raised-button color="primary"
       type="submit" class="btn-block btn-submit mt-2">Sign in
-  </button>
-</form>
+    </button>
+  </form>
+</div>
+
+
+
+  
+  
+
+<div class="alert alert-danger" role="alert" *ngIf="errorMsg">
+  {{errorMsg}}
+</div>
