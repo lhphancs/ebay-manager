@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
     this.databaseUserService.auth(formValues['email']
       , formValues['password']).subscribe( (data) =>{
         if(data['success'])
-          console.log("success");
+          console.log(data);
         else
           this.errorMsg = data['msg'];
     });

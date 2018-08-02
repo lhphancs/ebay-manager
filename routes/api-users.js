@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
+const authenticate = require('../util/authenticate');
+const jwt = require('jsonwebtoken');
+const config = require('../config/database');
 
 function getUserJSON(body){
     return {
@@ -22,16 +25,38 @@ router.post('/add', (req, res, next) => {
     });
 });
 
-router.post('/auth', (req, res, next) => {
-    let body = req.body;
-    User.auth(body.email, body.password, (err, user) =>{
-        if(err) res.json({success: false, msg: 'Error: Database error'});
-        else{
-            if(user)
-                res.json({success:true, msg: 'Valid login information'});
-            else
-                res.json({success: false, msg: `Error: Invalid email/password`});
-        } 
+function handleComparePasswordResponse(isMatch, user, res){
+    if(isMatch){
+        const token = jwt.sign({data: user}, config.secret, {expiresIn: 604800}); //1 week
+        res.json({
+            success: true,
+            token: `JWT ${token}`,
+            user: { id: user._id,email: user.email }
+        });
+    }
+    else{
+        res.json({
+            success: false,
+            msg: 'Wrong password'
+        });
+    }
+}
+
+router.post('/auth', (req, res, next) =>{
+    const email = req.body.email;
+    const password = req.body.password;
+
+    User.getUserByEmail (email, (err, user) => {
+        if(err) res.json({success: false, msg: `Database error: ${err.message}`});
+        else if(user){
+            User.comparePassword(password, user.password, (err, isMatch) =>{
+                if(err) res.json({success: false, msg: `Database error: ${err.message}`});
+                else handleComparePasswordResponse(isMatch, user, res);
+            });
+        }
+        else
+            res.json({success:false, msg:'User Not found'});
+        
     });
 });
 
