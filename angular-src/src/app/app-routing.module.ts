@@ -1,3 +1,4 @@
+import { AuthGuard } from './guards/auth.guards';
 import { RegisterComponent } from './components/register/register.component';
 import { DatabaseProductsComponent } from './components/database/database-products/database-products.component';
 import { DatabaseAddOrUpdateComponent } from './components/database/database-add-or-update/database-add-or-update.component';
@@ -14,8 +15,8 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
 
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'ebay', component: EbayComponent },
-  { path: 'database', component: DatabaseComponent, 
+  { path: 'ebay', component: EbayComponent, canActivate:[AuthGuard] },
+  { path: 'database', component: DatabaseComponent, canActivate:[AuthGuard], 
     children: [
       { path: '', redirectTo: 'products', pathMatch: 'full' },
       { path: 'products', component: DatabaseProductsComponent },
@@ -29,7 +30,7 @@ const routes: Routes = [
   imports: [
     RouterModule.forRoot(routes)
   ],
-  providers: [],
+  providers: [AuthGuard],
   exports: [ RouterModule ]
 })
 export class AppRoutingModule { }

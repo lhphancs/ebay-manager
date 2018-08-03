@@ -9,7 +9,9 @@ export class DatabaseUsersService {
   authToken;
   user;
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {
+    this.loadToken();
+  }
 
   auth(email, password){
     let headers = new HttpHeaders();
