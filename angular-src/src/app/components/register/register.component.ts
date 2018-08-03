@@ -1,4 +1,4 @@
-import { DatabaseUsersService } from './../../services/database-users.service';
+import { DatabaseUsersService } from '../../services/database-users.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
 

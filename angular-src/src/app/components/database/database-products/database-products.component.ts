@@ -1,4 +1,4 @@
-import { DatabaseUsersService } from './../../../services/database-users.service';
+import { DatabaseUsersService } from '../../../services/database-users.service';
 import { Stack } from '../../../classesAndInterfaces/stack';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Product } from '../../../classesAndInterfaces/product';
@@ -8,7 +8,7 @@ import { MatSort, MatTableDataSource, MatSnackBar, MatDialog, MatDialogRef } fro
 import { openSnackbar } from '../../snackbar';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { DatabaseProductsService } from '../../../services/database-products.service';
-import { Router } from '../../../../../node_modules/@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'database-products',
