@@ -1,6 +1,7 @@
 import { MatSnackBar } from '@angular/material';
 import { DatabaseUsersService } from './../../services/database-users.service';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '../../../../node_modules/@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +11,8 @@ import { Component, OnInit } from '@angular/core';
 export class LoginComponent implements OnInit {
   errorMsg = null;
 
-  constructor(private databaseUserService:DatabaseUsersService) { }
+  constructor(private databaseUserService:DatabaseUsersService
+    , private router: Router) { }
 
   ngOnInit() {
   }
@@ -19,8 +21,11 @@ export class LoginComponent implements OnInit {
     let formValues = loginForm.value;
     this.databaseUserService.auth(formValues['email']
       , formValues['password']).subscribe( (data) =>{
-        if(data['success'])
-          console.log(data);
+        if(data['success']){
+          this.databaseUserService.storeUserData(data['token'], data['user']);
+          this.router.navigate(['database']);
+        }
+          
         else
           this.errorMsg = data['msg'];
     });

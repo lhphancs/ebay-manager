@@ -27,7 +27,7 @@ export class RegisterComponent implements OnInit {
       delete formValues['confirm-password'];
       this.databaseUsersService.addUser(formValues).subscribe(data => {
         if(data['success'])
-          console.log('success');
+          this.router.navigate(['/database']);
         else
           openSnackbar(this.snackBar, `Failed to register user: ${data['msg']}`);
       });

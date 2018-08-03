@@ -6,14 +6,17 @@
       </li>
       <li class="nav-item" [routerLinkActive]="['active']">
         <a class="nav-link" [routerLink]="['database']">Database</a>
-    </li>
+      </li>
+      <li class="nav-item" [routerLinkActive]="['active']">
+        <a class="nav-link" [routerLink]="['calculator']">Calculator</a>
+      </li>
     </ul>
   </div>
     
   <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item" [routerLinkActive]="['active']">
-          <a class="nav-link" [routerLink]="['calculator']">Calculator</a>
+      <li class="nav-item">
+          <a class="nav-link" (click)="onLogoutClick($event)" href="/logout">Logout</a>
       </li>
     </ul>
   </div>

@@ -1,4 +1,6 @@
+import { DatabaseUsersService } from './../../services/database-users.service';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '../../../../node_modules/@angular/router';
 
 @Component({
   selector: 'navbar-logged',
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavbarLoggedComponent implements OnInit {
 
-  constructor() { }
+  constructor(private databaseUsersService:DatabaseUsersService
+    , private router: Router ) { }
 
   ngOnInit() {
   }
 
+  onLogoutClick(event){
+    event.preventDefault();
+    this.databaseUsersService.logout();
+    this.router.navigate(['/login']);
+  }
 }

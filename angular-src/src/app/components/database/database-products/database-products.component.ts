@@ -1,3 +1,4 @@
+import { DatabaseUsersService } from './../../../services/database-users.service';
 import { Stack } from '../../../classesAndInterfaces/stack';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Product } from '../../../classesAndInterfaces/product';
@@ -7,6 +8,7 @@ import { MatSort, MatTableDataSource, MatSnackBar, MatDialog, MatDialogRef } fro
 import { openSnackbar } from '../../snackbar';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { DatabaseProductsService } from '../../../services/database-products.service';
+import { Router } from '../../../../../node_modules/@angular/router';
 
 @Component({
   selector: 'database-products',
@@ -14,6 +16,7 @@ import { DatabaseProductsService } from '../../../services/database-products.ser
   styleUrls: ['./database-products.component.css']
 })
 export class DatabaseProductsComponent implements OnInit {
+  user;
   filterValue: string;
   products: Product[];
   displayedColumns: string[] = ['select', 'brand', 'name', 'stockNo', 'costPerBox', 'quantityPerBox', 'UPC', 'purchasedLocation', 'update'];
@@ -21,14 +24,21 @@ export class DatabaseProductsComponent implements OnInit {
   selection = new SelectionModel<Product>(true, []);
   deletedGroupsStack: Stack; // Used to undo delete
 
-  constructor(private databaseProductsService: DatabaseProductsService
-    , public snackBar: MatSnackBar, private dialog: MatDialog) {
+  constructor(
+    private databaseProductsService: DatabaseProductsService
+    , private databaseUsersService: DatabaseUsersService
+    , public snackBar: MatSnackBar, private dialog: MatDialog
+    , private router: Router) {
       this.deletedGroupsStack = new Stack();
   }
 
   @ViewChild(MatSort) sort: MatSort;
   
   ngOnInit() {
+    this.databaseUsersService.getProfile().subscribe( (user) =>{
+      this.user = user;
+    });
+
     this.databaseProductsService.getProducts().subscribe( (data) => {
       if(data['success']){
         this.products = data['products'];

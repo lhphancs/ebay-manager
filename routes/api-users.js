@@ -25,6 +25,10 @@ router.post('/add', (req, res, next) => {
     });
 });
 
+router.get('/profile', authenticate, (req, res, next) => {
+    res.json({user: req.user});
+});
+
 function handleComparePasswordResponse(isMatch, user, res){
     if(isMatch){
         const token = jwt.sign({data: user}, config.secret, {expiresIn: 604800}); //1 week
