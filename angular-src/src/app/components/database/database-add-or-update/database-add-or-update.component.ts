@@ -75,7 +75,6 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
   }
   
   prepareProductUpdate(){
-    console.log(this.databaseComponent.user['_id'])
     this.databaseProductsService.getProductByUPC(this.user['_id']
         , this.oldProductUPC).subscribe((data) =>{
       if(data['success']){
@@ -186,8 +185,8 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
     });
   }
 
-  updateProduct(product){
-    this.databaseProductsService.updateProduct(this.oldProductUPC, product).subscribe(data => {
+  updateProduct(oldProductUPC, newProduct){
+    this.databaseProductsService.updateProduct(this.user['_id'], oldProductUPC, newProduct).subscribe(data => {
       if(data['success'])
         openSnackbar(this.snackBar, `Update successful: ${data['msg']}`);
       else
@@ -201,11 +200,11 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
     if(processedEntriesASIN == null)
       openSnackbar(this.snackBar, 'Failed to add product: Partially filled ASIN entry exists. Complete or remove the entry.');
     else{
-      let product = this.getNewProductObject(processedEntriesASIN);
+      let newProduct = this.getNewProductObject(processedEntriesASIN);
       if(this.oldProductUPC)
-        this.updateProduct(product)
+        this.updateProduct(this.oldProductUPC, newProduct)
       else
-        this.addProduct(product, form);
+        this.addProduct(newProduct, form);
     }
   }
 }

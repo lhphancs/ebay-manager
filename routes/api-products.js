@@ -6,42 +6,38 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 
 
-function getProductEntryJSON(userId, newProduct){
+function getFilteredProductJson(newProductJson){
     return {
-        userId: userId,
-        brand: newProduct.brand,
-        name: newProduct.name,
-        costPerBox: newProduct.costPerBox,
-        quantityPerBox: newProduct.quantityPerBox,
-        purchasedLocation: newProduct.purchasedLocation,
-        stockNo: newProduct.stockNo,
-        oz: newProduct.oz,
-        UPC: newProduct.UPC,
-        ASINS: newProduct.ASINS
+        brand: newProductJson.brand,
+        name: newProductJson.name,
+        costPerBox: newProductJson.costPerBox,
+        quantityPerBox: newProductJson.quantityPerBox,
+        purchasedLocation: newProductJson.purchasedLocation,
+        stockNo: newProductJson.stockNo,
+        oz: newProductJson.oz,
+        UPC: newProductJson.UPC,
+        ASINS: newProductJson.ASINS
     };
 }
 
-function getNewProductEntry(userId, newProduct){
-    return new Product(getProductEntryJSON(userId, newProduct));
-}
-
-router.get('/info/:UPC', (req, res, next) => {
-    Product.getProductByUPC( req.param('UPC'), (err, product) => {
+router.get('/info/:userId/:UPC', (req, res, next) => {
+    Product.getProductByUPC( req.param('userId'), req.param('UPC'), (err, product) => {
         if(err) res.json({success: false, msg: `Failed to grab products: ${err.message}`});
         else res.json({success:true, product: product});
     });
 });
 
-router.get('/:offset?/:limit?', (req, res, next) => {
+router.get('/:userId/:offset?/:limit?', (req, res, next) => {
     let DEFAULT_OFFSET = 0;
     let DEFAULT_LIMIT = 100;
 
-    strOffset = req.params.offset;
+    let userId = req.params.userId;
+    let strOffset = req.params.offset;
     let offset = strOffset ? parseInt(strOffset): DEFAULT_OFFSET;
     let strLimit = req.params.limit;
     let limit = strLimit ? parseInt(strLimit):DEFAULT_LIMIT;
 
-    Product.getProducts(offset, limit, (err, products) => {
+    Product.getProducts(userId, offset, limit, (err, products) => {
         if(err) res.json({success: false, msg: `Failed to grab products: ${err.message}`});
         else res.json({success:true, products: products});
     });
@@ -49,9 +45,12 @@ router.get('/:offset?/:limit?', (req, res, next) => {
 
 router.post('/add', (req, res, next) => {
     let userId = req.body.userId;
-    let newProduct = req.body.newProduct;
-    let productEntry = getNewProductEntry(userId, newProduct);
-    Product.addProduct(productEntry, (err, product) => {
+    let newProductJson = req.body.newProduct;
+    let newProduct = getFilteredProductJson(newProductJson);
+
+    let newProductEntry = newProduct;
+    newProductEntry.userId = userId;
+    Product.addProduct(newProductEntry, (err, product) => {
         if(err) res.json({success: false, msg: `Failed to add product: ${err.message}`});
         else res.json({success:true, msg: `Successfully added product: ${product}`});
     });
@@ -75,9 +74,12 @@ router.delete('/delete', (req, res, next) => {
 });
 
 router.put('/update', (req, res, next) => {
+    let userId = req.body.userId;
     let oldUPC = req.body.oldUPC;
-    let newProductJSON = getNewProductEntry(req.body.product)
-    Product.updateProduct(oldUPC, getProductEntryJSON(newProductJSON), (err, updatedProduct) => {
+    let newProductJson = req.body.newProduct;
+    let newProduct = getFilteredProductJson(newProductJson);
+
+    Product.updateProduct(userId, oldUPC, newProduct, (err, updatedProduct) => {
         if(err) res.json({success: false, msg: `Failed to update product: ${err.message}`});
         else if(!updatedProduct) res.json({success:false, msg: `Failed to update product: ${oldUPC} not found in database`});
         else res.json({success:true, msg: `Successfully updated product: ${updatedProduct.UPC}`});

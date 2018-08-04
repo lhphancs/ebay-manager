@@ -24,8 +24,9 @@ productSchema.index({ userId: 1, UPC: 1 }, { unique: true })
 
 const Product = module.exports = mongoose.model('Product', productSchema);
 
-module.exports.addProduct = function(productEntry, callback){
-    productEntry.save(callback);
+module.exports.addProduct = function(filteredProductJson, callback){
+    let newProductEntry = new Product(filteredProductJson);
+    newProductEntry.save(callback);
 };
 
 module.exports.addManyProducts = function(userId, newProducts, callback){

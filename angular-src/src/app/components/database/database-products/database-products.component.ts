@@ -37,7 +37,7 @@ export class DatabaseProductsComponent implements OnInit {
   
   ngOnInit() {
     this.user = this.databaseComponent.user;
-    this.databaseProductsService.getProducts().subscribe( (data) => {
+    this.databaseProductsService.getProducts(this.user['_id']).subscribe( (data) => {
       if(data['success']){
         this.products = data['products'];
         this.dataSource = new MatTableDataSource<Product>(this.products);
@@ -104,7 +104,8 @@ export class DatabaseProductsComponent implements OnInit {
 
   undoDelete(){
     let productsToAddBack = this.deletedGroupsStack.peek();
-    this.databaseProductsService.addManyProducts(productsToAddBack).subscribe( (data) =>{
+    this.databaseProductsService.addManyProducts(this.user['_id']
+      , productsToAddBack).subscribe( (data) =>{
       if(data['success']){
         this.addToView(productsToAddBack);
         this.deletedGroupsStack.pop();

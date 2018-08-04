@@ -15,31 +15,31 @@ export class DatabaseProductsService {
     , {userId:userId, newProduct:newProduct}, {headers: headers});
   }
 
-  addManyProducts(products){
+  addManyProducts(userId, products){
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
     return this.httpClient.post('/api/products/add-many'
-    , {products: products}, {headers: headers});
+    , {userId:userId, products: products}, {headers: headers});
   }
 
-  updateProduct(oldUPC, product){
+  updateProduct(userId, oldUPC, newProduct){
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
     return this.httpClient.put('/api/products/update'
-    , {oldUPC: oldUPC, product: product}, {headers: headers});
+    , {userId:userId, oldUPC: oldUPC, newProduct: newProduct}, {headers: headers});
   }
 
   getProductByUPC(userId, productUPC){
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
-    return this.httpClient.get(`/api/products/info/${productUPC}`
+    return this.httpClient.get(`/api/products/info/${userId}/${productUPC}`
     , {headers: headers});
   }
 
-  getProducts(){
+  getProducts(userId){
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
-    return this.httpClient.get('/api/products/'
+    return this.httpClient.get(`api/products/${userId}`
     , {headers: headers});
   }
 
