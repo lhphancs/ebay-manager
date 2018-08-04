@@ -1,3 +1,4 @@
+import { DatabaseComponent } from './../database.component';
 import { ViewChild, ElementRef } from '@angular/core';
 //Add and update page do almost the same thing, so just clump code together
 
@@ -20,6 +21,7 @@ import { DatabaseProductsService } from '../../../services/database-products.ser
 
 export class DatabaseAddOrUpdateComponent implements OnInit {
   //used for update page
+  user: Object;
   displayRdy = false;
 
   inputBrand;
@@ -38,12 +40,24 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
   selection = new SelectionModel<EntryASIN>(true, []);
   oldProductUPC: string;
 
-  constructor(private databaseProductsService: DatabaseProductsService
+  constructor(private databaseComponent:DatabaseComponent,
+      private databaseProductsService: DatabaseProductsService
       , private route: ActivatedRoute
       , public snackBar: MatSnackBar
       , private router: Router)
       
   { }
+
+  ngOnInit() {
+    this.user = this.databaseComponent.user;
+    this.route.paramMap.subscribe(params => {
+      this.oldProductUPC = params.get('UPC');
+      if(this.oldProductUPC)
+        this.prepareProductUpdate();
+      else
+        this.displayRdy = true;
+    });
+  }
 
   fillInForm(product){
     this.inputBrand = product.brand;
@@ -61,7 +75,9 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
   }
   
   prepareProductUpdate(){
-    this.databaseProductsService.getProductByUPC(this.oldProductUPC).subscribe((data) =>{
+    console.log(this.databaseComponent.user['_id'])
+    this.databaseProductsService.getProductByUPC(this.user['_id']
+        , this.oldProductUPC).subscribe((data) =>{
       if(data['success']){
         if(data['product'])
           this.fillInForm(data['product']);
@@ -71,16 +87,6 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
       else
         openSnackbar(this.snackBar, data['msg']);
       this.displayRdy = true;
-    });
-  }
-
-  ngOnInit() {
-    this.route.paramMap.subscribe(params => {
-      this.oldProductUPC = params.get('UPC');
-      if(this.oldProductUPC)
-        this.prepareProductUpdate();
-      else
-        this.displayRdy = true;
     });
   }
 
@@ -171,7 +177,8 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
   }
 
   addProduct(product, form){
-    this.databaseProductsService.addProduct(product).subscribe(data => {
+    this.databaseProductsService.addProduct(this.user['_id']
+      , product).subscribe(data => {
       if(data['success'])
         this.successResponse(form);
       else

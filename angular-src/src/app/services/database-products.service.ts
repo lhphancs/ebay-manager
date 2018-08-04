@@ -8,11 +8,11 @@ export class DatabaseProductsService {
 
   constructor(private httpClient: HttpClient) { }
 
-  addProduct(product){
+  addProduct(userId, newProduct){
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
     return this.httpClient.post('/api/products/add'
-    , product, {headers: headers});
+    , {userId:userId, newProduct:newProduct}, {headers: headers});
   }
 
   addManyProducts(products){
@@ -29,7 +29,7 @@ export class DatabaseProductsService {
     , {oldUPC: oldUPC, product: product}, {headers: headers});
   }
 
-  getProductByUPC(productUPC){
+  getProductByUPC(userId, productUPC){
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
     return this.httpClient.get(`/api/products/info/${productUPC}`

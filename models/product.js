@@ -6,7 +6,7 @@ const productSchema = Schema({
     userId: {type: ObjectId, required: true},
     brand: {type: String, required: true},
     name: {type: String, required: true},
-    UPC: {type: String, unique: true, required: true},
+    UPC: {type: String, required: true},
     costPerBox: {type: Number, required: true, min: 0},
     quantityPerBox: {type: Number, required: true, min: 1},
     purchasedLocation: {type: String},
@@ -20,10 +20,20 @@ const productSchema = Schema({
         , default: []
     }
 });
+productSchema.index({ userId: 1, UPC: 1 }, { unique: true })
 
 const Product = module.exports = mongoose.model('Product', productSchema);
 
-module.exports.getProductByUPC = function(productUPC, callback){
+module.exports.addProduct = function(productEntry, callback){
+    productEntry.save(callback);
+};
+
+module.exports.addManyProducts = function(userId, newProducts, callback){
+
+    Product.insertMany(newProducts, callback);
+};
+
+module.exports.getProductByUPC = function(userId, productUPC, callback){
     Product.findOne({userId: userId, UPC: productUPC}, callback);
 };
 
@@ -31,13 +41,7 @@ module.exports.getProducts = function(userId, offset, limit, callback){
     Product.find({userId: userId}, null, {skip:offset, limit: limit}, callback);
 };
 
-module.exports.addProduct = function(userId, newProduct, callback){
-    newProduct.save(callback);
-};
 
-module.exports.addManyProducts = function(userId, newProducts, callback){
-    Product.insertMany(newProducts, callback);
-};
 
 module.exports.deleteProducts = function(userId, UPCs, callback){
     Product.remove({ userId: userId, UPC: UPCs}, callback);
@@ -50,7 +54,6 @@ module.exports.updateProduct = function(userId, oldUPC, newProductJSON, callback
 
 //To Delete
 module.exports.debugAdd = function(products, callback){
-    console.log(products)
     Product.insertMany(products, callback);
 };
 //End To Delete

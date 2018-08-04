@@ -26,7 +26,7 @@ router.post('/add', (req, res, next) => {
 });
 
 router.get('/profile', authenticate, (req, res, next) => {
-    res.json({user: req.user});
+    res.json(req.user);
 });
 
 function handleComparePasswordResponse(isMatch, user, res){

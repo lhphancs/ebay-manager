@@ -6,22 +6,23 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 
 
-function getProductJSON(body){
+function getProductEntryJSON(userId, newProduct){
     return {
-        brand: body.brand,
-        name: body.name,
-        costPerBox: body.costPerBox,
-        quantityPerBox: body.quantityPerBox,
-        purchasedLocation: body.purchasedLocation,
-        stockNo: body.stockNo,
-        oz: body.oz,
-        UPC: body.UPC,
-        ASINS: body.ASINS
+        userId: userId,
+        brand: newProduct.brand,
+        name: newProduct.name,
+        costPerBox: newProduct.costPerBox,
+        quantityPerBox: newProduct.quantityPerBox,
+        purchasedLocation: newProduct.purchasedLocation,
+        stockNo: newProduct.stockNo,
+        oz: newProduct.oz,
+        UPC: newProduct.UPC,
+        ASINS: newProduct.ASINS
     };
 }
 
-function getNewProduct(body){
-    return new Product(getProductJSON(body));
+function getNewProductEntry(userId, newProduct){
+    return new Product(getProductEntryJSON(userId, newProduct));
 }
 
 router.get('/info/:UPC', (req, res, next) => {
@@ -47,15 +48,19 @@ router.get('/:offset?/:limit?', (req, res, next) => {
 });
 
 router.post('/add', (req, res, next) => {
-    let newProduct = getNewProduct(req.body);
-    Product.addProduct(newProduct, (err, product) => {
+    let userId = req.body.userId;
+    let newProduct = req.body.newProduct;
+    let productEntry = getNewProductEntry(userId, newProduct);
+    Product.addProduct(productEntry, (err, product) => {
         if(err) res.json({success: false, msg: `Failed to add product: ${err.message}`});
         else res.json({success:true, msg: `Successfully added product: ${product}`});
     });
 });
 
 router.post('/add-many', (req, res, next) => {
-    Product.addManyProducts(req.body.products, (err, products) => {
+    let userId = req.body.userId;
+    let products = req.body.products;
+    Product.addManyProducts(userId, products, (err, products) => {
         if(err) res.json({success: false, msg: `Failed to add products: ${err.message}`});
         else res.json({success:true, msg: `Successfully added products: ${products}`});
     });
@@ -71,8 +76,8 @@ router.delete('/delete', (req, res, next) => {
 
 router.put('/update', (req, res, next) => {
     let oldUPC = req.body.oldUPC;
-    let newProductJSON = getNewProduct(req.body.product)
-    Product.updateProduct(oldUPC, getProductJSON(newProductJSON), (err, updatedProduct) => {
+    let newProductJSON = getNewProductEntry(req.body.product)
+    Product.updateProduct(oldUPC, getProductEntryJSON(newProductJSON), (err, updatedProduct) => {
         if(err) res.json({success: false, msg: `Failed to update product: ${err.message}`});
         else if(!updatedProduct) res.json({success:false, msg: `Failed to update product: ${oldUPC} not found in database`});
         else res.json({success:true, msg: `Successfully updated product: ${updatedProduct.UPC}`});
