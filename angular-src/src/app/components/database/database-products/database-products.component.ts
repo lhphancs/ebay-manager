@@ -40,7 +40,6 @@ export class DatabaseProductsComponent implements OnInit {
     this.databaseProductsService.getProducts(this.userId).subscribe( (data) => {
       if(data['success']){
         this.products = data['products'];
-        console.log(this.products)
         this.dataSource = new MatTableDataSource<Product>(this.products);
         this.dataSource.sort = this.sort;
       }
