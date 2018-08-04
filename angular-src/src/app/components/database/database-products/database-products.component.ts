@@ -1,3 +1,4 @@
+import { DatabaseComponent } from './../database.component';
 import { DatabaseUsersService } from '../../../services/database-users.service';
 import { Stack } from '../../../classesAndInterfaces/stack';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -16,15 +17,15 @@ import { Router } from '@angular/router';
   styleUrls: ['./database-products.component.css']
 })
 export class DatabaseProductsComponent implements OnInit {
-  user;
+  user:Object;
   filterValue: string;
   products: Product[];
-  displayedColumns: string[] = ['select', 'brand', 'name', 'stockNo', 'costPerBox', 'quantityPerBox', 'UPC', 'purchasedLocation', 'update'];
+  displayedColumns: string[] = ['select', 'brand', 'name', 'stockNo', 'costPerBox', 'quantityPerBox', 'UPC', 'purchasedLocation', 'asins'];
   dataSource: MatTableDataSource<Product>;
   selection = new SelectionModel<Product>(true, []);
   deletedGroupsStack: Stack; // Used to undo delete
 
-  constructor(
+  constructor(private databaseComponent:DatabaseComponent,
     private databaseProductsService: DatabaseProductsService
     , private databaseUsersService: DatabaseUsersService
     , public snackBar: MatSnackBar, private dialog: MatDialog
@@ -35,10 +36,7 @@ export class DatabaseProductsComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   
   ngOnInit() {
-    this.databaseUsersService.getProfile().subscribe( (user) =>{
-      this.user = user;
-    });
-
+    this.user = this.databaseComponent.user;
     this.databaseProductsService.getProducts().subscribe( (data) => {
       if(data['success']){
         this.products = data['products'];

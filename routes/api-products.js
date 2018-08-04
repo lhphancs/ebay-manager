@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Product = require('../models/product');
 
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
+
+
 function getProductJSON(body){
     return {
         brand: body.brand,
@@ -79,14 +83,13 @@ router.put('/update', (req, res, next) => {
 //To Delete
 router.post('/debug-fill', (req, res, next) => {
     let products = [
-        {brand: '1', name: '1', costPerBox: 1, quantityPerBox: 1, purchasedLocation: '1'
+        {userId:ObjectId('111111111111'), brand: '1', name: '1', costPerBox: 1, quantityPerBox: 1, purchasedLocation: '1'
             , stockNo: '1', oz: 1, UPC: '1', ASINS: []}
-        ,{
-        brand: '2', name: '2', costPerBox: 2, quantityPerBox: 2, purchasedLocation: '2'
+        ,{userId:ObjectId('111111111111'), brand: '2', name: '2', costPerBox: 2, quantityPerBox: 2, purchasedLocation: '2'
             , stockNo: '2', oz: 1,UPC: '2', ASINS: []}
-        ,{brand: '3', name: '3', costPerBox: 3, quantityPerBox: 3, purchasedLocation: '3'
+        ,{userId:ObjectId('111111111111'), brand: '3', name: '3', costPerBox: 3, quantityPerBox: 3, purchasedLocation: '3'
             , stockNo: '3', oz: 1,UPC: '3', ASINS: []}
-        ,{brand: '4', name: '4', costPerBox: 3, quantityPerBox: 4, purchasedLocation: '4'
+        ,{userId:ObjectId('111111111111'), brand: '4', name: '4', costPerBox: 3, quantityPerBox: 4, purchasedLocation: '4'
             , stockNo: '4', oz: 1, UPC: '4', ASINS: []}
     ];
     Product.debugAdd(products, (err, products) => {

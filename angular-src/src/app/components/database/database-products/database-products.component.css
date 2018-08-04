@@ -5,3 +5,7 @@ table {
 th.mat-sort-header-sorted {
   color: black;
 }
+
+.asin-table{
+  border: 3px solid black;
+}

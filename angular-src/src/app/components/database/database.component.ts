@@ -1,3 +1,4 @@
+import { DatabaseUsersService } from './../../services/database-users.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -6,10 +7,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./database.component.css']
 })
 export class DatabaseComponent implements OnInit {
+  user:Object;
 
-  constructor() { }
+  constructor(private databaseUsersService: DatabaseUsersService) { }
 
   ngOnInit() {
+    this.databaseUsersService.getProfile().subscribe( (user) =>{
+      this.user = user;
+    });
   }
-
 }

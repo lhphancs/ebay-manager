@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
-
 const Schema = mongoose.Schema;
+const ObjectId = Schema.ObjectId;
+
 const productSchema = Schema({
+    userId: {type: ObjectId, required: true},
     brand: {type: String, required: true},
     name: {type: String, required: true},
     UPC: {type: String, unique: true, required: true},
@@ -22,33 +24,33 @@ const productSchema = Schema({
 const Product = module.exports = mongoose.model('Product', productSchema);
 
 module.exports.getProductByUPC = function(productUPC, callback){
-    Product.findOne({UPC: productUPC}, callback);
+    Product.findOne({userId: userId, UPC: productUPC}, callback);
 };
 
-module.exports.getProducts = function(offset, limit, callback){
-    Product.find({}, null, {skip:offset, limit: limit}, callback);
+module.exports.getProducts = function(userId, offset, limit, callback){
+    Product.find({userId: userId}, null, {skip:offset, limit: limit}, callback);
 };
 
-module.exports.addProduct = function(newProduct, callback){
+module.exports.addProduct = function(userId, newProduct, callback){
     newProduct.save(callback);
 };
 
-module.exports.addManyProducts = function(newProducts, callback){
+module.exports.addManyProducts = function(userId, newProducts, callback){
     Product.insertMany(newProducts, callback);
 };
 
-module.exports.deleteProducts = function(UPCs, callback){
-    Product.remove({ UPC: UPCs}, callback);
+module.exports.deleteProducts = function(userId, UPCs, callback){
+    Product.remove({ userId: userId, UPC: UPCs}, callback);
 };
 
-module.exports.updateProduct = function(oldUPC, newProductJSON, callback){
-    Product.findOneAndUpdate({UPC: oldUPC}, newProductJSON
+module.exports.updateProduct = function(userId, oldUPC, newProductJSON, callback){
+    Product.findOneAndUpdate({userId: userId, UPC: oldUPC}, newProductJSON
         , { new: true, runValidators: true }, callback);
 };
 
-
 //To Delete
 module.exports.debugAdd = function(products, callback){
+    console.log(products)
     Product.insertMany(products, callback);
 };
 //End To Delete
