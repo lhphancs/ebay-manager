@@ -43,9 +43,9 @@ export class DatabaseProductsService {
     , {headers: headers});
   }
 
-  deleteProducts(UPCs){
+  deleteProducts(userId, UPCs){
     const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' }), body: {UPCs: UPCs}
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }), body: {userId:userId, UPCs: UPCs}
     };
     return this.httpClient.delete('/api/products/delete'
     , httpOptions);

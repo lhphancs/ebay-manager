@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./database-products.component.css']
 })
 export class DatabaseProductsComponent implements OnInit {
-  user:Object;
+  userId;
   filterValue: string;
   products: Product[];
   displayedColumns: string[] = ['select', 'brand', 'name', 'stockNo', 'costPerBox', 'quantityPerBox', 'UPC', 'purchasedLocation', 'asins'];
@@ -36,10 +36,11 @@ export class DatabaseProductsComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   
   ngOnInit() {
-    this.user = this.databaseComponent.user;
-    this.databaseProductsService.getProducts(this.user['_id']).subscribe( (data) => {
+    this.userId = this.databaseComponent.userId;
+    this.databaseProductsService.getProducts(this.userId).subscribe( (data) => {
       if(data['success']){
         this.products = data['products'];
+        console.log(this.products)
         this.dataSource = new MatTableDataSource<Product>(this.products);
         this.dataSource.sort = this.sort;
       }
@@ -86,7 +87,7 @@ export class DatabaseProductsComponent implements OnInit {
     });
 
     let UPCsToDelete = this.getUPCsFromProducts(productsToDelete);
-    this.databaseProductsService.deleteProducts(UPCsToDelete).subscribe( (data) =>{
+    this.databaseProductsService.deleteProducts(this.userId, UPCsToDelete).subscribe( (data) =>{
       if(data['success']){
         this.deleteFromView();
         this.deletedGroupsStack.push(productsToDelete);
@@ -104,7 +105,7 @@ export class DatabaseProductsComponent implements OnInit {
 
   undoDelete(){
     let productsToAddBack = this.deletedGroupsStack.peek();
-    this.databaseProductsService.addManyProducts(this.user['_id']
+    this.databaseProductsService.addManyProducts(this.userId
       , productsToAddBack).subscribe( (data) =>{
       if(data['success']){
         this.addToView(productsToAddBack);
@@ -114,7 +115,7 @@ export class DatabaseProductsComponent implements OnInit {
     });
   }
 
-  openConfirmDialog(){
+  openDeleteConfirmDialog(){
     const confirmDialogRef = this.dialog.open(ConfirmDialogComponent, {
       data:{title: "Confirmation", msg: "Are you sure you want to delete?"}
     });

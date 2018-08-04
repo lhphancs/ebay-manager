@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-between mt-3">
   <button type="button" mat-raised-button color="warn"
-    [disabled]="selection.selected.length == 0" (click)="openConfirmDialog()">Delete
+    [disabled]="selection.selected.length == 0" (click)="openDeleteConfirmDialog()">Delete
   </button>
 
   <input [(ngModel)]="filterValue" class="form-control mx-5 mb-3 border border-primary"

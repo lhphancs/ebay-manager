@@ -28,11 +28,7 @@ module.exports.addUser = function(newUser, callback){
 };
 
 module.exports.getUserById  = function(userId, callback){
-    var query = User.findOne({_id: userId});
-    query.select('-password');
-    query.exec(callback);
-    
-    
+    User.findOne({_id: userId}, {select:'password'}, callback);
 };
 
 module.exports.getUserByEmail  = function(email, callback){

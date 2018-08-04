@@ -66,8 +66,9 @@ router.post('/add-many', (req, res, next) => {
 });
 
 router.delete('/delete', (req, res, next) => {
+    userId = req.body.userId;
     UPCs = req.body.UPCs;
-    Product.deleteProducts(UPCs, (err) => {
+    Product.deleteProducts(userId, UPCs, (err) => {
         if(err) res.json({success: false, msg: `Failed to delete product: ${err.message}`});
         else res.json({success:true, msg: `Successfully deleted product: ${UPCs}`});
     });

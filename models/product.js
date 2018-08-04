@@ -30,7 +30,9 @@ module.exports.addProduct = function(filteredProductJson, callback){
 };
 
 module.exports.addManyProducts = function(userId, newProducts, callback){
-
+    newProducts.forEach(item =>{
+        item.userId = userId;
+    });
     Product.insertMany(newProducts, callback);
 };
 
@@ -39,7 +41,7 @@ module.exports.getProductByUPC = function(userId, productUPC, callback){
 };
 
 module.exports.getProducts = function(userId, offset, limit, callback){
-    Product.find({userId: userId}, null, {skip:offset, limit: limit}, callback);
+    Product.find({userId: userId}, null, {select:'-userId -_id', skip:offset, limit: limit}, callback);
 };
 
 

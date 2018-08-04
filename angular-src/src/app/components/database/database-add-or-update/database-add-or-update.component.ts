@@ -21,7 +21,7 @@ import { DatabaseProductsService } from '../../../services/database-products.ser
 
 export class DatabaseAddOrUpdateComponent implements OnInit {
   //used for update page
-  user: Object;
+  userId;
   displayRdy = false;
 
   inputBrand;
@@ -49,7 +49,7 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
   { }
 
   ngOnInit() {
-    this.user = this.databaseComponent.user;
+    this.userId = this.databaseComponent.userId;
     this.route.paramMap.subscribe(params => {
       this.oldProductUPC = params.get('UPC');
       if(this.oldProductUPC)
@@ -75,7 +75,7 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
   }
   
   prepareProductUpdate(){
-    this.databaseProductsService.getProductByUPC(this.user['_id']
+    this.databaseProductsService.getProductByUPC(this.userId
         , this.oldProductUPC).subscribe((data) =>{
       if(data['success']){
         if(data['product'])
@@ -176,7 +176,7 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
   }
 
   addProduct(product, form){
-    this.databaseProductsService.addProduct(this.user['_id']
+    this.databaseProductsService.addProduct(this.userId
       , product).subscribe(data => {
       if(data['success'])
         this.successResponse(form);
@@ -186,7 +186,7 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
   }
 
   updateProduct(oldProductUPC, newProduct){
-    this.databaseProductsService.updateProduct(this.user['_id'], oldProductUPC, newProduct).subscribe(data => {
+    this.databaseProductsService.updateProduct(this.userId, oldProductUPC, newProduct).subscribe(data => {
       if(data['success'])
         openSnackbar(this.snackBar, `Update successful: ${data['msg']}`);
       else

@@ -7,13 +7,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./database.component.css']
 })
 export class DatabaseComponent implements OnInit {
-  user:Object;
+  userId;
 
   constructor(private databaseUsersService: DatabaseUsersService) { }
 
   ngOnInit() {
     this.databaseUsersService.getProfile().subscribe( (user) =>{
-      this.user = user;
+      this.userId = user['_id'];
     });
   }
 }
