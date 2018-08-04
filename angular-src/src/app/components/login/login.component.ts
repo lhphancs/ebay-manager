@@ -11,18 +11,20 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
   errorMsg = null;
 
-  constructor(private databaseUserService:DatabaseUsersService
+  constructor(private databaseUsersService:DatabaseUsersService
     , private router: Router) { }
 
   ngOnInit() {
+    if(this.databaseUsersService.loggedIn())
+      this.router.navigate(['/database/products']);
   }
 
   onSubmit(loginForm){
     let formValues = loginForm.value;
-    this.databaseUserService.auth(formValues['email']
+    this.databaseUsersService.auth(formValues['email']
       , formValues['password']).subscribe( (data) =>{
         if(data['success']){
-          this.databaseUserService.storeUserData(data['token'], data['user']);
+          this.databaseUsersService.storeUserData(data['token'], data['user']);
           this.router.navigate(['database']);
         }
           

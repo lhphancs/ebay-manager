@@ -17,6 +17,8 @@ export class RegisterComponent implements OnInit {
     , private router: Router) { }
 
   ngOnInit() {
+    if(this.databaseUsersService.loggedIn())
+      this.router.navigate(['/database/products']);
   }
 
   onSubmit(userForm){
