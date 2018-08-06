@@ -1,18 +1,15 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const config = require('../config/database');
+const Schema = mongoose.Schema;
 
 const saltRounds = 10;
 
-const Schema = mongoose.Schema;
 const userSchema = Schema({
     email: {type: String, required: true, unique: true},
     password: {type: String, required: true},
     ebayKey: {type: String},
-    siteSettings:{
-        
-    }
 });
+userSchema.index({ email: 1, "fixedShippingInfo.service": 1 }, { unique: true })
 
 const User = module.exports = mongoose.model('User', userSchema);
 
