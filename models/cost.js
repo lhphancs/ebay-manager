@@ -3,9 +3,10 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
 const FIRST_CLASS_LOW_WEIGHT_COST = 2.66;
-const defaultFixedShippingInfo = [
+const defaultEbayFixedShippingInfo = [
     {
-        service:"USPS first class",
+        company:"USPS",
+        method:"First class",
         ozPrice:[
             {oz: 1, price:FIRST_CLASS_LOW_WEIGHT_COST}, {oz: 2, price:FIRST_CLASS_LOW_WEIGHT_COST},
             {oz: 3, price:FIRST_CLASS_LOW_WEIGHT_COST}, {oz: 4, price:FIRST_CLASS_LOW_WEIGHT_COST},
@@ -15,37 +16,43 @@ const defaultFixedShippingInfo = [
         ]
     },
     {
-        service:"USPS flat rate normal envelope",
+        company:"USPS",
+        method:"Flat rate normal envelope",
         ozPrice:[
             {oz: -1, price: 6.35}
         ]
     },
     {
-        service:"USPS flat rate legal envelope",
+        company:"USPS",
+        method:"Flat rate legal envelope",
         ozPrice:[
             {oz: -1, price:6.65}
         ]
     },
     {
-        service:"USPS flat rate padded envelope",
+        company:"USPS",
+        method:"Flat rate padded envelope",
         ozPrice:[
             {oz: -1, price:6.90}
         ]
     },
     {
-        service:"USPS flat rate small box",
+        company:"USPS",
+        method:"Flat rate small box",
         ozPrice:[
             {oz: -1, price:6.85}
         ]
     },
     {
-        service:"USPS flat rate medium box",
+        company:"USPS",
+        method:"Flat rate medium box",
         ozPrice:[
             {oz: -1, price:12.45}
         ]
     },
     {
-        service:"USPS flat rate large box",
+        company:"USPS",
+        method:"Flat rate large box",
         ozPrice:[
             {oz: -1, price:17.10}
         ]
@@ -54,17 +61,22 @@ const defaultFixedShippingInfo = [
 
 const costSchema = Schema({
     userId: {type: ObjectId, required: true},
-    fixedShippingInfo: {
+    ebayFixedShippingInfo: {
         type:
-        [{ service: { type: String, required: true },
+        [{ company: { type: String, required: true },
+            method: {type: String, required: true},
             ozPrice: {type:
                 [{
-                    oz: { type: Number, min: -1, },
+                    oz: { type: Number, min: -1 },
                     price: { type: Number, required: true, min: 0} }
                 ]}
         }],
-        default:defaultFixedShippingInfo
-    }
+        default:defaultEbayFixedShippingInfo
+    },
+    ebayPercentageFromSaleFee:{type: Number, min:0, default:9.15},
+    paypalPercentageFromSaleFee:{ type: Number, min: 0, default: 2.9},
+    paypalInitialFee:{ type: Number, min: 0, default: 0.30},
+    miscCost:{type:[], default:[]}
 });
 costSchema.index({ userId: 1, "fixedShippingInfo.service": 1 }, { unique: true })
 

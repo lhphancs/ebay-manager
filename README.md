@@ -1,2 +1,2 @@
-# ebay-manager
-Uses ebay's api along with own database to display profits
+# inventory-manager
+Inventory manager to store details of products and calculate profits from eBay and amazon
