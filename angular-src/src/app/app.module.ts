@@ -26,6 +26,9 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import {MatMenuModule} from '@angular/material/menu';
+import { AccountComponent } from './components/account/account.component';
+import { SettingsComponent } from './components/settings/settings.component';
+import { AmazonComponent } from './components/amazon/amazon.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +41,10 @@ import {MatMenuModule} from '@angular/material/menu';
     DatabaseProductsComponent,
     ConfirmDialogComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    AccountComponent,
+    SettingsComponent,
+    AmazonComponent
   ],
   imports: [
     NgbModule.forRoot(),

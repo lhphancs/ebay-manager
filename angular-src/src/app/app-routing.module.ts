@@ -1,3 +1,6 @@
+import { AmazonComponent } from './components/amazon/amazon.component';
+import { AccountComponent } from './components/account/account.component';
+import { SettingsComponent } from './components/settings/settings.component';
 import { AuthGuard } from './guards/auth.guards';
 import { RegisterComponent } from './components/register/register.component';
 import { DatabaseProductsComponent } from './components/database/database-products/database-products.component';
@@ -11,12 +14,15 @@ import { EbayComponent } from './components/ebay/ebay.component';
 import { LoginComponent } from './components/login/login.component';
 
 const routes: Routes = [
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'amazon', component: AmazonComponent, canActivate:[AuthGuard] },
   { path: 'ebay', component: EbayComponent, canActivate:[AuthGuard] },
-  { path: 'database', component: DatabaseComponent, canActivate:[AuthGuard], 
+  { path: 'account', component: AccountComponent, canActivate:[AuthGuard] },
+  { path: 'settings', component: SettingsComponent, canActivate:[AuthGuard] }, 
+  { path: 'database', component: DatabaseComponent, canActivate:[AuthGuard] , 
     children: [
       { path: '', redirectTo: 'products', pathMatch: 'full' },
       { path: 'products', component: DatabaseProductsComponent },
