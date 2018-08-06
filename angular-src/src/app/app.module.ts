@@ -25,6 +25,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
+import {MatMenuModule} from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -48,19 +49,20 @@ import { RegisterComponent } from './components/register/register.component';
     FormsModule,
     MatButtonModule,
     MatCheckboxModule,
+    MatDialogModule,
     MatFormFieldModule,
+    MatIconModule,
     MatInputModule,
-    MatTableModule,
-    MatTabsModule,
+    MatMenuModule,
     MatOptionModule,
     MatSelectModule,
-    FlexLayoutModule,
-    HttpClientModule,
     MatSortModule,
     MatSnackBarModule,
-    MatDialogModule,
+    MatTableModule,
+    MatTabsModule,
+    FlexLayoutModule,
+    HttpClientModule,
     ReactiveFormsModule,
-    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent],
