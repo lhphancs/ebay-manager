@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const config = require('../config/database');
 const Schema = mongoose.Schema;
+const ObjectId = Schema.ObjectId;
 
 const FIRST_CLASS_LOW_WEIGHT_COST = 2.66;
 const defaultFixedShippingInfo = [
@@ -72,6 +71,6 @@ costSchema.index({ userId: 1, "fixedShippingInfo.service": 1 }, { unique: true }
 const Cost = module.exports = mongoose.model('Cost', costSchema);
 
 module.exports.addNewCost = function(userId, callback){
-    newCost = new Cost(userId);
+    newCost = new Cost({userId: userId});
     newCost.save(callback);
 };

@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const apiUsers = require('./routes/api-users');
 const apiProducts = require('./routes/api-products');
+const apiCosts = require('./routes/api-costs');
 const passport = require('passport');
 const config = require('./config/database');
 
@@ -34,6 +35,7 @@ require('./config/passport')(passport);
 
 app.use('/api/users', apiUsers);
 app.use('/api/products', apiProducts);
+app.use('/api/costs', apiCosts);
 app.get('/', (req, res) => {
     res.send('Hello World');
 });

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
+const Cost = require('./cost');
 
 const saltRounds = 10;
 
@@ -16,10 +17,19 @@ const User = module.exports = mongoose.model('User', userSchema);
 module.exports.addUser = function(newUser, callback){
     bcrypt.genSalt(saltRounds, (err, salt) =>{
         bcrypt.hash(newUser.password, salt, (err, hash) => {
-            if(err) throw err;
+            if(err) callback(err, null);
+            else{
+                newUser.password = hash;
+                newUser.save((err, user)=>{
+                    if(err) callback(err, null);
+                    else{
+                        Cost.addNewCost(user._id, (err, cost) => {
+                            callback(err, user);
+                        });
+                    }
+                });
+            }
 
-            newUser.password = hash;
-            newUser.save(callback);
         });
     })
 };
