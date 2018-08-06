@@ -15,40 +15,40 @@
   <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item" [routerLinkActive]="['active']">
+          <a class="nav-link" [routerLink]="['amazon']">amazon</a>
+      </li>
+      <li class="nav-item" [routerLinkActive]="['active']">
           <a class="nav-link" [routerLink]="['ebay']">eBay</a>
-      </li>
-      <li class="nav-item" [routerLinkActive]="['active']">
-        <a class="nav-link" [routerLink]="['database']">Database</a>
-      </li>
-      <li class="nav-item" [routerLinkActive]="['active']">
-        <a class="nav-link" [routerLink]="['calculator']">Calculator</a>
       </li>
     </ul>
   </div>
     
   <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
     <ul class="navbar-nav ml-auto">
-      <li>
+      <li class="nav-item" [routerLinkActive]="['active']">
+        <a class="nav-link" [routerLink]="['database']">Database</a>
+      </li>
+      <li class="nav-item" [routerLinkActive]="['active']">
+        <a class="nav-link" [routerLink]="['calculator']">Calculator</a>
+      </li>
+      <li class="nav-item">
         <button mat-icon-button class="grey-icon" [matMenuTriggerFor]="menu">
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
           <button mat-menu-item>
-            <mat-icon>dialpad</mat-icon>
-            <span>Redial</span>
-          </button>
-          <button mat-menu-item disabled>
-            <mat-icon>voicemail</mat-icon>
-            <span>Check voicemail</span>
+            <mat-icon>account_box</mat-icon>
+            <span>Account</span>
           </button>
           <button mat-menu-item>
-            <mat-icon>notifications_off</mat-icon>
-            <span>Disable alerts</span>
+            <mat-icon>settings</mat-icon>
+            <span>Settings</span>
+          </button>
+          <button mat-menu-item (click)="onLogoutClick($event)">
+            <mat-icon>exit_to_app</mat-icon>
+            <span>Logout</span>
           </button>
         </mat-menu>
-      </li>
-      <li class="nav-item">
-          <a class="nav-link" (click)="onLogoutClick($event)" href="/logout">Logout</a>
       </li>
     </ul>
   </div>
