@@ -29,6 +29,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import { AccountComponent } from './components/account/account.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { AmazonComponent } from './components/amazon/amazon.component';
+import { ShippingComponent } from './components/shipping/shipping.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { AmazonComponent } from './components/amazon/amazon.component';
     RegisterComponent,
     AccountComponent,
     SettingsComponent,
-    AmazonComponent
+    AmazonComponent,
+    ShippingComponent
   ],
   imports: [
     NgbModule.forRoot(),

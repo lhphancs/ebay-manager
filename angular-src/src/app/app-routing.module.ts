@@ -1,3 +1,4 @@
+import { ShippingComponent } from './components/shipping/shipping.component';
 import { ProductsComponent } from './components/products/products.component';
 import { ProductsAddOrUpdateComponent } from './components/products/products-add-or-update/products-add-or-update.component';
 import { ProductsDisplayComponent } from './components/products/products-display/products-display.component';
@@ -24,11 +25,12 @@ const routes: Routes = [
   { path: 'settings', component: SettingsComponent, canActivate:[AuthGuard] }, 
   { path: 'products', component: ProductsComponent, canActivate:[AuthGuard] , 
     children: [
-      { path: '', redirectTo: 'products', pathMatch: 'full' },
+      { path: '', redirectTo: 'display', pathMatch: 'full' },
       { path: 'display', component: ProductsDisplayComponent },
       { path: 'update/:UPC', component: ProductsAddOrUpdateComponent },
       { path: 'add', component: ProductsAddOrUpdateComponent }
     ]},
+  { path: 'shipping', component: ShippingComponent },
   { path: 'calculator', component: CalculatorComponent }
 ];
 

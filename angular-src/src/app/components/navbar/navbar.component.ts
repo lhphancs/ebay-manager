@@ -25,14 +25,15 @@ export class NavbarComponent implements OnInit {
   ];
 
   loggedLeftLinks = [
-      new Link("amazon", "amazon"),
-      new Link("ebay", "ebay")
+      new Link("Amazon", "amazon"),
+      new Link("eBay", "ebay")
 
   ];
 
   loggedRightLinks = [
-      new Link("ebay", "ebay"),
-      new Link("calculator", "calculator")
+      new Link("Products", "products"),
+      new Link("Shipping", "shipping"),
+      new Link("Calculator", "calculator")
   ];
 
   constructor(private databaseUsersService:DatabaseUsersService

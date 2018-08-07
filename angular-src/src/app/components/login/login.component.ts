@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     if(this.databaseUsersService.loggedIn())
-      this.router.navigate(['/products/display']);
+      this.router.navigate(['/products']);
   }
 
   onSubmit(loginForm){
@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
       , formValues['password']).subscribe( (data) =>{
         if(data['success']){
           this.databaseUsersService.storeUserData(data['token'], data['user']);
-          this.router.navigate(['database']);
+          this.router.navigate(['/products']);
         }
           
         else
