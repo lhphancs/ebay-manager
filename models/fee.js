@@ -75,7 +75,7 @@ const feeSchema = Schema({
     },
     ebayPercentageFromSaleFee:{type: Number, min:0, default:9.15},
     paypalPercentageFromSaleFee:{ type: Number, min: 0, default: 2.9},
-    paypalInitialFee:{ type: Number, min: 0, default: 0.30},
+    paypalFlatFee:{ type: Number, min: 0, default: 0.30},
     miscFee:{type:[], default:[]}
 });
 feeSchema.index({ userId: 1, "fixedShippingInfo.service": 1 }, { unique: true })
@@ -85,4 +85,8 @@ const Fee = module.exports = mongoose.model('Fee', feeSchema);
 module.exports.addNewFee = function(userId, callback){
     newFee = new Fee({userId: userId});
     newFee.save(callback);
+};
+
+module.exports.getFeesById = function(userId, callback){
+    Fee.findOne({userId: userId}, null, {select:'-userId -_id'}, callback);
 };

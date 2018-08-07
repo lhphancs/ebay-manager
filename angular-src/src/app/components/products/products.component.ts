@@ -12,8 +12,9 @@ export class ProductsComponent implements OnInit {
   constructor(private databaseUsersService: DatabaseUsersService) { }
 
   ngOnInit() {
-    this.databaseUsersService.getProfile().subscribe( (user) =>{
-      this.userId = user['_id'];
+    this.databaseUsersService.getProfile().subscribe( (data) =>{
+      if(data['_id'])
+        this.userId = data['_id'];
     });
   }
 }
