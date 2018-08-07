@@ -15,7 +15,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule, MatDialogModule, MatIconModule } from '@angular/material';
+import { MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule, MatDialogModule, MatIconModule, MatProgressSpinnerModule } from '@angular/material';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -30,6 +30,7 @@ import { AccountComponent } from './components/account/account.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { AmazonComponent } from './components/amazon/amazon.component';
 import { ShippingComponent } from './components/shipping/shipping.component';
+import { LogoutComponent } from './components/logout/logout.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { ShippingComponent } from './components/shipping/shipping.component';
     AccountComponent,
     SettingsComponent,
     AmazonComponent,
-    ShippingComponent
+    ShippingComponent,
+    LogoutComponent
   ],
   imports: [
     NgbModule.forRoot(),
@@ -63,6 +65,7 @@ import { ShippingComponent } from './components/shipping/shipping.component';
     MatInputModule,
     MatMenuModule,
     MatOptionModule,
+    MatProgressSpinnerModule,
     MatSelectModule,
     MatSortModule,
     MatSnackBarModule,

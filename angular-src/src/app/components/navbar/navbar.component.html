@@ -27,17 +27,9 @@
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item [routerLink]="['account']">
-            <mat-icon>account_box</mat-icon>
-            <span>Account</span>
-          </button>
-          <button mat-menu-item [routerLink]="['settings']">
-            <mat-icon>settings</mat-icon>
-            <span>Settings</span>
-          </button>
-          <button mat-menu-item (click)="onLogoutClick($event)">
-            <mat-icon>exit_to_app</mat-icon>
-            <span>Logout</span>
+          <button *ngFor="let menuItemLink of menuItemLinks" mat-menu-item routerLink={{menuItemLink.href}}>
+            <mat-icon>{{menuItemLink.icon}}</mat-icon>
+            <span>{{menuItemLink.text}}</span>
           </button>
         </mat-menu>
       </li>

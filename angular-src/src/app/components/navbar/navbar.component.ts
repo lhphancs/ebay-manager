@@ -1,12 +1,23 @@
 import { DatabaseUsersService } from '../../services/database-users.service';
-import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
 class Link{
-  text;
-  href;
+  text:string;
+  href:string;
 
   constructor(text, href){
+    this.text=text;
+    this.href=href;
+  }
+}
+
+class MenuItemLink{
+  icon:string;
+  text:string;
+  href:string;
+
+  constructor(icon, text, href){
+    this.icon=icon;
     this.text=text;
     this.href=href;
   }
@@ -36,16 +47,16 @@ export class NavbarComponent implements OnInit {
       new Link("Calculator", "calculator")
   ];
 
-  constructor(private databaseUsersService:DatabaseUsersService
-    , private router: Router) { }
+  menuItemLinks = [
+    new MenuItemLink("account_box", "Account", "account"),
+    new MenuItemLink("settings", "Settings", "settings"),
+    new MenuItemLink("exit_to_app", "Logout", "logout"),
+  ]
+
+  // databaseUsersService used by html to determine if user is logged in or not
+  constructor(private databaseUsersService:DatabaseUsersService) { }
 
   ngOnInit() {
-  }
-
-  onLogoutClick(event){
-    event.preventDefault();
-    this.databaseUsersService.logout();
-    this.router.navigate(['/login']);
   }
 
 }
