@@ -29,8 +29,8 @@ import {MatMenuModule} from '@angular/material/menu';
 import { AccountComponent } from './components/account/account.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { AmazonComponent } from './components/amazon/amazon.component';
-import { ShippingComponent } from './components/shipping/shipping.component';
 import { LogoutComponent } from './components/logout/logout.component';
+import { FeesComponent } from './components/fees/fees.component';
 
 @NgModule({
   declarations: [
@@ -47,8 +47,8 @@ import { LogoutComponent } from './components/logout/logout.component';
     AccountComponent,
     SettingsComponent,
     AmazonComponent,
-    ShippingComponent,
-    LogoutComponent
+    LogoutComponent,
+    FeesComponent
   ],
   imports: [
     NgbModule.forRoot(),

@@ -18,7 +18,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     if(this.databaseUsersService.loggedIn())
-      this.router.navigate(['/database/products']);
+      this.router.navigate(['/products']);
   }
 
   onSubmit(userForm){
@@ -29,7 +29,7 @@ export class RegisterComponent implements OnInit {
       delete formValues['confirm-password'];
       this.databaseUsersService.addUser(formValues).subscribe(data => {
         if(data['success'])
-          this.router.navigate(['/database']);
+          this.router.navigate(['/products']);
         else
           openSnackbar(this.snackBar, `Failed to register user: ${data['msg']}`);
       });

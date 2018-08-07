@@ -2,14 +2,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
-const FIRST_CLASS_LOW_WEIGHT_COST = 2.66;
+const FIRST_CLASS_LOW_WEIGHT_FEE = 2.66;
 const defaultEbayFixedShippingInfo = [
     {
         company:"USPS",
         method:"First class",
         ozPrice:[
-            {oz: 1, price:FIRST_CLASS_LOW_WEIGHT_COST}, {oz: 2, price:FIRST_CLASS_LOW_WEIGHT_COST},
-            {oz: 3, price:FIRST_CLASS_LOW_WEIGHT_COST}, {oz: 4, price:FIRST_CLASS_LOW_WEIGHT_COST},
+            {oz: 1, price:FIRST_CLASS_LOW_WEIGHT_FEE}, {oz: 2, price:FIRST_CLASS_LOW_WEIGHT_FEE},
+            {oz: 3, price:FIRST_CLASS_LOW_WEIGHT_FEE}, {oz: 4, price:FIRST_CLASS_LOW_WEIGHT_FEE},
             {oz: 5, price:2.79},   {oz: 6, price:2.92},   {oz: 7, price:3.05},   {oz: 8, price:3.18},
             {oz: 9, price:3.34},   {oz: 10, price:3.50},  {oz: 11, price:3.66},  {oz: 12, price:3.82},
             {oz: 13, price:4.10},  {oz: 14, price:4.38},  {oz: 15, price:4.66},  {oz: 16, price:4.94},
@@ -59,7 +59,7 @@ const defaultEbayFixedShippingInfo = [
     }
 ];
 
-const costSchema = Schema({
+const feeSchema = Schema({
     userId: {type: ObjectId, required: true},
     ebayFixedShippingInfo: {
         type:
@@ -76,13 +76,13 @@ const costSchema = Schema({
     ebayPercentageFromSaleFee:{type: Number, min:0, default:9.15},
     paypalPercentageFromSaleFee:{ type: Number, min: 0, default: 2.9},
     paypalInitialFee:{ type: Number, min: 0, default: 0.30},
-    miscCost:{type:[], default:[]}
+    miscFee:{type:[], default:[]}
 });
-costSchema.index({ userId: 1, "fixedShippingInfo.service": 1 }, { unique: true })
+feeSchema.index({ userId: 1, "fixedShippingInfo.service": 1 }, { unique: true })
 
-const Cost = module.exports = mongoose.model('Cost', costSchema);
+const Fee = module.exports = mongoose.model('Fee', feeSchema);
 
-module.exports.addNewCost = function(userId, callback){
-    newCost = new Cost({userId: userId});
-    newCost.save(callback);
+module.exports.addNewFee = function(userId, callback){
+    newFee = new Fee({userId: userId});
+    newFee.save(callback);
 };

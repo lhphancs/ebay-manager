@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { DatabaseUsersService } from './../../services/database-users.service';
+import { DatabaseUsersService } from '../../services/database-users.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -16,5 +16,4 @@ export class LogoutComponent implements OnInit {
     this.databaseUsersService.logout();
     this.router.navigate(['/login']);
   }
-
 }

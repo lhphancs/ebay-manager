@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
-const Cost = require('./cost');
+const Fee = require('./fee');
 
 const saltRounds = 10;
 
@@ -23,7 +23,7 @@ module.exports.addUser = function(newUser, callback){
                 newUser.save((err, user)=>{
                     if(err) callback(err, null);
                     else{
-                        Cost.addNewCost(user._id, (err, cost) => {
+                        Fee.addNewFee(user._id, (err, fee) => {
                             callback(err, user);
                         });
                     }
