@@ -1,4 +1,4 @@
-import { DatabaseComponent } from './../database.component';
+import { ProductsComponent } from '../products.component';
 import { DatabaseUsersService } from '../../../services/database-users.service';
 import { Stack } from '../../../classesAndInterfaces/stack';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -12,11 +12,11 @@ import { DatabaseProductsService } from '../../../services/database-products.ser
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'database-products',
-  templateUrl: './database-products.component.html',
-  styleUrls: ['./database-products.component.css']
+  selector: 'products-display',
+  templateUrl: './products-display.component.html',
+  styleUrls: ['./products-display.component.css']
 })
-export class DatabaseProductsComponent implements OnInit {
+export class ProductsDisplayComponent implements OnInit {
   userId;
   filterValue: string;
   products: Product[];
@@ -25,18 +25,16 @@ export class DatabaseProductsComponent implements OnInit {
   selection = new SelectionModel<Product>(true, []);
   deletedGroupsStack: Stack; // Used to undo delete
 
-  constructor(private databaseComponent:DatabaseComponent,
+  constructor(private productsComponent:ProductsComponent,
     private databaseProductsService: DatabaseProductsService
-    , private databaseUsersService: DatabaseUsersService
-    , public snackBar: MatSnackBar, private dialog: MatDialog
-    , private router: Router) {
+    , public snackBar: MatSnackBar, private dialog: MatDialog){
       this.deletedGroupsStack = new Stack();
   }
 
   @ViewChild(MatSort) sort: MatSort;
   
   ngOnInit() {
-    this.userId = this.databaseComponent.userId;
+    this.userId = this.productsComponent.userId;
     this.databaseProductsService.getProducts(this.userId).subscribe( (data) => {
       if(data['success']){
         this.products = data['products'];

@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     if(this.databaseUsersService.loggedIn())
-      this.router.navigate(['/database/products']);
+      this.router.navigate(['/products/display']);
   }
 
   onSubmit(loginForm){

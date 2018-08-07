@@ -1,4 +1,4 @@
-import { DatabaseComponent } from './../database.component';
+import { ProductsComponent } from '../products.component';
 import { ViewChild, ElementRef } from '@angular/core';
 //Add and update page do almost the same thing, so just clump code together
 
@@ -14,12 +14,12 @@ import { openSnackbar } from '../../snackbar';
 import { DatabaseProductsService } from '../../../services/database-products.service';
 
 @Component({
-  selector: 'database-add-or-update',
-  templateUrl: './database-add-or-update.component.html',
-  styleUrls: ['./database-add-or-update.component.css']
+  selector: 'products-add-or-update',
+  templateUrl: './products-add-or-update.component.html',
+  styleUrls: ['./products-add-or-update.component.css']
 })
 
-export class DatabaseAddOrUpdateComponent implements OnInit {
+export class ProductsAddOrUpdateComponent implements OnInit {
   //used for update page
   userId;
   displayRdy = false;
@@ -40,7 +40,7 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
   selection = new SelectionModel<EntryASIN>(true, []);
   oldProductUPC: string;
 
-  constructor(private databaseComponent:DatabaseComponent,
+  constructor(private productsComponent:ProductsComponent,
       private databaseProductsService: DatabaseProductsService
       , private route: ActivatedRoute
       , public snackBar: MatSnackBar
@@ -49,7 +49,7 @@ export class DatabaseAddOrUpdateComponent implements OnInit {
   { }
 
   ngOnInit() {
-    this.userId = this.databaseComponent.userId;
+    this.userId = this.productsComponent.userId;
     this.route.paramMap.subscribe(params => {
       this.oldProductUPC = params.get('UPC');
       if(this.oldProductUPC)

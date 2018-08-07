@@ -1,11 +1,11 @@
+import { ProductsComponent } from './components/products/products.component';
+import { ProductsAddOrUpdateComponent } from './components/products/products-add-or-update/products-add-or-update.component';
+import { ProductsDisplayComponent } from './components/products/products-display/products-display.component';
 import { AmazonComponent } from './components/amazon/amazon.component';
 import { AccountComponent } from './components/account/account.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { AuthGuard } from './guards/auth.guards';
 import { RegisterComponent } from './components/register/register.component';
-import { DatabaseProductsComponent } from './components/database/database-products/database-products.component';
-import { DatabaseAddOrUpdateComponent } from './components/database/database-add-or-update/database-add-or-update.component';
-import { DatabaseComponent } from './components/database/database.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -22,12 +22,12 @@ const routes: Routes = [
   { path: 'ebay', component: EbayComponent, canActivate:[AuthGuard] },
   { path: 'account', component: AccountComponent, canActivate:[AuthGuard] },
   { path: 'settings', component: SettingsComponent, canActivate:[AuthGuard] }, 
-  { path: 'database', component: DatabaseComponent, canActivate:[AuthGuard] , 
+  { path: 'products', component: ProductsComponent, canActivate:[AuthGuard] , 
     children: [
       { path: '', redirectTo: 'products', pathMatch: 'full' },
-      { path: 'products', component: DatabaseProductsComponent },
-      { path: 'update/:UPC', component: DatabaseAddOrUpdateComponent },
-      { path: 'add', component: DatabaseAddOrUpdateComponent }
+      { path: 'display', component: ProductsDisplayComponent },
+      { path: 'update/:UPC', component: ProductsAddOrUpdateComponent },
+      { path: 'add', component: ProductsAddOrUpdateComponent }
     ]},
   { path: 'calculator', component: CalculatorComponent }
 ];

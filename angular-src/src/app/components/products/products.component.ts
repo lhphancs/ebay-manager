@@ -1,12 +1,12 @@
-import { DatabaseUsersService } from './../../services/database-users.service';
+import { DatabaseUsersService } from '../../services/database-users.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'database',
-  templateUrl: './database.component.html',
-  styleUrls: ['./database.component.css']
+  selector: 'products',
+  templateUrl: './products.component.html',
+  styleUrls: ['./products.component.css']
 })
-export class DatabaseComponent implements OnInit {
+export class ProductsComponent implements OnInit {
   userId;
 
   constructor(private databaseUsersService: DatabaseUsersService) { }

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DatabaseAddOrUpdateComponent } from './database-add-or-update.component';
+import { ProductsDisplayComponent } from './products-display.component';
 
-describe('DatabaseAddComponent', () => {
-  let component: DatabaseAddOrUpdateComponent;
-  let fixture: ComponentFixture<DatabaseAddOrUpdateComponent>;
+describe('ProductsDisplayComponent', () => {
+  let component: ProductsDisplayComponent;
+  let fixture: ComponentFixture<ProductsDisplayComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DatabaseAddOrUpdateComponent ]
+      declarations: [ ProductsDisplayComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DatabaseAddOrUpdateComponent);
+    fixture = TestBed.createComponent(ProductsDisplayComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,5 +1,7 @@
+import { ProductsDisplayComponent } from './components/products/products-display/products-display.component';
+import { ProductsAddOrUpdateComponent } from './components/products/products-add-or-update/products-add-or-update.component';
+import { ProductsComponent } from './components/products/products.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { DatabaseComponent } from './components/database/database.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -11,8 +13,6 @@ import { EbayComponent } from './components/ebay/ebay.component';
 import { CalculatorComponent } from './components/calculator/calculator.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DatabaseAddOrUpdateComponent } from './components/database/database-add-or-update/database-add-or-update.component';
-import { DatabaseProductsComponent } from './components/database/database-products/database-products.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule, MatDialogModule, MatIconModule } from '@angular/material';
@@ -36,9 +36,9 @@ import { AmazonComponent } from './components/amazon/amazon.component';
     NavbarComponent,
     EbayComponent,
     CalculatorComponent,
-    DatabaseComponent,
-    DatabaseAddOrUpdateComponent,
-    DatabaseProductsComponent,
+    ProductsComponent,
+    ProductsAddOrUpdateComponent,
+    ProductsDisplayComponent,
     ConfirmDialogComponent,
     LoginComponent,
     RegisterComponent,
