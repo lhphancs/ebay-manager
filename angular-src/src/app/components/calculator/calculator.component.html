@@ -1,3 +1,25 @@
-<p>
-  calculator works!
-</p>
+<ul class="nav nav-tabs">
+  <li class="nav-item" >
+    <a class="nav-link" routerLink='profit' routerLinkActive='anchor-active'>Calculate profit</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" routerLink='needed-sale' routerLinkActive='anchor-active'>Calculate sale</a>
+  </li>
+</ul>
+<table class="table table-bordered fee-table">
+  <tbody>
+    <tr>
+      <th scope="row">eBay fee percentage</th>
+      <td>{{ebayPercentageFromSaleFee | number : '1.2-2'}} %</td>
+    </tr>
+    <tr>
+      <th scope="row">Paypal fee percentage</th>
+      <td>{{paypalPercentageFromSaleFee | number : '1.2-2'}} %</td>
+    </tr>
+    <tr>
+      <th scope="row">Paypal flat fee</th>
+      <td>$ {{paypalFlatFee | number : '1.2-2'}}</td>
+    </tr>
+  </tbody>
+</table>
+<router-outlet></router-outlet>

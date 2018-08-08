@@ -1,3 +1,5 @@
+import { CalculatorNeededSaleComponent } from './components/calculator/calculator-needed-sale/calculator-needed-sale.component';
+import { CalculatorProfitComponent } from './components/calculator/calculator-profit/calculator-profit.component';
 import { ShippingsComponent } from './components/shippings/shippings.component';
 import { FeesComponent } from './components/fees/fees.component';
 import { LogoutComponent } from './components/logout/logout.component';
@@ -34,7 +36,12 @@ const routes: Routes = [
     ]},
   { path: 'shippings', component: ShippingsComponent, canActivate:[AuthGuard] }, 
   { path: 'fees', component: FeesComponent },
-  { path: 'calculator', component: CalculatorComponent },
+  { path: 'calculator', component: CalculatorComponent, canActivate:[AuthGuard],
+    children: [
+      { path: '', redirectTo: 'profit', pathMatch: 'full' },
+      { path: 'profit', component: CalculatorProfitComponent },
+      { path: 'needed-sale', component: CalculatorNeededSaleComponent },
+    ]},
   { path: 'logout', component: LogoutComponent }
 ];
 

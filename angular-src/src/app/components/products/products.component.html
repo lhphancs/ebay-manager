@@ -1,9 +1,9 @@
 <ul class="nav nav-tabs">
   <li class="nav-item" >
-    <a class="nav-link" [routerLink]="['display']" [routerLinkActive]="['anchor-active']">Display</a>
+    <a class="nav-link" routerLink='display' routerLinkActive='anchor-active'>Display</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" [routerLink]="['add']" [routerLinkActive]="['anchor-active']">Add</a>
+    <a class="nav-link" routerLink='add' routerLinkActive='anchor-active'>Add</a>
   </li>
 </ul>
 <router-outlet *ngIf="userId"></router-outlet>

@@ -1,0 +1,22 @@
+<div class="entire-form">
+  <div class="form-row-container" fxLayoutWrap fxLayoutGap="0.5%">
+    <div fxFlex="33%">
+        <mat-form-field fxFlex>
+          <input [(ngModel)]='saleValue' matInput placeholder="Sale value" required>
+        </mat-form-field>
+    </div>
+
+    <div fxFlex="33%">
+      <mat-form-field fxFlex>
+        <input [(ngModel)]='productCost' matInput placeholder="Product cost" required>
+      </mat-form-field>
+    </div>
+
+    <div fxFlex="33%">
+      <mat-form-field fxFlex>
+        <input [(ngModel)]='miscCost' matInput placeholder="Misc cost" required>
+        <span matPrefix>&nbsp;</span>
+      </mat-form-field>
+    </div>
+  </div>
+</div>

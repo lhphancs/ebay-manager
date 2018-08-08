@@ -32,6 +32,8 @@ import { AmazonComponent } from './components/amazon/amazon.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { FeesComponent } from './components/fees/fees.component';
 import { ShippingsComponent } from './components/shippings/shippings.component';
+import { CalculatorProfitComponent } from './components/calculator/calculator-profit/calculator-profit.component';
+import { CalculatorNeededSaleComponent } from './components/calculator/calculator-needed-sale/calculator-needed-sale.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +52,9 @@ import { ShippingsComponent } from './components/shippings/shippings.component';
     AmazonComponent,
     LogoutComponent,
     FeesComponent,
-    ShippingsComponent
+    ShippingsComponent,
+    CalculatorProfitComponent,
+    CalculatorNeededSaleComponent
   ],
   imports: [
     NgbModule.forRoot(),

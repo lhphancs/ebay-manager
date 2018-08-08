@@ -5,7 +5,7 @@
 </div>
 
 <form *ngIf="!errorMsg && displayRdy" #productForm="ngForm" class="entire-form" ngNativeValidate (ngSubmit)="onSubmit(productForm)">
-  <div class="container"fxLayoutWrap fxLayoutGap="0.5%">
+  <div class="form-row-container"fxLayoutWrap fxLayoutGap="0.5%">
     <div fxFlex="33%">
         <mat-form-field fxFlex>
           <input [(ngModel)]='inputBrand' name="brand" matInput placeholder="Brand" required>
@@ -26,7 +26,7 @@
     </div>
   </div>
 
-  <div class="container" fxLayoutWrap fxLayoutGap="0.5%" >    
+  <div class="form-row-container" fxLayoutWrap fxLayoutGap="0.5%" >    
     <div fxFlex="33%">
       <mat-form-field fxFlex>
         <input [(ngModel)]='inputCostPerBox' name="costPerBox" matInput placeholder="Cost/Box" type="number" min="0" required>
@@ -41,7 +41,7 @@
     </div>
   </div>
 
-  <div class="container" fxLayoutWrap fxLayoutGap="0.5%">    
+  <div class="form-row-container" fxLayoutWrap fxLayoutGap="0.5%">    
     <div fxFlex="33%">
       <mat-form-field fxFlex>
         <input [(ngModel)]='inputPurchasedLocation' name="purchasedLocation" matInput placeholder="Purchased Location">
