@@ -60,4 +60,17 @@ export class DatabaseUsersService {
     localStorage.clear();
   }
   
+  getFees(userId){
+    let headers = new HttpHeaders();
+    headers.append('Content-Type', 'application/json');
+    return this.httpClient.get(`/api/users/fees/${userId}`
+    , {headers: headers});
+  }
+
+  updateFees(userId, newFees){
+    let headers = new HttpHeaders();
+    headers.append('Content-Type', 'application/json');
+    return this.httpClient.put('/api/users/fees/update'
+    , {userId: userId, newFees: newFees}, {headers: headers});
+  }
 }

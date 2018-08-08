@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
-const Fee = require('./fee');
 const Shipping = require('./shipping');
 
 const saltRounds = 10;
@@ -10,12 +9,13 @@ const userSchema = Schema({
     email: {type: String, required: true, unique: true},
     password: {type: String, required: true},
     fees: { type:{
-        ebayPercentageFromSaleFee:{type: Number, min:0, default:9.15},
-        paypalPercentageFromSaleFee:{ type: Number, min: 0, default: 2.9},
-        paypalFlatFee:{ type: Number, min: 0, default: 0.30}
-        , required: true}
-    },
-    ebayKey: {type: String},
+             ebayPercentageFromSaleFee:{type: Number, min:0, required:true},
+             paypalPercentageFromSaleFee:{ type: Number, min: 0, required:true},
+             paypalFlatFee:{ type: Number, min: 0, required:true}
+            }
+        , default:{ebayPercentageFromSaleFee:9.15, paypalPercentageFromSaleFee: 2.9,
+        paypalFlatFee: 0.30}, required: true},
+    ebayKey: {type: String, default:""}
 });
 userSchema.index({ email: 1, "fixedShippingInfo.service": 1 }, { unique: true })
 
@@ -30,13 +30,8 @@ module.exports.addUser = function(newUser, callback){
                 newUser.save((err, user)=>{
                     if(err) callback(err, null);
                     else{
-                        Fee.addDefaultForNewUser(user._id, (err, fee) => {
-                            if(err) callback(err, null);
-                            else{
-                                Shipping.addDefaultForNewUser(user._id, (err, shipping)=>{
-                                    callback(err, user);
-                                });
-                            }
+                        Shipping.addDefaultForNewUser(user._id, (err, shipping)=>{
+                            callback(err, user);
                         });
                     }
                 });
@@ -47,7 +42,7 @@ module.exports.addUser = function(newUser, callback){
 };
 
 module.exports.getUserById  = function(userId, callback){
-    User.findOne({_id: userId}, {select:'-password -__v'}, callback);
+    User.findOne({_id: userId}, null, {select:'-password -__v'}, callback);
 };
 
 module.exports.getUserByEmail  = function(email, callback){
@@ -62,3 +57,21 @@ module.exports.comparePassword = function(inputPassword, hashPassword, callback)
             callback(null, isMatch);
     });
 }
+
+module.exports.getFeesById  = function(userId, callback){
+    User.findOne({_id: userId}, null, {select:'fees -_id'}, (err, user) =>{
+        callback(err, user.fees);
+    });
+};
+
+
+module.exports.updateFeesById = function(userId, newFees, callback){
+    User.findOneAndUpdate({_id: userId}, {fees:newFees}
+        , { select:'fees -_id', new: true, runValidators: true }, (err, user) =>{
+            if(err) callback(err,null);
+            else{
+                if(user) callback(err, user);
+                else callback(new Error("userId not found"), null);
+            }
+    });
+};

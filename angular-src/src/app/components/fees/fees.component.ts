@@ -1,6 +1,5 @@
 import { MatSnackBar } from '@angular/material';
 import { DatabaseUsersService } from './../../services/database-users.service';
-import { DatabaseFeesService } from './../../services/database-fees.service';
 import { Component, OnInit } from '@angular/core';
 import { openSnackbar } from '../snackbar';
 
@@ -14,17 +13,15 @@ export class FeesComponent implements OnInit {
   fees;
 
   constructor(private databaseUsersService: DatabaseUsersService
-    , private databaseFeesService:DatabaseFeesService
     , public snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.databaseUsersService.getProfile().subscribe( (data) =>{
       if(data['_id']){
         this.userId=data['_id'];
-        this.databaseFeesService.getFees(this.userId).subscribe( (data) =>{
+        this.databaseUsersService.getFees(this.userId).subscribe( (data) =>{
           if(data['success']){
             this.fees = data['fees'];
-            console.log(this.fees)
           }
         });
       }
@@ -44,7 +41,7 @@ export class FeesComponent implements OnInit {
 
   onSubmit(form){
     let newFees = this.getFeesFromFormValues(form.value);
-    this.databaseFeesService.updateFees(this.userId, newFees).subscribe( (data) =>{
+    this.databaseUsersService.updateFees(this.userId, newFees).subscribe( (data) =>{
       if(data['success'])
         openSnackbar(this.snackBar, 'Successfully updated fees');
       else
