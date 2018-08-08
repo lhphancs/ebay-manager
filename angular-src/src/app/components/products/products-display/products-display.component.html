@@ -3,7 +3,7 @@
     [disabled]="selection.selected.length == 0" (click)="openDeleteConfirmDialog()">Delete
   </button>
 
-  <input [(ngModel)]="filterValue" class="form-control mx-5 mb-3 border border-primary"
+  <input [(ngModel)]="filterValue" class="form-control mb-3 border border-primary filter"
     placeholder="Filter" (keyup)="applyFilter($event.target.value)">
   
   <button type="button" mat-raised-button color="warn"

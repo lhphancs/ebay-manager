@@ -9,3 +9,6 @@ th.mat-sort-header-sorted {
 .asin-table{
   border: 3px solid black;
 }
+.filter{
+  width:50%;
+}
