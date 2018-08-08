@@ -41,7 +41,7 @@ module.exports.getProductByUPC = function(userId, productUPC, callback){
 };
 
 module.exports.getProducts = function(userId, offset, limit, callback){
-    Product.find({userId: userId}, null, {select:'-userId -_id', skip:offset, limit: limit}, callback);
+    Product.find({userId: userId}, null, {select:'-userId -_id -__v', skip:offset, limit: limit}, callback);
 };
 
 

@@ -1,29 +1,33 @@
-<form #feesForm="ngForm" class="entire-form" ngNativeValidate (ngSubmit)="onSubmit(feesForm)">
+<form *ngIf="fees" #feesForm="ngForm" class="entire-form" ngNativeValidate (ngSubmit)="onSubmit(feesForm)">
   <div class="container"fxLayoutWrap fxLayoutGap="0.5%">
     <div fxFlex="33%">
         <mat-form-field fxFlex>
-          <input [(ngModel)]='ebayPercentageFromSaleFee' name="ebayPercentageFromSaleFee"
+          <input [(ngModel)]='fees.ebayPercentageFromSaleFee' name="ebayPercentageFromSaleFee"
             placeholder="eBay Fee Percentage" matInput required>
         </mat-form-field>
     </div>
 
     <div fxFlex="33%">
       <mat-form-field fxFlex>
-        <input [(ngModel)]='paypalPercentageFromSaleFee' name="paypalPercentageFromSaleFee"
+        <input [(ngModel)]='fees.paypalPercentageFromSaleFee' name="paypalPercentageFromSaleFee"
           placeholder="Paypal Fee Percentage" matInput required>
       </mat-form-field>
     </div>
 
     <div fxFlex="33%">
       <mat-form-field fxFlex>
-        <input [(ngModel)]='paypalFlatFee' name="paypalFlatFee" matInput
+        <input [(ngModel)]='fees.paypalFlatFee' name="paypalFlatFee" matInput
           placeholder="Paypal Flat Fee" required>
         <span matPrefix>&nbsp;</span>
       </mat-form-field>
     </div>
   </div>
 
+  <div>
+    
+  </div>
+
   <button mat-raised-button color="primary"
-    type="submit" class="btn-block btn-submit">Submit
+    type="submit" class="btn-block btn-submit">Update
   </button>
 </form>

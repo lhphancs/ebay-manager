@@ -1,6 +1,8 @@
+import { MatSnackBar } from '@angular/material';
 import { DatabaseUsersService } from './../../services/database-users.service';
 import { DatabaseFeesService } from './../../services/database-fees.service';
 import { Component, OnInit } from '@angular/core';
+import { openSnackbar } from '../snackbar';
 
 @Component({
   selector: 'fees',
@@ -9,12 +11,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FeesComponent implements OnInit {
   userId;
+  fees;
 
-  ebayPercentageFromSaleFee:number;
-  paypalPercentageFromSaleFee:number;
-  paypalFlatFee:number;
   constructor(private databaseUsersService: DatabaseUsersService
-    , private databaseFeesService:DatabaseFeesService) { }
+    , private databaseFeesService:DatabaseFeesService
+    , public snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.databaseUsersService.getProfile().subscribe( (data) =>{
@@ -22,14 +23,32 @@ export class FeesComponent implements OnInit {
         this.userId=data['_id'];
         this.databaseFeesService.getFees(this.userId).subscribe( (data) =>{
           if(data['success']){
-            let fees = data['fees'];
-            this.ebayPercentageFromSaleFee = fees['ebayPercentageFromSaleFee'];
-            this.paypalPercentageFromSaleFee = fees['paypalPercentageFromSaleFee'];
-            this.paypalFlatFee = fees['paypalFlatFee'];
+            this.fees = data['fees'];
+            console.log(this.fees)
           }
         });
       }
     });
   }
 
+  getFeesFromFormValues(formValues){
+    let values = {
+      ebayPercentageFromSaleFee: formValues.ebayPercentageFromSaleFee,
+      paypalFlatFee: formValues.paypalFlatFee,
+      paypalPercentageFromSaleFee: formValues.paypalPercentageFromSaleFee
+    }
+    if(formValues['miscFee'])
+      values['miscFee'] = formValues.miscFee;
+    return values;
+  }
+
+  onSubmit(form){
+    let newFees = this.getFeesFromFormValues(form.value);
+    this.databaseFeesService.updateFees(this.userId, newFees).subscribe( (data) =>{
+      if(data['success'])
+        openSnackbar(this.snackBar, 'Successfully updated fees');
+      else
+        openSnackbar(this.snackBar, `Failed to update fees: ${data['msg']}`);
+    });
+  }
 }

@@ -15,4 +15,10 @@ export class DatabaseFeesService {
     , {headers: headers});
   }
 
+  updateFees(userId, newFees){
+    let headers = new HttpHeaders();
+    headers.append('Content-Type', 'application/json');
+    return this.httpClient.put('api/fees/update'
+    , {userId: userId, newFees: newFees}, {headers: headers});
+  }
 }

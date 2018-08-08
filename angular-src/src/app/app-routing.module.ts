@@ -1,3 +1,4 @@
+import { ShippingsComponent } from './components/shippings/shippings.component';
 import { FeesComponent } from './components/fees/fees.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { ProductsComponent } from './components/products/products.component';
@@ -31,6 +32,7 @@ const routes: Routes = [
       { path: 'update/:UPC', component: ProductsAddOrUpdateComponent },
       { path: 'add', component: ProductsAddOrUpdateComponent }
     ]},
+  { path: 'shippings', component: ShippingsComponent, canActivate:[AuthGuard] }, 
   { path: 'fees', component: FeesComponent },
   { path: 'calculator', component: CalculatorComponent },
   { path: 'logout', component: LogoutComponent }

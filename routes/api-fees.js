@@ -9,4 +9,10 @@ router.get('/:userId', (req, res, next) => {
     });
 });
 
+router.put('/update', (req, res, next) => {
+    Fee.updateFees( req.body.userId, req.body.newFees, (err, fees) => {
+        if(err) res.json({success: false, msg: `Failed to grab fee: ${err.message}`});
+        else res.json({success:true, msg: `Successfully updated fees: ${fees}`});
+    });
+});
 module.exports = router;
