@@ -3,21 +3,21 @@
     <div fxFlex="33%">
         <mat-form-field fxFlex>
           <input [(ngModel)]='fees.ebayPercentageFromSaleFee' name="ebayPercentageFromSaleFee"
-            placeholder="eBay Fee Percentage" matInput required>
+            placeholder="eBay Fee Percentage" matInput type="number" step="any" min="0" required>
         </mat-form-field>
     </div>
 
     <div fxFlex="33%">
       <mat-form-field fxFlex>
         <input [(ngModel)]='fees.paypalPercentageFromSaleFee' name="paypalPercentageFromSaleFee"
-          placeholder="Paypal Fee Percentage" matInput required>
+          placeholder="Paypal Fee Percentage" matInput type="number" step="any" min="0" required>
       </mat-form-field>
     </div>
 
     <div fxFlex="33%">
       <mat-form-field fxFlex>
         <input [(ngModel)]='fees.paypalFlatFee' name="paypalFlatFee" matInput
-          placeholder="Paypal Flat Fee" required>
+          placeholder="Paypal Flat Fee" type="number" step="any" min="0" required>
         <span matPrefix>&nbsp;</span>
       </mat-form-field>
     </div>
