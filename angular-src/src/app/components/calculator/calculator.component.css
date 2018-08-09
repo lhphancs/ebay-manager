@@ -1,4 +1,19 @@
 .fee-table{
-    margin:10px;
     width:30%;
+}
+
+.text-bold{
+    font-weight: bold;
+}
+
+.profit-container{
+    text-align: center;
+}
+
+.red-text{
+    color:red;
+}
+
+.green-text{
+    color:green;
 }

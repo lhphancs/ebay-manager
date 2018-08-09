@@ -3,106 +3,98 @@
   <mat-button-toggle value="calcNeededSale">Calculate Needed Sales</mat-button-toggle>
 </mat-button-toggle-group>
 
-<div class="div-right-align">
-  <table class="table table-bordered fee-table">
-    <tbody>
-      <tr>
-        <th scope="row">eBay fee percentage</th>
-        <td>{{ebayPercentageFromSaleFee | number : '1.2-2'}} %</td>
-      </tr>
-      <tr>
-        <th scope="row">Paypal fee percentage</th>
-        <td>{{paypalPercentageFromSaleFee | number : '1.2-2'}} %</td>
-      </tr>
-      <tr>
-        <th scope="row">Paypal flat fee</th>
-        <td>$ {{paypalFlatFee | number : '1.2-2'}}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+<div class="mx-4">
+  <div class="m-3">
+    <div class="d-flex justify-content-between text-bold">
+      <div>eBay fee percentage = {{ebayPercentageFromSaleFee | number : '1.2-2'}}%</div>
+      <div>Paypal fee percentage = {{paypalPercentageFromSaleFee | number : '1.2-2'}}%</div>
+      <div>Paypal flat fee = ${{paypalFlatFee | number : '1.2-2'}}</div>
+    </div>
+  </div>
 
-<div class="entire-form">
   <div class="form-row-container" fxLayoutWrap fxLayoutGap="0.5%">
     <div fxFlex="33%">
         <mat-form-field fxFlex>
-          <input [(ngModel)]='saleValue'
-            (change)="updateFees()" matInput placeholder="Sale value" required>
+          <input [(ngModel)]='saleValue' [disabled]="group.value!='calcProfit'"
+            (input)="updateFees(); updateTotalOrSaleValue(group.value)"
+            type="number" step="any" matInput placeholder="Sale value" required>
         </mat-form-field>
     </div>
 
     <div fxFlex="33%">
       <mat-form-field fxFlex>
-        <input [(ngModel)]='productCost' matInput placeholder="Product cost" required>
+        <input [(ngModel)]='productCost' matInput
+          (input)="updateTotalOrSaleValue(group.value)" placeholder="Product cost"
+          type="number" step="any" required>
       </mat-form-field>
     </div>
 
     <div fxFlex="33%">
       <mat-form-field fxFlex>
-        <input [(ngModel)]='miscCost' matInput placeholder="Misc cost" required>
+        <input [(ngModel)]='miscCost' matInput
+        (input)="updateTotalOrSaleValue(group.value)" placeholder="Misc cost"
+        type="number" step="any" required>
         <span matPrefix>&nbsp;</span>
       </mat-form-field>
     </div>
   </div>
-</div>
 
-<div>
-  <label class ="center_vertically red_text">Shipping Type:</label>
-    <select class = "margin_left_short red_text"
-            (change)="response_ship_change($event.target.value); response_update_calculations()">
-      <option *ngFor="let ship_option of ship_option_array">{{ship_option}}</option>
-    </select>
-
-    <div class="margin_left_long" *ngIf="show_first_class_shipping">
-      <label class = "red_text">Weight (oz):</label>
-      <select class = "red_text"
-              (change)="response_first_class_weight($event.target.value); response_update_calculations()">
-        <option *ngFor="let weight of oz_first_class_array"
-                [selected]="weight === first_class_weight">{{weight}}</option>
+  <div>
+    <label class ="center_vertically red_text">Shipping Type:</label>
+      <select class = "margin_left_short red_text"
+              (change)="response_ship_change($event.target.value); response_update_calculations">
+        <option *ngFor="let ship_option of ship_option_array">{{ship_option}}</option>
       </select>
+
+      <div class="margin_left_long" *ngIf="show_first_class_shipping">
+        <label class = "red_text">Weight (oz):</label>
+        <select class = "red_text"
+                (change)="response_first_class_weight($event.target.value); response_update_calculations()">
+          <option *ngFor="let weight of oz_first_class_array"
+                  [selected]="weight === first_class_weight">{{weight}}</option>
+        </select>
+    </div>
   </div>
-</div>
 
 
 
-<div>
-  <table class="table table-bordered fee-table">
-    <tbody>
-      <tr>
-        <th scope="row">Sale Value</th>
-        <td>{{saleValue}}</td>
-      </tr>
-      <tr>
-        <th scope="row">Product cost</th>
-        <td>{{productCost}}</td>
-      </tr>
-      <tr>
-        <th scope="row">Misc cost</th>
-        <td>{{miscCost}}</td>
-      </tr>
-      <tr>
-        <th scope="row">Shipping cost</th>
-        <td>{{shippingCost}}</td>
-      </tr>
-      <tr>
-        <th scope="row">eBay fee</th>
-        <td>{{totalEbayFee}}</td>
-      </tr>
-      <tr>
-        <th scope="row">Paypal fee</th>
-        <td>{{totalPaypalFee}}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-<div style="text-align:center">
-  <h4>Profit</h4>
-  <div *ngIf="group.value=='calcProfit'">
-    {{saleValue - productCost - miscCost
-                - shippingCost - totalEbayFee - totalPaypalFee}}
+  <div>
+    <table class="table table-bordered fee-table">
+      <tbody>
+        <tr>
+          <th scope="row">Sale Value</th>
+          <td>{{saleValue | number : '1.2-2'}}</td>
+        </tr>
+        <tr>
+          <th scope="row">Product cost</th>
+          <td>{{productCost | number : '1.2-2'}}</td>
+        </tr>
+        <tr>
+          <th scope="row">Misc cost</th>
+          <td>{{miscCost | number : '1.2-2'}}</td>
+        </tr>
+        <tr>
+          <th scope="row">Shipping cost</th>
+          <td>{{shippingCost | number : '1.2-2'}}</td>
+        </tr>
+        <tr>
+          <th scope="row">eBay fee</th>
+          <td>{{totalEbayFee | number : '1.2-2'}}</td>
+        </tr>
+        <tr>
+          <th scope="row">Paypal fee</th>
+          <td>{{totalPaypalFee | number : '1.2-2'}}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-  <mat-form-field *ngIf="group.value!='calcProfit'">
-    <input [(ngModel)]='total'
-      (change)="updateFees()" matInput placeholder="Desired Profit" required>
-  </mat-form-field>
+  <div class="profit-container">
+    <mat-form-field class="px-5">
+      <span>Profit:</span>
+      <input class="{{ totalProfit >= 1 ? 'green-text' : 'red-text'}}"
+        (input)="updateTotalOrSaleValue(group.value)"
+        [(ngModel)]="totalProfit" [disabled]="group.value=='calcProfit'"
+        type="number" step="any" matInput required>
+    </mat-form-field>
+  </div>
 </div>
