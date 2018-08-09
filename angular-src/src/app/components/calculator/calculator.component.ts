@@ -8,14 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CalculatorComponent implements OnInit {
   userId;
-  ebayPercentageFromSaleFee;
-  paypalPercentageFromSaleFee;
-  paypalFlatFee;
+
   saleValue;
   productCost;
   miscCost;
+  shippingCost = 0;
+  ebayPercentageFromSaleFee;
+  paypalPercentageFromSaleFee;
+  paypalFlatFee;
+  totalEbayFee;
+  totalPaypalFee;
 
-  constructor(private databaseUsersService:DatabaseUsersService) { }
+  constructor(private databaseUsersService:DatabaseUsersService) {
+  }
 
 
   ngOnInit() {
@@ -28,6 +33,14 @@ export class CalculatorComponent implements OnInit {
         this.paypalFlatFee = fees['paypalFlatFee'];
       }
     });
+  }
+  
+  updateFees(){
+    this.totalEbayFee= Math.round((this.ebayPercentageFromSaleFee*0.01
+        * this.saleValue)*100)/100;
+    this.totalPaypalFee = Math.round((this.paypalFlatFee
+        + this.paypalPercentageFromSaleFee*0.01
+        * this.saleValue)*100)/100;
   }
 
 }

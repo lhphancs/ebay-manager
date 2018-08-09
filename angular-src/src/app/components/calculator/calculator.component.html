@@ -1,15 +1,9 @@
-<ul class="nav nav-tabs">
-  <li class="nav-item" >
-    <a class="nav-link" routerLink='profit' routerLinkActive='anchor-active'>Calculate profit</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" routerLink='needed-sale' routerLinkActive='anchor-active'>Calculate sale</a>
-  </li>
-</ul>
+<mat-button-toggle-group value="calcProfit" #group="matButtonToggleGroup">
+  <mat-button-toggle value="calcProfit">Calculate Profit</mat-button-toggle>
+  <mat-button-toggle value="calcNeededSale">Calculate Needed Sales</mat-button-toggle>
+</mat-button-toggle-group>
 
-<router-outlet></router-outlet>
-
-<div>
+<div class="div-right-align">
   <table class="table table-bordered fee-table">
     <tbody>
       <tr>
@@ -28,37 +22,87 @@
   </table>
 </div>
 
+<div class="entire-form">
+  <div class="form-row-container" fxLayoutWrap fxLayoutGap="0.5%">
+    <div fxFlex="33%">
+        <mat-form-field fxFlex>
+          <input [(ngModel)]='saleValue'
+            (change)="updateFees()" matInput placeholder="Sale value" required>
+        </mat-form-field>
+    </div>
+
+    <div fxFlex="33%">
+      <mat-form-field fxFlex>
+        <input [(ngModel)]='productCost' matInput placeholder="Product cost" required>
+      </mat-form-field>
+    </div>
+
+    <div fxFlex="33%">
+      <mat-form-field fxFlex>
+        <input [(ngModel)]='miscCost' matInput placeholder="Misc cost" required>
+        <span matPrefix>&nbsp;</span>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+
+<div>
+  <label class ="center_vertically red_text">Shipping Type:</label>
+    <select class = "margin_left_short red_text"
+            (change)="response_ship_change($event.target.value); response_update_calculations()">
+      <option *ngFor="let ship_option of ship_option_array">{{ship_option}}</option>
+    </select>
+
+    <div class="margin_left_long" *ngIf="show_first_class_shipping">
+      <label class = "red_text">Weight (oz):</label>
+      <select class = "red_text"
+              (change)="response_first_class_weight($event.target.value); response_update_calculations()">
+        <option *ngFor="let weight of oz_first_class_array"
+                [selected]="weight === first_class_weight">{{weight}}</option>
+      </select>
+  </div>
+</div>
+
+
 
 <div>
   <table class="table table-bordered fee-table">
     <tbody>
       <tr>
         <th scope="row">Sale Value</th>
-        <td>{{saleValue | number : '1.2-2'}}</td>
+        <td>{{saleValue}}</td>
       </tr>
       <tr>
         <th scope="row">Product cost</th>
-        <td>{{productCost | number : '1.2-2'}}</td>
+        <td>{{productCost}}</td>
       </tr>
       <tr>
         <th scope="row">Misc cost</th>
-        <td>{{miscCost | number : '1.2-2'}}</td>
+        <td>{{miscCost}}</td>
       </tr>
       <tr>
         <th scope="row">Shipping cost</th>
-        <td>{{shippingCost | number : '1.2-2'}}</td>
+        <td>{{shippingCost}}</td>
       </tr>
       <tr>
         <th scope="row">eBay fee</th>
-        <td #ebayFee>{{ebayPercentageFromSaleFee*0.01*saleValue
-           | number : '1.2-2'}}</td>
+        <td>{{totalEbayFee}}</td>
       </tr>
       <tr>
         <th scope="row">Paypal fee</th>
-        <td>{{paypalFlatFee + paypalPercentageFromSaleFee*0.01*saleValue
-          | number : '1.2-2'}}</td>
+        <td>{{totalPaypalFee}}</td>
       </tr>
     </tbody>
   </table>
 </div>
-
+<div style="text-align:center">
+  <h4>Profit</h4>
+  <div *ngIf="group.value=='calcProfit'">
+    {{saleValue - productCost - miscCost
+                - shippingCost - totalEbayFee - totalPaypalFee}}
+  </div>
+  <mat-form-field *ngIf="group.value!='calcProfit'">
+    <input [(ngModel)]='total'
+      (change)="updateFees()" matInput placeholder="Desired Profit" required>
+  </mat-form-field>
+</div>

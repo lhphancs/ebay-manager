@@ -15,7 +15,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule, MatDialogModule, MatIconModule, MatProgressSpinnerModule } from '@angular/material';
+import { MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule, MatDialogModule, MatIconModule, MatProgressSpinnerModule, MatButtonToggleModule } from '@angular/material';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -32,8 +32,6 @@ import { AmazonComponent } from './components/amazon/amazon.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { FeesComponent } from './components/fees/fees.component';
 import { ShippingsComponent } from './components/shippings/shippings.component';
-import { CalculatorProfitComponent } from './components/calculator/calculator-profit/calculator-profit.component';
-import { CalculatorNeededSaleComponent } from './components/calculator/calculator-needed-sale/calculator-needed-sale.component';
 
 @NgModule({
   declarations: [
@@ -53,8 +51,6 @@ import { CalculatorNeededSaleComponent } from './components/calculator/calculato
     LogoutComponent,
     FeesComponent,
     ShippingsComponent,
-    CalculatorProfitComponent,
-    CalculatorNeededSaleComponent
   ],
   imports: [
     NgbModule.forRoot(),
@@ -64,6 +60,7 @@ import { CalculatorNeededSaleComponent } from './components/calculator/calculato
     MatTabsModule,
     FormsModule,
     MatButtonModule,
+    MatButtonToggleModule,
     MatCheckboxModule,
     MatDialogModule,
     MatFormFieldModule,
