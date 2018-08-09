@@ -12,3 +12,8 @@ th.mat-sort-header-sorted {
 .filter{
   width:50%;
 }
+
+.products-table-container{
+  height: 500px;
+  overflow: auto;
+}
