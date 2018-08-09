@@ -11,6 +11,9 @@ export class CalculatorComponent implements OnInit {
   ebayPercentageFromSaleFee;
   paypalPercentageFromSaleFee;
   paypalFlatFee;
+  saleValue;
+  productCost;
+  miscCost;
 
   constructor(private databaseUsersService:DatabaseUsersService) { }
 

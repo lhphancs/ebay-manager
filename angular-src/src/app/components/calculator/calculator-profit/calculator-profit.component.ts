@@ -1,3 +1,4 @@
+import { CalculatorComponent } from './../calculator.component';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CalculatorProfitComponent implements OnInit {
 
-  constructor() { }
+  constructor(private calculatorComponent:CalculatorComponent) {
+
+  }
 
   ngOnInit() {
   }

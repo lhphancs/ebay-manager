@@ -6,20 +6,59 @@
     <a class="nav-link" routerLink='needed-sale' routerLinkActive='anchor-active'>Calculate sale</a>
   </li>
 </ul>
-<table class="table table-bordered fee-table">
-  <tbody>
-    <tr>
-      <th scope="row">eBay fee percentage</th>
-      <td>{{ebayPercentageFromSaleFee | number : '1.2-2'}} %</td>
-    </tr>
-    <tr>
-      <th scope="row">Paypal fee percentage</th>
-      <td>{{paypalPercentageFromSaleFee | number : '1.2-2'}} %</td>
-    </tr>
-    <tr>
-      <th scope="row">Paypal flat fee</th>
-      <td>$ {{paypalFlatFee | number : '1.2-2'}}</td>
-    </tr>
-  </tbody>
-</table>
+
 <router-outlet></router-outlet>
+
+<div>
+  <table class="table table-bordered fee-table">
+    <tbody>
+      <tr>
+        <th scope="row">eBay fee percentage</th>
+        <td>{{ebayPercentageFromSaleFee | number : '1.2-2'}} %</td>
+      </tr>
+      <tr>
+        <th scope="row">Paypal fee percentage</th>
+        <td>{{paypalPercentageFromSaleFee | number : '1.2-2'}} %</td>
+      </tr>
+      <tr>
+        <th scope="row">Paypal flat fee</th>
+        <td>$ {{paypalFlatFee | number : '1.2-2'}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<div>
+  <table class="table table-bordered fee-table">
+    <tbody>
+      <tr>
+        <th scope="row">Sale Value</th>
+        <td>{{saleValue | number : '1.2-2'}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Product cost</th>
+        <td>{{productCost | number : '1.2-2'}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Misc cost</th>
+        <td>{{miscCost | number : '1.2-2'}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Shipping cost</th>
+        <td>{{shippingCost | number : '1.2-2'}}</td>
+      </tr>
+      <tr>
+        <th scope="row">eBay fee</th>
+        <td #ebayFee>{{ebayPercentageFromSaleFee*0.01*saleValue
+           | number : '1.2-2'}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Paypal fee</th>
+        <td>{{paypalFlatFee + paypalPercentageFromSaleFee*0.01*saleValue
+          | number : '1.2-2'}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
