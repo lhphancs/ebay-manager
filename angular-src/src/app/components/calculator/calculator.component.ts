@@ -1,5 +1,15 @@
+import { DatabaseShippingsService } from './../../services/database-shippings.service';
 import { DatabaseUsersService } from './../../services/database-users.service';
 import { Component, OnInit } from '@angular/core';
+
+class ShippingCompany{
+  name;
+  services;
+  constructor(name, services){
+    this.name = name;
+    this.services = services;
+  }
+}
 
 @Component({
   selector: 'calculator',
@@ -21,9 +31,24 @@ export class CalculatorComponent implements OnInit {
 
   totalProfit;
 
-  constructor(private databaseUsersService:DatabaseUsersService) {
+  shippingCompanies;
+  shippingCompanyObjects = {};
+  selectedShippingCompany;
+
+  constructor(private databaseUsersService:DatabaseUsersService
+    , private databaseShippingsService:DatabaseShippingsService) {
+      this.selectedShippingCompany = "USPS";
   }
 
+  loadShippings(){
+    this.databaseShippingsService.getShippings(this.userId).subscribe( (data) =>{
+      if(data['success']){
+        this.shippingCompanyObjects = data['shippings'];
+        this.shippingCompanies = Object.keys(this.shippingCompanyObjects);
+        this.shippingCompanies.push("FEDEX_TO_REMOVE");
+      }
+    });
+  }
 
   ngOnInit() {
     this.databaseUsersService.getProfile().subscribe( (data) =>{
@@ -33,6 +58,7 @@ export class CalculatorComponent implements OnInit {
         this.ebayPercentageFromSaleFee = fees['ebayPercentageFromSaleFee'];
         this.paypalPercentageFromSaleFee = fees['paypalPercentageFromSaleFee'];
         this.paypalFlatFee = fees['paypalFlatFee'];
+        this.loadShippings();
       }
     });
   }

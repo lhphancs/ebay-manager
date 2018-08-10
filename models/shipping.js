@@ -50,5 +50,19 @@ module.exports.addDefaultForNewUser = function(userId, callback){
 };
 
 module.exports.getShippingsById = function(userId, callback){
-    Shipping.find({userId: userId}, null, {select:'-userId -_id -__v'}, callback);
+    Shipping.find({userId: userId}, null, { sort:{company:'desc'}
+        , select:'-userId -_id -__v'}, (err, shippings) =>{
+        let shippingCompanies = {};
+        for(let i=0; i<shippings.length; ++i){
+            let entry = shippings[i];
+            let companyName = entry.company;
+            if(shippingCompanies[companyName] == undefined)
+                shippingCompanies[companyName] = [];
+            shippingCompanies[companyName].push({
+                shipMethod:entry.shipMethod,
+                ozPrice:entry.ozPrice
+            });
+        }
+        callback(err, shippingCompanies);
+    });
 };

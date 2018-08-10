@@ -39,7 +39,7 @@ export class DatabaseProductsService {
   getProducts(userId){
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
-    return this.httpClient.get(`api/products/${userId}`
+    return this.httpClient.get(`/api/products/${userId}`
     , {headers: headers});
   }
 
