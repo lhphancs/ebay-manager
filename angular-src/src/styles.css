@@ -53,6 +53,9 @@
     display: flex;
     justify-content: flex-end;
 }
+.div-center-align{
+    margin:auto;
+}
 
 .mat-button-toggle-checked{
     background-color:#619cff;

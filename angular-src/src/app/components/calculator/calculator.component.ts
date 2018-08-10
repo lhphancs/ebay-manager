@@ -50,7 +50,8 @@ export class CalculatorComponent implements OnInit {
       this.totalProfit = Math.round((this.saleValue - this.productCost - this.miscCost
         - this.shippingCost - this.totalEbayFee - this.totalPaypalFee)*100)/100;
     else{
-      this.saleValue = Math.round((this.totalProfit+this.paypalFlatFee + this.miscCost + this.shippingCost)
+      this.saleValue = Math.round((this.totalProfit+this.paypalFlatFee
+        + this.productCost + this.miscCost + this.shippingCost)
         / (1-this.paypalPercentageFromSaleFee*0.01 - this.ebayPercentageFromSaleFee*0.01)*100)/100;
       this.updateFees();
     }

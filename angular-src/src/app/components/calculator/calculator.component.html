@@ -12,34 +12,26 @@
     </div>
   </div>
 
-  <div class="form-row-container" fxLayoutWrap fxLayoutGap="0.5%">
-    <div fxFlex="33%">
-        <mat-form-field fxFlex>
-          <input [(ngModel)]='saleValue' [disabled]="group.value!='calcProfit'"
-            (input)="updateFees(); updateTotalOrSaleValue(group.value)"
-            type="number" step="any" matInput placeholder="Sale value" required>
-        </mat-form-field>
+  <div class="form-row mt-5">
+    <div class="form-group col-md-3 mr-5">
+      <label for="saleValue">Sale value</label>
+      <input type="number" step="any" class="form-control" id="saleValue"
+        [(ngModel)]='saleValue' [disabled]="group.value!='calcProfit'"
+        (input)="updateFees(); updateTotalOrSaleValue(group.value)">
     </div>
-
-    <div fxFlex="33%">
-      <mat-form-field fxFlex>
-        <input [(ngModel)]='productCost' matInput
-          (input)="updateTotalOrSaleValue(group.value)" placeholder="Product cost"
-          type="number" step="any" required>
-      </mat-form-field>
+    <div class="form-group col-md-3 mr-5">
+      <label for="productCost">Product cost</label>
+      <input type="number" step="any" class="form-control" id="productCost"
+        [(ngModel)]='productCost' (input)="updateTotalOrSaleValue(group.value)">
     </div>
-
-    <div fxFlex="33%">
-      <mat-form-field fxFlex>
-        <input [(ngModel)]='miscCost' matInput
-        (input)="updateTotalOrSaleValue(group.value)" placeholder="Misc cost"
-        type="number" step="any" required>
-        <span matPrefix>&nbsp;</span>
-      </mat-form-field>
+    <div class="form-group col-md-3 mr-5">
+      <label for="miscCost">Misc cost</label>
+      <input type="number" step="any" class="form-control" id="miscCost"
+        [(ngModel)]='miscCost' (input)="updateTotalOrSaleValue(group.value)">
     </div>
   </div>
 
-  <div>
+  <div class="mt-2">
     <label class ="center_vertically red_text">Shipping Type:</label>
       <select class = "margin_left_short red_text"
               (change)="response_ship_change($event.target.value); response_update_calculations">
@@ -58,7 +50,7 @@
 
 
 
-  <div>
+  <div class="mt-5 div-right-align">
     <table class="table table-bordered fee-table">
       <tbody>
         <tr>
@@ -88,13 +80,11 @@
       </tbody>
     </table>
   </div>
-  <div class="profit-container">
-    <mat-form-field class="px-5">
-      <span>Profit:</span>
-      <input class="{{ totalProfit >= 1 ? 'green-text' : 'red-text'}}"
-        (input)="updateTotalOrSaleValue(group.value)"
-        [(ngModel)]="totalProfit" [disabled]="group.value=='calcProfit'"
-        type="number" step="any" matInput required>
-    </mat-form-field>
+  <div class="profit-container div-center-align">
+    <label for="profit">Profit</label>
+    <input type="number" step="any"
+      class="form-control {{ totalProfit >= 1 ? 'green-text' : 'red-text'}}" id="profit"
+      [(ngModel)]="totalProfit" [disabled]="group.value=='calcProfit'"
+      type="number" step="any" (input)="updateTotalOrSaleValue(group.value)">
   </div>
 </div>
