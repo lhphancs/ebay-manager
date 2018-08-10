@@ -3,16 +3,8 @@
   <mat-button-toggle value="calcNeededSale">Calculate Needed Sales</mat-button-toggle>
 </mat-button-toggle-group>
 
-<div class="mx-4">
-  <div class="m-3">
-    <div class="d-flex justify-content-between text-bold">
-      <div>eBay fee percentage = {{ebayPercentageFromSaleFee | number : '1.2-2'}}%</div>
-      <div>Paypal fee percentage = {{paypalPercentageFromSaleFee | number : '1.2-2'}}%</div>
-      <div>Paypal flat fee = ${{paypalFlatFee | number : '1.2-2'}}</div>
-    </div>
-  </div>
-
-  <div class="form-row mt-5">
+<div class="mx-4 mt-4 form-containers">
+  <div class="form-row">
     <div class="form-group col-md-2 mr-5">
       <label for="saleValue">Sale value</label>
       <input type="number" step="any" class="form-control" id="saleValue"
@@ -32,52 +24,79 @@
   </div>
 
   <div class="mt-2">
-    <label class ="center_vertically red_text">Shipping Company:</label>
-    <button mat-stroked-button [matMenuTriggerFor]="menu" (change)="say()"
-      color="primary">{{selectedShippingCompany}}
-    </button>
-    <mat-menu #menu="matMenu">
-      <button *ngFor="let company of shippingCompanies" mat-menu-item>{{company}}</button>
-    </mat-menu>
+    <div class="div-inline mr-5">
+      <label class="center_vertically mr-1">Shipping Company:</label>
+      <button mat-stroked-button [matMenuTriggerFor]="menuCompanies"
+        color="primary">{{selectedCompany}}
+      </button>
+      <mat-menu #menuCompanies="matMenu">
+        <button *ngFor="let comp of companies"
+          mat-menu-item (click)="companySelect(comp)">{{comp}}</button>
+      </mat-menu>
+    </div>
+
+    <div class="div-inline mr-5">
+      <label class="center_vertically mr-1">Method:</label>
+      <button mat-stroked-button [matMenuTriggerFor]="menuMethods"
+        color="primary">{{selectedMethod}}
+      </button>
+      <mat-menu #menuMethods="matMenu">
+        <button *ngFor="let method of methods"
+          mat-menu-item (click)="methodSelect(method)">{{method}}</button>
+      </mat-menu>
+    </div>
+
+    <div class="div-inline mr-5" *ngIf="selectedWeight!=-1">
+      <label class="center_vertically mr-1">Weight(oz):</label>
+      <button mat-stroked-button [matMenuTriggerFor]="menuWeights"
+        color="primary">{{selectedWeight}}
+      </button>
+      <mat-menu #menuWeights="matMenu">
+        <button *ngFor="let weight of weights"
+          mat-menu-item (click)="weightSelect(weight)">{{weight}}</button>
+      </mat-menu>
+    </div>
   </div>
 
-
-
-  <div class="mt-5 div-right-align">
-    <table class="table table-bordered fee-table">
-      <tbody>
-        <tr>
-          <th scope="row">Sale Value</th>
-          <td>{{saleValue | number : '1.2-2'}}</td>
-        </tr>
-        <tr>
-          <th scope="row">Product cost</th>
-          <td>{{productCost | number : '1.2-2'}}</td>
-        </tr>
-        <tr>
-          <th scope="row">Misc cost</th>
-          <td>{{miscCost | number : '1.2-2'}}</td>
-        </tr>
-        <tr>
-          <th scope="row">Shipping cost</th>
-          <td>{{shippingCost | number : '1.2-2'}}</td>
-        </tr>
-        <tr>
-          <th scope="row">eBay fee</th>
-          <td>{{totalEbayFee | number : '1.2-2'}}</td>
-        </tr>
-        <tr>
-          <th scope="row">Paypal fee</th>
-          <td>{{totalPaypalFee | number : '1.2-2'}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="profit-container div-center-align col-md-2">
-    <label for="profit">Profit</label>
+  <div class="row mt-4 mx-3 div-right-align">
+    <label for="profit">Profit:</label>
     <input type="number" step="any"
-      class="form-control {{ totalProfit >= 1 ? 'green-text' : 'red-text'}}" id="profit"
+      class="input-profit mx-1 form-control {{ totalProfit >= 1 ? 'green-text' : 'red-text'}}" id="profit"
       [(ngModel)]="totalProfit" [disabled]="group.value=='calcProfit'"
       type="number" step="any" (input)="updateTotalOrSaleValue(group.value)">
   </div>
+</div>
+
+<div class="mt-5 mr-4 div-right-align">
+  <div class="mr-5">eBay fee percentage = {{ebayPercentageFromSaleFee | number : '1.2-2'}}%</div>
+  <div class="mr-5">Paypal fee percentage = {{paypalPercentageFromSaleFee | number : '1.2-2'}}%</div>
+  <div class="mr-5">Paypal flat fee = ${{paypalFlatFee | number : '1.2-2'}}</div>
+  <table class="table table-bordered fee-table">
+    <tbody>
+      <tr>
+        <th scope="row">Sale Value</th>
+        <td class="text-right green-text">{{saleValue | number : '1.2-2'}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Product cost</th>
+        <td class="text-right red-text">{{productCost | number : '1.2-2'}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Misc cost</th>
+        <td class="text-right red-text">{{miscCost | number : '1.2-2'}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Shipping cost</th>
+        <td class="text-right red-text">{{shippingCost | number : '1.2-2'}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Total eBay fee</th>
+        <td class="text-right red-text">{{totalEbayFee | number : '1.2-2'}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Total paypal fee</th>
+        <td class="text-right red-text">{{totalPaypalFee | number : '1.2-2'}}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>

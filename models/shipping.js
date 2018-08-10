@@ -32,20 +32,28 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
     { method:"Flat rate large box",         ozPrice:[ {oz: -1, price: 17.10}] }
 ];
 
+const DEFAULT_FEDEX_SHIP_METHOD_LIST = [
+    { method:"SOME FLAT RATE METHOD",       ozPrice:[ {oz: -1, price: 17.10}] }
+];
+
 const Shipping = module.exports = mongoose.model('Shipping', shippingSchema);
+
+function pushShipEntriesToArray(userId, arr, items, company){
+    items.forEach(item =>{
+        arr.push({
+            userId:userId,
+            company: company,
+            shipMethod: item.method,
+            ozPrice: item.ozPrice
+        })
+    });
+}
 
 module.exports.addDefaultForNewUser = function(userId, callback){
     entriesToBeInserted = [];
-    DEFAULT_USPS_SHIP_METHOD_LIST.forEach(item =>{
-        entriesToBeInserted.push(
-        {
-            userId: userId,
-            company: "USPS",
-            shipMethod: item.method,
-            ozPrice: item.ozPrice
-        }
-        );
-    });
+    pushShipEntriesToArray(userId, entriesToBeInserted, DEFAULT_USPS_SHIP_METHOD_LIST, "USPS");
+    pushShipEntriesToArray(userId, entriesToBeInserted, DEFAULT_FEDEX_SHIP_METHOD_LIST, "FEDEX");
+
     Shipping.insertMany(entriesToBeInserted, callback);
 };
 

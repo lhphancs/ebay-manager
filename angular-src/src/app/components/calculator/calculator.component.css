@@ -1,14 +1,9 @@
 .fee-table{
-    width:30%;
+    width:250px;
 }
 
 .text-bold{
     font-weight: bold;
-}
-
-.profit-container{
-    width:30%;
-    text-align: center;
 }
 
 .red-text{
@@ -17,4 +12,18 @@
 
 .green-text{
     color:green;
+}
+
+.div-inline{
+    display:inline;
+}
+
+.form-containers{
+    padding: 20px;
+    background-color: #e5f8ff;
+    border: 1px solid grey;
+}
+
+.input-profit{
+    width:200px;
 }

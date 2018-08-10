@@ -22,7 +22,7 @@ export class CalculatorComponent implements OnInit {
   saleValue;
   productCost;
   miscCost;
-  shippingCost = 0;
+  shippingCost;
   ebayPercentageFromSaleFee;
   paypalPercentageFromSaleFee;
   paypalFlatFee;
@@ -31,21 +31,59 @@ export class CalculatorComponent implements OnInit {
 
   totalProfit;
 
-  shippingCompanies;
-  shippingCompanyObjects = {};
-  selectedShippingCompany;
+  companies;
+  methods;
+  weights;
+
+  companyObjectsDict = {};
+  companyToMethodsDict = {};
+  companyMethodToWeightsDict = {};
+  companyMethodWeightToPriceDict = {};
+
+
+  selectedCompany;
+  selectedMethod;
+  selectedWeight;
 
   constructor(private databaseUsersService:DatabaseUsersService
     , private databaseShippingsService:DatabaseShippingsService) {
-      this.selectedShippingCompany = "USPS";
+      this.selectedCompany = "USPS";
   }
 
-  loadShippings(){
+  setDicts(){
+    for(let companyName in this.companyObjectsDict)
+    {
+      if(this.companyToMethodsDict[companyName] == undefined)
+        this.companyToMethodsDict[companyName] = [];
+      let companyShipMethodArray = this.companyObjectsDict[companyName];
+      for(let i=0; i<companyShipMethodArray.length; ++i){
+        let methodWithOzAndPrice = companyShipMethodArray[i];
+        this.companyToMethodsDict[companyName]
+          .push(methodWithOzAndPrice.shipMethod);
+
+        let ozPriceArray = methodWithOzAndPrice.ozPrice;
+        for(let j=0; j<ozPriceArray.length; ++j){
+          let methodToWeightsKey = companyName+methodWithOzAndPrice.shipMethod;
+          if(this.companyMethodToWeightsDict[methodToWeightsKey] == undefined)
+            this.companyMethodToWeightsDict[methodToWeightsKey] = [];
+          this.companyMethodToWeightsDict[methodToWeightsKey].push(ozPriceArray[j].oz);
+          let weightToPriceKey = methodToWeightsKey+ozPriceArray[j].oz;
+          if(this.companyMethodWeightToPriceDict[weightToPriceKey] == undefined)
+            this.companyMethodWeightToPriceDict[weightToPriceKey] = [];
+
+          this.companyMethodWeightToPriceDict[weightToPriceKey] = ozPriceArray[j].price;
+        }
+      }
+    }
+  }
+
+  loadAvailableShippings(){
     this.databaseShippingsService.getShippings(this.userId).subscribe( (data) =>{
       if(data['success']){
-        this.shippingCompanyObjects = data['shippings'];
-        this.shippingCompanies = Object.keys(this.shippingCompanyObjects);
-        this.shippingCompanies.push("FEDEX_TO_REMOVE");
+        this.companyObjectsDict = data['shippings'];
+        this.companies = Object.keys(this.companyObjectsDict);
+        this.setDicts();
+        this.companySelect(this.selectedCompany);
       }
     });
   }
@@ -58,7 +96,7 @@ export class CalculatorComponent implements OnInit {
         this.ebayPercentageFromSaleFee = fees['ebayPercentageFromSaleFee'];
         this.paypalPercentageFromSaleFee = fees['paypalPercentageFromSaleFee'];
         this.paypalFlatFee = fees['paypalFlatFee'];
-        this.loadShippings();
+        this.loadAvailableShippings();
       }
     });
   }
@@ -81,5 +119,24 @@ export class CalculatorComponent implements OnInit {
         / (1-this.paypalPercentageFromSaleFee*0.01 - this.ebayPercentageFromSaleFee*0.01)*100)/100;
       this.updateFees();
     }
+  }
+
+  weightSelect(weight){
+    this.selectedWeight = weight;
+    let key = this.selectedCompany + this.selectedMethod + weight;
+    this.shippingCost = this.companyMethodWeightToPriceDict[key];
+  }
+
+  methodSelect(method){
+    this.selectedMethod = method;
+    let key = this.selectedCompany+method;
+    this.weights = this.companyMethodToWeightsDict[key];
+    this.weightSelect(this.weights[0]);
+  }
+
+  companySelect(company){
+    this.selectedCompany = company;
+    this.methods = this.companyToMethodsDict[company];
+    this.methodSelect(this.methods[0]);
   }
 }
