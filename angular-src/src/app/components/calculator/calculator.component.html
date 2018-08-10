@@ -1,4 +1,4 @@
-<mat-button-toggle-group value="calcProfit" #group="matButtonToggleGroup">
+<mat-button-toggle-group #group="matButtonToggleGroup" [(ngModel)]="mode">
   <mat-button-toggle value="calcProfit">Calculate Profit</mat-button-toggle>
   <mat-button-toggle value="calcNeededSale">Calculate Needed Sales</mat-button-toggle>
 </mat-button-toggle-group>

@@ -18,6 +18,7 @@ class ShippingCompany{
 })
 export class CalculatorComponent implements OnInit {
   userId;
+  mode = "calcProfit";
 
   saleValue;
   productCost;
@@ -109,8 +110,8 @@ export class CalculatorComponent implements OnInit {
         * this.saleValue)*100)/100;
   }
 
-  updateTotalOrSaleValue(mode){
-    if(mode=="calcProfit")
+  updateTotalOrSaleValue(){
+    if(this.mode=="calcProfit")
       this.totalProfit = Math.round((this.saleValue - this.productCost - this.miscCost
         - this.shippingCost - this.totalEbayFee - this.totalPaypalFee)*100)/100;
     else{
@@ -125,6 +126,7 @@ export class CalculatorComponent implements OnInit {
     this.selectedWeight = weight;
     let key = this.selectedCompany + this.selectedMethod + weight;
     this.shippingCost = this.companyMethodWeightToPriceDict[key];
+    this.updateTotalOrSaleValue();
   }
 
   methodSelect(method){

@@ -4,7 +4,7 @@
   </div>
 </div>
 
-<form *ngIf="!errorMsg && displayRdy" #productForm="ngForm" class="entire-form" ngNativeValidate (ngSubmit)="onSubmit(productForm)">
+<form *ngIf="displayRdy" #productForm="ngForm" class="entire-form" ngNativeValidate (ngSubmit)="onSubmit(productForm)">
   <div class="form-row-container"fxLayoutWrap fxLayoutGap="0.5%">
     <div fxFlex="33%">
         <mat-form-field fxFlex>

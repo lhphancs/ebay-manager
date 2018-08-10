@@ -1,5 +1,4 @@
 import { ProductsComponent } from '../products.component';
-import { DatabaseUsersService } from '../../../services/database-users.service';
 import { Stack } from '../../../classesAndInterfaces/stack';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Product } from '../../../classesAndInterfaces/product';
@@ -9,13 +8,13 @@ import { MatSort, MatTableDataSource, MatSnackBar, MatDialog, MatDialogRef } fro
 import { openSnackbar } from '../../snackbar';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { DatabaseProductsService } from '../../../services/database-products.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'products-display',
   templateUrl: './products-display.component.html',
   styleUrls: ['./products-display.component.css']
 })
+
 export class ProductsDisplayComponent implements OnInit {
   userId;
   filterValue: string;
