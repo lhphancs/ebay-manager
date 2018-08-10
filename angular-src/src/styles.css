@@ -64,3 +64,11 @@
 .mat-button-toggle{
     color:black;
 }
+
+.mat-tooltip{
+    font-size:1em !important;
+}
+
+.center-vertically{
+    vertical-align: middle;
+}

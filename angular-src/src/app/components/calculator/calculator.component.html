@@ -6,17 +6,20 @@
 <div class="mx-4 mt-4 form-containers">
   <div class="form-row">
     <div class="form-group col-md-2 mr-5">
+      <mat-icon color="primary" matTooltip="Price that you want to sell for" class="center-vertically">info</mat-icon>
       <label for="saleValue">Sale value</label>
       <input type="number" step="any" class="form-control" id="saleValue"
         [(ngModel)]='saleValue' [disabled]="group.value!='calcProfit'"
         (input)="updateFees(); updateTotalOrSaleValue(group.value)">
     </div>
     <div class="form-group col-md-2 mr-5">
+      <mat-icon color="primary" matTooltip="Price that you bought it for" class="center-vertically">info</mat-icon>
       <label for="productCost">Product cost</label>
       <input type="number" step="any" class="form-control" id="productCost"
         [(ngModel)]='productCost' (input)="updateTotalOrSaleValue(group.value)">
     </div>
     <div class="form-group col-md-2 mr-5">
+      <mat-icon color="primary" matTooltip="(Optional) ex) Cost for box, bag, labels, etc..." class="center-vertically">info</mat-icon>
       <label for="miscCost">Misc cost</label>
       <input type="number" step="any" class="form-control" id="miscCost"
         [(ngModel)]='miscCost' (input)="updateTotalOrSaleValue(group.value)">
@@ -59,6 +62,7 @@
   </div>
 
   <div class="row mt-4 mx-3 div-right-align">
+    <mat-icon color="primary" matTooltip="Total profit after all costs/fees" class="center-vertically">info</mat-icon>
     <label for="profit">Profit:</label>
     <input type="number" step="any"
       class="input-profit mx-1 form-control {{ totalProfit >= 1 ? 'green-text' : 'red-text'}}" id="profit"
@@ -68,6 +72,7 @@
 </div>
 
 <div class="mt-5 mr-4 div-right-align">
+  <mat-icon color="primary" matTooltip="These values are taken from your &quot;Fees&quot; preferences" class="center-vertically">info</mat-icon>
   <div class="mr-5">eBay fee percentage = {{ebayPercentageFromSaleFee | number : '1.2-2'}}%</div>
   <div class="mr-5">Paypal fee percentage = {{paypalPercentageFromSaleFee | number : '1.2-2'}}%</div>
   <div class="mr-5">Paypal flat fee = ${{paypalFlatFee | number : '1.2-2'}}</div>

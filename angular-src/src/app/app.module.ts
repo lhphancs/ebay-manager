@@ -15,7 +15,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule, MatDialogModule, MatIconModule, MatProgressSpinnerModule, MatButtonToggleModule } from '@angular/material';
+import { MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule, MatDialogModule, MatIconModule, MatProgressSpinnerModule, MatButtonToggleModule, MatTooltipModule } from '@angular/material';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -50,7 +50,7 @@ import { ShippingsComponent } from './components/shippings/shippings.component';
     AmazonComponent,
     LogoutComponent,
     FeesComponent,
-    ShippingsComponent,
+    ShippingsComponent
   ],
   imports: [
     NgbModule.forRoot(),
@@ -58,7 +58,9 @@ import { ShippingsComponent } from './components/shippings/shippings.component';
     BrowserModule,
     BrowserAnimationsModule,
     MatTabsModule,
+    FlexLayoutModule,
     FormsModule,
+    HttpClientModule,
     MatButtonModule,
     MatButtonToggleModule,
     MatCheckboxModule,
@@ -74,8 +76,7 @@ import { ShippingsComponent } from './components/shippings/shippings.component';
     MatSnackBarModule,
     MatTableModule,
     MatTabsModule,
-    FlexLayoutModule,
-    HttpClientModule,
+    MatTooltipModule,
     ReactiveFormsModule,
   ],
   providers: [],
