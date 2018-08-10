@@ -192,7 +192,7 @@ export class ProductsAddOrUpdateComponent implements OnInit {
       else
         openSnackbar(this.snackBar, `Failed to add product: ${data['msg']}`);
     });
-    this.router.navigateByUrl('/database/products');
+    this.router.navigateByUrl('/products/display');
   }
   
   onSubmit(form){
