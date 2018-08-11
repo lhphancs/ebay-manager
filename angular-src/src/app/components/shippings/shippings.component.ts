@@ -16,17 +16,12 @@ export class ShippingsComponent implements OnInit {
     , private databaseShippingsService:DatabaseShippingsService) { }
 
 
-  setData(data){
-    this.shippings = data['shippings'];
-    console.log(this.shippings)
-  }
-
   ngOnInit() {
     this.databaseUsersService.getProfile().subscribe( (data) =>{
       if(data['_id']){
         this.userId = data['_id'];
         this.databaseShippingsService.getShippings(this.userId).subscribe((data) =>{
-          this.setData(data);
+        this.shippings = data['shippings'];
         });
       }
     });

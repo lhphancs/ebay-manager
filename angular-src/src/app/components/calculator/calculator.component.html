@@ -26,37 +26,40 @@
     </div>
   </div>
 
-  <div class="mt-2">
+  <div class="mt-2" *ngIf="shippings">
     <div class="div-inline mr-5">
       <label class="center_vertically mr-1">Shipping Company:</label>
       <button mat-stroked-button [matMenuTriggerFor]="menuCompanies"
         color="primary">{{selectedCompany}}
       </button>
       <mat-menu #menuCompanies="matMenu">
-        <button *ngFor="let comp of companies"
-          mat-menu-item (click)="companySelect(comp)">{{comp}}</button>
+        <button *ngFor="let company of objectKeys(shippings)"
+          mat-menu-item (click)="companySelect(company)">{{company}}</button>
       </mat-menu>
     </div>
 
     <div class="div-inline mr-5">
       <label class="center_vertically mr-1">Method:</label>
       <button mat-stroked-button [matMenuTriggerFor]="menuMethods"
-        color="primary">{{selectedMethod}}
+        color="primary">{{shippings[selectedCompany][selectedMethodIndex].shipMethod}}
       </button>
       <mat-menu #menuMethods="matMenu">
-        <button *ngFor="let method of methods"
-          mat-menu-item (click)="methodSelect(method)">{{method}}</button>
+        <button *ngFor="let methodObj of shippings[selectedCompany]; let i=index"
+          mat-menu-item (click)="methodSelect(i)">{{methodObj.shipMethod}}</button>
       </mat-menu>
     </div>
 
-    <div class="div-inline mr-5" *ngIf="selectedWeight!=-1">
+    <div class="div-inline mr-5"
+      *ngIf="shippings[selectedCompany][selectedMethodIndex].ozPrice[selectedOzPriceIndex].oz!=-1">
       <label class="center_vertically mr-1">Weight(oz):</label>
       <button mat-stroked-button [matMenuTriggerFor]="menuWeights"
-        color="primary">{{selectedWeight}}
+        color="primary">{{shippings[selectedCompany][selectedMethodIndex].ozPrice[selectedOzPriceIndex].oz}}
       </button>
       <mat-menu #menuWeights="matMenu">
-        <button *ngFor="let weight of weights"
-          mat-menu-item (click)="weightSelect(weight)">{{weight}}</button>
+        <button *ngFor="let ozPriceObj of
+            shippings[selectedCompany][selectedMethodIndex]['ozPrice'];
+            let i=index"
+          mat-menu-item (click)="weightSelect(i)">{{ozPriceObj['oz']}}</button>
       </mat-menu>
     </div>
   </div>

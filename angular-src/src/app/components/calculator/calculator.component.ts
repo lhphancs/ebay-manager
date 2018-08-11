@@ -17,72 +17,38 @@ class ShippingCompany{
   styleUrls: ['./calculator.component.css']
 })
 export class CalculatorComponent implements OnInit {
+  objectKeys = Object.keys;
   userId;
   mode = "calcProfit";
 
-  saleValue;
-  productCost;
-  miscCost;
-  shippingCost;
-  ebayPercentageFromSaleFee;
-  paypalPercentageFromSaleFee;
-  paypalFlatFee;
-  totalEbayFee;
-  totalPaypalFee;
+  saleValue:number;
+  productCost:number;
+  miscCost:number;
+  shippingCost:number;
+  ebayPercentageFromSaleFee:number;
+  paypalPercentageFromSaleFee:number;
+  paypalFlatFee:number;
+  totalEbayFee:number;
+  totalPaypalFee:number;
 
-  totalProfit;
+  totalProfit:number;
 
-  companies;
-  methods;
-  weights;
-
-  companyToMethodsDict = {};
-  companyMethodToWeightsDict = {};
-  companyMethodWeightToPriceDict = {};
-
+  shippings:object;
 
   selectedCompany;
-  selectedMethod;
-  selectedWeight;
+  selectedMethodIndex;
+  selectedOzPriceIndex;
 
   constructor(private databaseUsersService:DatabaseUsersService
     , private databaseShippingsService:DatabaseShippingsService) {
       this.selectedCompany = "USPS";
   }
 
-  setDicts(companyObjectsDict){
-    for(let companyName in companyObjectsDict)
-    {
-      if(this.companyToMethodsDict[companyName] == undefined)
-        this.companyToMethodsDict[companyName] = [];
-      let companyShipMethodArray = companyObjectsDict[companyName];
-      for(let i=0; i<companyShipMethodArray.length; ++i){
-        let methodWithOzAndPrice = companyShipMethodArray[i];
-        this.companyToMethodsDict[companyName]
-          .push(methodWithOzAndPrice.shipMethod);
-
-        let ozPriceArray = methodWithOzAndPrice.ozPrice;
-        for(let j=0; j<ozPriceArray.length; ++j){
-          let methodToWeightsKey = companyName+methodWithOzAndPrice.shipMethod;
-          if(this.companyMethodToWeightsDict[methodToWeightsKey] == undefined)
-            this.companyMethodToWeightsDict[methodToWeightsKey] = [];
-          this.companyMethodToWeightsDict[methodToWeightsKey].push(ozPriceArray[j].oz);
-          let weightToPriceKey = methodToWeightsKey+ozPriceArray[j].oz;
-          if(this.companyMethodWeightToPriceDict[weightToPriceKey] == undefined)
-            this.companyMethodWeightToPriceDict[weightToPriceKey] = [];
-
-          this.companyMethodWeightToPriceDict[weightToPriceKey] = ozPriceArray[j].price;
-        }
-      }
-    }
-  }
-
   loadAvailableShippings(){
     this.databaseShippingsService.getShippings(this.userId).subscribe( (data) =>{
       if(data['success']){
-        let companyObjectsDict = data['shippings'];
-        this.companies = Object.keys(companyObjectsDict);
-        this.setDicts(companyObjectsDict);
+        this.shippings=data['shippings'];
+        this.selectedCompany=this.objectKeys(this.shippings)[0];
         this.companySelect(this.selectedCompany);
       }
     });
@@ -121,23 +87,20 @@ export class CalculatorComponent implements OnInit {
     }
   }
 
-  weightSelect(weight){
-    this.selectedWeight = weight;
-    let key = this.selectedCompany + this.selectedMethod + weight;
-    this.shippingCost = this.companyMethodWeightToPriceDict[key];
+  weightSelect(ozPriceIndex){
+    this.selectedOzPriceIndex = ozPriceIndex;
     this.updateTotalOrSaleValue();
+    this.shippingCost = this.shippings[this.selectedCompany]
+      [this.selectedMethodIndex]['ozPrice'][this.selectedOzPriceIndex]['price'];
   }
 
-  methodSelect(method){
-    this.selectedMethod = method;
-    let key = this.selectedCompany+method;
-    this.weights = this.companyMethodToWeightsDict[key];
-    this.weightSelect(this.weights[0]);
+  methodSelect(methodIndex){
+    this.selectedMethodIndex = methodIndex;
+    this.weightSelect(0);
   }
 
   companySelect(company){
     this.selectedCompany = company;
-    this.methods = this.companyToMethodsDict[company];
-    this.methodSelect(this.methods[0]);
+    this.methodSelect(0);
   }
 }
