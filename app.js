@@ -10,7 +10,6 @@ const port = process.env.PORT || 3000;
 
 const apiUsers = require('./routes/api-users');
 const apiProducts = require('./routes/api-products');
-const apiShippings = require('./routes/api-shippings')
 
 const mongoPath = config.database;
 const mongoose = require('mongoose');
@@ -36,7 +35,6 @@ require('./config/passport')(passport);
 
 app.use('/api/users', apiUsers);
 app.use('/api/products', apiProducts);
-app.use('/api/shippings', apiShippings);
 
 app.get('/', (req, res) => {
     res.send('Hello World');

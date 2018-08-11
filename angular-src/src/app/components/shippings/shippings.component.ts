@@ -21,7 +21,7 @@ export class ShippingsComponent implements OnInit {
       if(data['_id']){
         this.userId = data['_id'];
         this.databaseShippingsService.getShippings(this.userId).subscribe((data) =>{
-        this.shippings = data['shippings'];
+          this.shippings = data['shippings'];
         });
       }
     });

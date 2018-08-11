@@ -78,4 +78,11 @@ router.put('/fees/update', (req, res, next) => {
     });
 });
 
+router.get('/shippings/:userId', (req, res, next) => {
+    User.getShippingsById( req.params.userId, (err, shippings) => {
+        if(err) res.json({success: false, msg: `Failed to grab fee: ${err.message}`});
+        else res.json({success:true,shippings: shippings});
+    });
+});
+
 module.exports = router;

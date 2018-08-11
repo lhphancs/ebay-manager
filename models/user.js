@@ -15,7 +15,7 @@ const userSchema = Schema({
             }
         , default:{ebayPercentageFromSaleFee:9.15, paypalPercentageFromSaleFee: 2.9,
         paypalFlatFee: 0.30}, required: true},
-    shippings:{ type:{
+    shippings:{ type:[{
         company: {type: String, required: true},
         shipMethods: { type: [{
                 name: {type: String, required: true},
@@ -23,7 +23,7 @@ const userSchema = Schema({
                     oz: { type: Number, min: -1 },
                     price: { type: Number, required: true, min: 0} }]}
             }], required: true },
-        }, default:defaultShippings, required: true
+        }], default:defaultShippings, required: true
 
     },
     ebayKey: {type: String, default:""}
@@ -80,21 +80,8 @@ module.exports.updateFeesById = function(userId, newFees, callback){
     });
 };
 
-// TO BE FIXED!!!!!!!!!!!!!!
 module.exports.getShippingsById = function(userId, callback){
-    Shipping.find({userId: userId}, null, { sort:{company:'desc'}
-        , select:'-userId -_id -__v'}, (err, shippings) =>{
-        let shippingCompanies = {};
-        for(let i=0; i<shippings.length; ++i){
-            let entry = shippings[i];
-            let companyName = entry.company;
-            if(shippingCompanies[companyName] == undefined)
-                shippingCompanies[companyName] = [];
-            shippingCompanies[companyName].push({
-                shipMethod:entry.shipMethod,
-                ozPrice:entry.ozPrice
-            });
-        }
-        callback(err, shippingCompanies);
+    User.findOne({_id: userId}, null, {select:'shippings -_id'}, (err, user) =>{
+        callback(err, user.shippings);
     });
 };

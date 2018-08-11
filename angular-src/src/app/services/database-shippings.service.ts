@@ -11,7 +11,7 @@ export class DatabaseShippingsService {
   getShippings(userId){
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
-    return this.httpClient.get(`/api/shippings/${userId}`
+    return this.httpClient.get(`/api/users/shippings/${userId}`
     , {headers: headers});
   }
 }

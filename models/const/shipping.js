@@ -9,17 +9,17 @@ const DEFAULT_USPS_FIRST_CLASS_OZ_PRICE = [
 ]
 
 const DEFAULT_USPS_SHIP_METHOD_LIST = [
-    { method:"First class",                 ozPrice: DEFAULT_USPS_FIRST_CLASS_OZ_PRICE},
-    { method:"Flat rate normal envelope",   ozPrice:[ {oz: -1, price: 6.35}] },
-    { method:"Flat rate legal envelope",    ozPrice:[ {oz: -1, price: 6.65}] },
-    { method:"Flat rate padded envelope",   ozPrice:[ {oz: -1, price: 6.90}] },
-    { method:"Flat rate small box",         ozPrice:[ {oz: -1, price: 6.85}] },
-    { method:"Flat rate medium box",        ozPrice:[ {oz: -1, price: 12.45}] },
-    { method:"Flat rate large box",         ozPrice:[ {oz: -1, price: 17.10}] }
+    { name:"First class",                 ozPrice: DEFAULT_USPS_FIRST_CLASS_OZ_PRICE},
+    { name:"Flat rate normal envelope",   ozPrice:[ {oz: -1, price: 6.35}] },
+    { name:"Flat rate legal envelope",    ozPrice:[ {oz: -1, price: 6.65}] },
+    { name:"Flat rate padded envelope",   ozPrice:[ {oz: -1, price: 6.90}] },
+    { name:"Flat rate small box",         ozPrice:[ {oz: -1, price: 6.85}] },
+    { name:"Flat rate medium box",        ozPrice:[ {oz: -1, price: 12.45}] },
+    { name:"Flat rate large box",         ozPrice:[ {oz: -1, price: 17.10}] }
 ];
 
 const DEFAULT_FEDEX_SHIP_METHOD_LIST = [
-    { method:"SOME FLAT RATE METHOD",       ozPrice:[ {oz: -1, price: 17.10}] }
+    { name:"SOME FLAT RATE METHOD",       ozPrice:[ {oz: -1, price: 17.10}] }
 ];
 
 const DEFAULT_SHIPPINGS = [
