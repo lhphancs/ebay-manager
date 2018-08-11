@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
-const Shipping = require('./shipping');
+const defaultShippings = require('./const/shipping');
 
 const saltRounds = 10;
 
@@ -15,6 +15,17 @@ const userSchema = Schema({
             }
         , default:{ebayPercentageFromSaleFee:9.15, paypalPercentageFromSaleFee: 2.9,
         paypalFlatFee: 0.30}, required: true},
+    shippings:{ type:{
+        company: {type: String, required: true},
+        shipMethods: { type: [{
+                name: {type: String, required: true},
+                ozPrice: {type:[{
+                    oz: { type: Number, min: -1 },
+                    price: { type: Number, required: true, min: 0} }]}
+            }], required: true },
+        }, default:defaultShippings, required: true
+
+    },
     ebayKey: {type: String, default:""}
 });
 userSchema.index({ email: 1, "fixedShippingInfo.service": 1 }, { unique: true })
@@ -27,14 +38,7 @@ module.exports.addUser = function(newUser, callback){
             if(err) callback(err, null);
             else{
                 newUser.password = hash;
-                newUser.save((err, user)=>{
-                    if(err) callback(err, null);
-                    else{
-                        Shipping.addDefaultForNewUser(user._id, (err, shipping)=>{
-                            callback(err, user);
-                        });
-                    }
-                });
+                newUser.save(callback);
             }
 
         });
@@ -73,5 +77,24 @@ module.exports.updateFeesById = function(userId, newFees, callback){
                 if(user) callback(err, user);
                 else callback(new Error("userId not found"), null);
             }
+    });
+};
+
+// TO BE FIXED!!!!!!!!!!!!!!
+module.exports.getShippingsById = function(userId, callback){
+    Shipping.find({userId: userId}, null, { sort:{company:'desc'}
+        , select:'-userId -_id -__v'}, (err, shippings) =>{
+        let shippingCompanies = {};
+        for(let i=0; i<shippings.length; ++i){
+            let entry = shippings[i];
+            let companyName = entry.company;
+            if(shippingCompanies[companyName] == undefined)
+                shippingCompanies[companyName] = [];
+            shippingCompanies[companyName].push({
+                shipMethod:entry.shipMethod,
+                ozPrice:entry.ozPrice
+            });
+        }
+        callback(err, shippingCompanies);
     });
 };
