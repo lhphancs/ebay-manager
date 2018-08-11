@@ -36,7 +36,6 @@ export class CalculatorComponent implements OnInit {
   methods;
   weights;
 
-  companyObjectsDict = {};
   companyToMethodsDict = {};
   companyMethodToWeightsDict = {};
   companyMethodWeightToPriceDict = {};
@@ -51,12 +50,12 @@ export class CalculatorComponent implements OnInit {
       this.selectedCompany = "USPS";
   }
 
-  setDicts(){
-    for(let companyName in this.companyObjectsDict)
+  setDicts(companyObjectsDict){
+    for(let companyName in companyObjectsDict)
     {
       if(this.companyToMethodsDict[companyName] == undefined)
         this.companyToMethodsDict[companyName] = [];
-      let companyShipMethodArray = this.companyObjectsDict[companyName];
+      let companyShipMethodArray = companyObjectsDict[companyName];
       for(let i=0; i<companyShipMethodArray.length; ++i){
         let methodWithOzAndPrice = companyShipMethodArray[i];
         this.companyToMethodsDict[companyName]
@@ -81,9 +80,9 @@ export class CalculatorComponent implements OnInit {
   loadAvailableShippings(){
     this.databaseShippingsService.getShippings(this.userId).subscribe( (data) =>{
       if(data['success']){
-        this.companyObjectsDict = data['shippings'];
-        this.companies = Object.keys(this.companyObjectsDict);
-        this.setDicts();
+        let companyObjectsDict = data['shippings'];
+        this.companies = Object.keys(companyObjectsDict);
+        this.setDicts(companyObjectsDict);
         this.companySelect(this.selectedCompany);
       }
     });

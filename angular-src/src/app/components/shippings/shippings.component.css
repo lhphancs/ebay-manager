@@ -1,0 +1,32 @@
+.method-btn{
+    width:250px;
+}
+
+.oz-price-tbl-row{
+    font-size: 0.7em;
+    line-height: 0px
+}
+.oz-price-tbl{
+    width:120px;
+    border: 1px solid grey;
+    display:inline-block;
+    overflow-y: auto;    /* Trigger vertical scroll    */
+    overflow-x: hidden;  /* Hide the horizontal scroll */
+    max-height:100px;
+    margin-bottom: 0px;
+}
+.tbl-header{
+    line-height:0px;
+    font-size: 0.7em;
+}
+
+.row-container{
+  border:thin black solid;
+  background-color:#daf7ff;
+  height: 120px;
+  vertical-align: middle;
+  display: inline-block;
+  align-items:center;
+  justify-content:center;
+  display:flex;
+}

@@ -1,3 +1,32 @@
-<p>
-  shippings works!
-</p>
+<ngb-tabset *ngIf="shippings">
+  <ngb-tab *ngFor="let company of objectKeys(shippings)" title={{company}}>
+    <ng-template ngbTabContent>
+      <div class="row-container" *ngFor="let index of objectKeys(shippings[company])">
+        <a href="#">
+          <button mat-icon-button>
+            <mat-icon >edit</mat-icon>
+          </button>
+        </a>
+        <button class="method-btn" mat-raised-button color="primary">
+          {{shippings[company][index]['shipMethod']}}</button>
+        <table class="table oz-price-tbl table-striped table-light ml-2">
+          <thead>
+            <tr>
+              <th class="tbl-header" scope="col">oz</th>
+              <th class="tbl-header" scope="col">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="oz-price-tbl-row" *ngFor="let ozPrice of shippings[company][index]['ozPrice']">
+              <td>{{ozPrice.oz}}</td>
+              <td>{{ozPrice.price}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <button mat-icon-button>
+          <mat-icon >delete</mat-icon>
+        </button>
+      </div>
+    </ng-template>
+  </ngb-tab>
+</ngb-tabset>
