@@ -22,9 +22,9 @@ const DEFAULT_FEDEX_SHIP_METHOD_LIST = [
     { name:"SOME FLAT RATE METHOD",       ozPrice:[ {oz: -1, price: 17.10}] }
 ];
 
-const DEFAULT_SHIPPINGS = [
-    { company: "USPS", shipMethods: DEFAULT_USPS_SHIP_METHOD_LIST},
-    { company: "FEDEX", shipMethods: DEFAULT_FEDEX_SHIP_METHOD_LIST}
+const DEFAULT_COMPANIES = [
+    { name: "USPS", shipMethods: DEFAULT_USPS_SHIP_METHOD_LIST},
+    { name: "FEDEX", shipMethods: DEFAULT_FEDEX_SHIP_METHOD_LIST}
 ];
 
-module.exports = DEFAULT_SHIPPINGS;
+module.exports = DEFAULT_COMPANIES;

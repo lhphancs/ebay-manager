@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
-const defaultShippings = require('./const/shipping');
+const defaultShipCompanies = require('./const/shipping');
 
 const saltRounds = 10;
 
@@ -15,15 +15,15 @@ const userSchema = Schema({
             }
         , default:{ebayPercentageFromSaleFee:9.15, paypalPercentageFromSaleFee: 2.9,
         paypalFlatFee: 0.30}, required: true},
-    shippings:{ type:[{
-        company: {type: String, required: true},
+    shipCompanies:{ type:[{
+        name: {type: String, required: true},
         shipMethods: { type: [{
                 name: {type: String, required: true},
                 ozPrice: {type:[{
                     oz: { type: Number, min: -1 },
                     price: { type: Number, required: true, min: 0} }]}
             }], required: true },
-        }], default:defaultShippings, required: true
+        }], default:defaultShipCompanies, required: true
 
     },
     ebayKey: {type: String, default:""}
@@ -80,8 +80,8 @@ module.exports.updateFeesById = function(userId, newFees, callback){
     });
 };
 
-module.exports.getShippingsById = function(userId, callback){
-    User.findOne({_id: userId}, null, {select:'shippings -_id'}, (err, user) =>{
-        callback(err, user.shippings);
+module.exports.getShipCompaniesById = function(userId, callback){
+    User.findOne({_id: userId}, null, {select:'shipCompanies -_id'}, (err, user) =>{
+        callback(err, user.shipCompanies);
     });
 };

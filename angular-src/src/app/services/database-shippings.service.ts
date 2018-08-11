@@ -8,10 +8,10 @@ export class DatabaseShippingsService {
 
   constructor(private httpClient:HttpClient) { }
 
-  getShippings(userId){
+  getShipCompanies(userId){
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
-    return this.httpClient.get(`/api/users/shippings/${userId}`
+    return this.httpClient.get(`/api/users/ship-companies/${userId}`
     , {headers: headers});
   }
 }

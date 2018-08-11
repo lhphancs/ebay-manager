@@ -35,21 +35,21 @@ export class CalculatorComponent implements OnInit {
 
   shippings:object;
 
-  selectedCompany;
+  selectedCompanyIndex;
   selectedMethodIndex;
   selectedOzPriceIndex;
 
   constructor(private databaseUsersService:DatabaseUsersService
     , private databaseShippingsService:DatabaseShippingsService) {
-      this.selectedCompany = "USPS";
   }
 
   loadAvailableShippings(){
-    this.databaseShippingsService.getShippings(this.userId).subscribe( (data) =>{
+    this.databaseShippingsService.getShipCompanies(this.userId).subscribe( (data) =>{
       if(data['success']){
         this.shippings=data['shippings'];
-        this.selectedCompany=this.objectKeys(this.shippings)[0];
-        this.companySelect(this.selectedCompany);
+        console.log(this.shippings)
+//        this.selectedCompany=this.objectKeys(this.shippings)[0];
+//        this.companySelect(this.selectedCompany);
       }
     });
   }
@@ -90,7 +90,7 @@ export class CalculatorComponent implements OnInit {
   weightSelect(ozPriceIndex){
     this.selectedOzPriceIndex = ozPriceIndex;
     this.updateTotalOrSaleValue();
-    this.shippingCost = this.shippings[this.selectedCompany]
+    //this.shippingCost = this.shippings[this.selectedCompany]
       [this.selectedMethodIndex]['ozPrice'][this.selectedOzPriceIndex]['price'];
   }
 
@@ -100,7 +100,7 @@ export class CalculatorComponent implements OnInit {
   }
 
   companySelect(company){
-    this.selectedCompany = company;
+    //this.selectedCompany = company;
     this.methodSelect(0);
   }
 }

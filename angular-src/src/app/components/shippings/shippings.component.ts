@@ -10,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
 export class ShippingsComponent implements OnInit {
   objectKeys = Object.keys;
   userId:string;
-  shippings:Object;
+  shipCompanies:Object;
 
   constructor(private databaseUsersService:DatabaseUsersService
     , private databaseShippingsService:DatabaseShippingsService) { }
@@ -20,8 +20,8 @@ export class ShippingsComponent implements OnInit {
     this.databaseUsersService.getProfile().subscribe( (data) =>{
       if(data['_id']){
         this.userId = data['_id'];
-        this.databaseShippingsService.getShippings(this.userId).subscribe((data) =>{
-          this.shippings = data['shippings'];
+        this.databaseShippingsService.getShipCompanies(this.userId).subscribe((data) =>{
+          this.shipCompanies = data['shipCompanies'];
         });
       }
     });
