@@ -21,7 +21,7 @@
 }
 
 .row-container{
-  border:thin black solid;
+  border-top: thin black solid;
   background-color:#daf7ff;
   height: 120px;
   vertical-align: middle;

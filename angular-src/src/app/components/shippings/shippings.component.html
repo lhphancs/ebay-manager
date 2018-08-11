@@ -1,6 +1,9 @@
 <ngb-tabset *ngIf="shippings">
   <ngb-tab *ngFor="let company of objectKeys(shippings)" title={{company}}>
     <ng-template ngbTabContent>
+      <button mat-icon-button>
+        <mat-icon color="primary">add_circle</mat-icon>
+      </button>
       <div class="row-container" *ngFor="let index of objectKeys(shippings[company])">
         <a href="#">
           <button mat-icon-button>
