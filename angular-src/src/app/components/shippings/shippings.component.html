@@ -1,10 +1,10 @@
 <ngb-tabset *ngIf="shippings">
   <ngb-tab *ngFor="let company of objectKeys(shippings)" title={{company}}>
     <ng-template ngbTabContent>
-      <button mat-icon-button>
+      <button class="mt-3" mat-icon-button>
         <mat-icon color="primary">add_circle</mat-icon>
       </button>
-      <div class="row-container" *ngFor="let index of objectKeys(shippings[company])">
+      <div class="row-container p-3" *ngFor="let index of objectKeys(shippings[company])">
         <a href="#">
           <button mat-icon-button>
             <mat-icon >edit</mat-icon>
@@ -13,16 +13,10 @@
         <button class="method-btn" mat-raised-button color="primary">
           {{shippings[company][index]['shipMethod']}}</button>
         <table class="table oz-price-tbl table-striped table-light ml-2">
-          <thead>
-            <tr>
-              <th class="tbl-header" scope="col">oz</th>
-              <th class="tbl-header" scope="col">Price</th>
-            </tr>
-          </thead>
           <tbody>
             <tr class="oz-price-tbl-row" *ngFor="let ozPrice of shippings[company][index]['ozPrice']">
-              <td>{{ozPrice.oz}}</td>
-              <td>{{ozPrice.price}}</td>
+              <td>{{ozPrice.oz}}oz</td>
+              <td>${{ozPrice.price}}</td>
             </tr>
           </tbody>
         </table>
