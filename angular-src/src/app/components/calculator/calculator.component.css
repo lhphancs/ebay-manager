@@ -21,3 +21,13 @@
 .input-profit{
     width:200px;
 }
+
+.mnu-btn{
+    font-size:0.8em;
+    height: 40px;
+    border: 1px solid grey;
+    background-color:#619cff;
+}
+.mnu-btn:hover{
+    background-color: #dfff30;
+}

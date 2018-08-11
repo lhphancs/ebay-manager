@@ -2,15 +2,6 @@ import { DatabaseShippingsService } from './../../services/database-shippings.se
 import { DatabaseUsersService } from './../../services/database-users.service';
 import { Component, OnInit } from '@angular/core';
 
-class ShippingCompany{
-  name;
-  services;
-  constructor(name, services){
-    this.name = name;
-    this.services = services;
-  }
-}
-
 @Component({
   selector: 'calculator',
   templateUrl: './calculator.component.html',
@@ -33,7 +24,7 @@ export class CalculatorComponent implements OnInit {
 
   totalProfit:number;
 
-  shippings:object;
+  shipCompanies:object;
 
   selectedCompanyIndex;
   selectedMethodIndex;
@@ -46,10 +37,8 @@ export class CalculatorComponent implements OnInit {
   loadAvailableShippings(){
     this.databaseShippingsService.getShipCompanies(this.userId).subscribe( (data) =>{
       if(data['success']){
-        this.shippings=data['shippings'];
-        console.log(this.shippings)
-//        this.selectedCompany=this.objectKeys(this.shippings)[0];
-//        this.companySelect(this.selectedCompany);
+        this.shipCompanies=data['shipCompanies'];
+        this.companySelect(0);
       }
     });
   }
@@ -90,7 +79,7 @@ export class CalculatorComponent implements OnInit {
   weightSelect(ozPriceIndex){
     this.selectedOzPriceIndex = ozPriceIndex;
     this.updateTotalOrSaleValue();
-    //this.shippingCost = this.shippings[this.selectedCompany]
+    this.shippingCost = this.shipCompanies[this.selectedCompanyIndex]['shipMethods']
       [this.selectedMethodIndex]['ozPrice'][this.selectedOzPriceIndex]['price'];
   }
 
@@ -99,8 +88,8 @@ export class CalculatorComponent implements OnInit {
     this.weightSelect(0);
   }
 
-  companySelect(company){
-    //this.selectedCompany = company;
+  companySelect(companyIndex){
+    this.selectedCompanyIndex = companyIndex;
     this.methodSelect(0);
   }
 }

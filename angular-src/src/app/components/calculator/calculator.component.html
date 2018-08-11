@@ -29,35 +29,34 @@
   <div class="mt-2" *ngIf="shipCompanies">
     <div class="div-inline mr-5">
       <label class="center_vertically mr-1">Shipping Company:</label>
-      <button mat-stroked-button [matMenuTriggerFor]="menuCompanies"
-        color="primary">{{selectedCompany}}
+      <button mat-raised-button color="primary"[matMenuTriggerFor]="menuCompanies">
+        {{shipCompanies[selectedCompanyIndex].name}}
       </button>
       <mat-menu #menuCompanies="matMenu">
-        <button *ngFor="let company of objectKeys(shipCompanies)"
-          mat-menu-item (click)="companySelect(company)">{{company}}</button>
+        <button class="mnu-btn" *ngFor="let companyObj of shipCompanies; let i=index"
+          mat-menu-item (click)="companySelect(i)">{{companyObj.name}}</button>
       </mat-menu>
     </div>
 
     <div class="div-inline mr-5">
       <label class="center_vertically mr-1">Method:</label>
-      <button mat-stroked-button [matMenuTriggerFor]="menuMethods"
-        color="primary">{{shipCompanies[selectedCompany][selectedMethodIndex].shipMethod}}
+      <button mat-raised-button color="primary" [matMenuTriggerFor]="menuMethods">
+        {{shipCompanies[selectedCompanyIndex]['shipMethods'][selectedMethodIndex].name}}
       </button>
       <mat-menu #menuMethods="matMenu">
-        <button *ngFor="let methodObj of shipCompanies[selectedCompany]; let i=index"
-          mat-menu-item (click)="methodSelect(i)">{{methodObj.shipMethod}}</button>
+        <button class="mnu-btn" *ngFor="let methodObj of shipCompanies[selectedCompanyIndex]['shipMethods']; let i=index"
+          mat-menu-item (click)="methodSelect(i)">{{methodObj.name}}</button>
       </mat-menu>
     </div>
-
     <div class="div-inline mr-5"
-      *ngIf="shipCompanies[selectedCompany][selectedMethodIndex].ozPrice[selectedOzPriceIndex].oz!=-1">
+      *ngIf="shipCompanies[selectedCompanyIndex]['shipMethods'][selectedMethodIndex].ozPrice[selectedOzPriceIndex].oz!=-1">
       <label class="center_vertically mr-1">Weight(oz):</label>
-      <button mat-stroked-button [matMenuTriggerFor]="menuWeights"
-        color="primary">{{shipCompanies[selectedCompany][selectedMethodIndex].ozPrice[selectedOzPriceIndex].oz}}
+      <button mat-raised-button color="primary" [matMenuTriggerFor]="menuWeights">
+        {{shipCompanies[selectedCompanyIndex]['shipMethods'][selectedMethodIndex]['ozPrice'][selectedOzPriceIndex].oz}}
       </button>
       <mat-menu #menuWeights="matMenu">
-        <button *ngFor="let ozPriceObj of
-            shipCompanies[selectedCompany][selectedMethodIndex]['ozPrice'];
+        <button class="mnu-btn" *ngFor="let ozPriceObj of
+            shipCompanies[selectedCompanyIndex]['shipMethods'][selectedMethodIndex]['ozPrice'];
             let i=index"
           mat-menu-item (click)="weightSelect(i)">{{ozPriceObj['oz']}}</button>
       </mat-menu>
@@ -73,7 +72,6 @@
       type="number" step="any" (input)="updateTotalOrSaleValue(group.value)">
   </div>
 </div>
-
 <div class="mt-5 mr-4 div-right-align">
   <mat-icon color="primary" matTooltip="These values are taken from your &quot;Fees&quot; preferences" class="center-vertically">info</mat-icon>
   <div class="mr-5">eBay fee percentage = {{ebayPercentageFromSaleFee | number : '1.2-2'}}%</div>
