@@ -84,7 +84,7 @@ export class DatabaseUsersService {
   getShipMethodById(shipMethodId){
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
-    return this.httpClient.get(`/api/users/ship-companies/ship-method/${shipMethodId}`
+    return this.httpClient.get(`/api/users/ship-method/${shipMethodId}`
     , {headers: headers});
   }
 }

@@ -85,8 +85,8 @@ router.get('/ship-companies/:userId', (req, res, next) => {
     });
 });
 
-router.get('/ship-companies/ship-method/:shipMethodId', (req, res, next) => {
-    User.getShipMethodById( req.params.shipMethodId, (err, shipMethod) => {
+router.get('/ship-method/:shipMethodId', (req, res, next) => {
+    User.getShipMethodById(req.params.shipMethodId, (err, shipMethod) => {
         if(err) res.json({success: false, msg: `Failed to find ship method: ${err.message}`});
         else res.json({success:true, shipMethod:shipMethod});
     });
