@@ -40,7 +40,8 @@
 
     <div class="div-inline mr-5">
       <label class="center_vertically mr-1">Method:</label>
-      <button mat-raised-button color="primary" [matMenuTriggerFor]="menuMethods">
+      <mat-icon color="primary" matTooltip="{{shipCompanies[selectedCompanyIndex]['shipMethods'][selectedMethodIndex].description}}" class="center-vertically">info</mat-icon>
+      <button class="ml-1" mat-raised-button color="primary" [matMenuTriggerFor]="menuMethods">
         {{shipCompanies[selectedCompanyIndex]['shipMethods'][selectedMethodIndex].name}}
       </button>
       <mat-menu #menuMethods="matMenu">

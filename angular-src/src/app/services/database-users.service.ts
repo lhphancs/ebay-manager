@@ -73,4 +73,18 @@ export class DatabaseUsersService {
     return this.httpClient.put('/api/users/fees/update'
     , {userId: userId, newFees: newFees}, {headers: headers});
   }
+
+  getShipCompanies(userId){
+    let headers = new HttpHeaders();
+    headers.append('Content-Type', 'application/json');
+    return this.httpClient.get(`/api/users/ship-companies/${userId}`
+    , {headers: headers});
+  }
+
+  getShipMethodById(shipMethodId){
+    let headers = new HttpHeaders();
+    headers.append('Content-Type', 'application/json');
+    return this.httpClient.get(`/api/users/ship-companies/ship-method/${shipMethodId}`
+    , {headers: headers});
+  }
 }

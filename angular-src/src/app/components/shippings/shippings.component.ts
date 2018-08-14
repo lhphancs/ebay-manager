@@ -1,5 +1,4 @@
 import { DatabaseUsersService } from './../../services/database-users.service';
-import { DatabaseShippingsService } from './../../services/database-shippings.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -12,15 +11,14 @@ export class ShippingsComponent implements OnInit {
   userId:string;
   shipCompanies:Object;
 
-  constructor(private databaseUsersService:DatabaseUsersService
-    , private databaseShippingsService:DatabaseShippingsService) { }
+  constructor(private databaseUsersService:DatabaseUsersService) { }
 
 
   ngOnInit() {
     this.databaseUsersService.getProfile().subscribe( (data) =>{
       if(data['_id']){
         this.userId = data['_id'];
-        this.databaseShippingsService.getShipCompanies(this.userId).subscribe((data) =>{
+        this.databaseUsersService.getShipCompanies(this.userId).subscribe((data) =>{
           this.shipCompanies = data['shipCompanies'];
         });
       }

@@ -42,7 +42,7 @@ export class ProductsAddOrUpdateComponent implements OnInit {
 
   constructor(private productsComponent:ProductsComponent,
       private databaseProductsService: DatabaseProductsService
-      , private route: ActivatedRoute
+      , private activatedRoute: ActivatedRoute
       , public snackBar: MatSnackBar
       , private router: Router)
       
@@ -50,7 +50,7 @@ export class ProductsAddOrUpdateComponent implements OnInit {
 
   ngOnInit() {
     this.userId = this.productsComponent.userId;
-    this.route.paramMap.subscribe(params => {
+    this.activatedRoute.paramMap.subscribe(params => {
       this.oldProductUPC = params.get('UPC');
       if(this.oldProductUPC)
         this.prepareProductUpdate();

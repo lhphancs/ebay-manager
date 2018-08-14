@@ -1,4 +1,3 @@
-import { DatabaseShippingsService } from './../../services/database-shippings.service';
 import { DatabaseUsersService } from './../../services/database-users.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -30,12 +29,11 @@ export class CalculatorComponent implements OnInit {
   selectedMethodIndex;
   selectedOzPriceIndex;
 
-  constructor(private databaseUsersService:DatabaseUsersService
-    , private databaseShippingsService:DatabaseShippingsService) {
+  constructor(private databaseUsersService:DatabaseUsersService) {
   }
 
   loadAvailableShippings(){
-    this.databaseShippingsService.getShipCompanies(this.userId).subscribe( (data) =>{
+    this.databaseUsersService.getShipCompanies(this.userId).subscribe( (data) =>{
       if(data['success']){
         this.shipCompanies=data['shipCompanies'];
         this.companySelect(0);

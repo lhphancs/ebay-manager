@@ -19,6 +19,7 @@ const userSchema = Schema({
         name: {type: String, required: true},
         shipMethods: { type: [{
                 name: {type: String, required: true},
+                description:{type: String},
                 ozPrice: {type:[{
                     oz: { type: Number, min: -1 },
                     price: { type: Number, required: true, min: 0} }]}
@@ -83,5 +84,12 @@ module.exports.updateFeesById = function(userId, newFees, callback){
 module.exports.getShipCompaniesById = function(userId, callback){
     User.findOne({_id: userId}, null, {select:'shipCompanies -_id'}, (err, user) =>{
         callback(err, user.shipCompanies);
+    });
+};
+
+module.exports.getShipMethodById = function(shipMethodId, callback){
+    User.findOne({"shipCompanies.shipMethods._id": shipMethodId}
+        , {"shipCompanies.$":1}, (err, shipMethod) =>{
+        callback(err, shipMethod);
     });
 };

@@ -1,3 +1,4 @@
+import { ShippingsEditComponent } from './components/shippings-edit/shippings-edit.component';
 import { ShippingsComponent } from './components/shippings/shippings.component';
 import { FeesComponent } from './components/fees/fees.component';
 import { LogoutComponent } from './components/logout/logout.component';
@@ -25,14 +26,16 @@ const routes: Routes = [
   { path: 'ebay', component: EbayComponent, canActivate:[AuthGuard] },
   { path: 'account', component: AccountComponent, canActivate:[AuthGuard] },
   { path: 'settings', component: SettingsComponent, canActivate:[AuthGuard] }, 
-  { path: 'products', component: ProductsComponent, canActivate:[AuthGuard] , 
+  { path: 'products', component: ProductsComponent, canActivate:[AuthGuard], 
     children: [
       { path: '', redirectTo: 'display', pathMatch: 'full' },
       { path: 'display', component: ProductsDisplayComponent },
       { path: 'update/:UPC', component: ProductsAddOrUpdateComponent },
       { path: 'add', component: ProductsAddOrUpdateComponent }
-    ]},
+    ]
+  },
   { path: 'shippings', component: ShippingsComponent, canActivate:[AuthGuard] }, 
+  { path: 'shippings/edit/:shipMethodId', component: ShippingsEditComponent, canActivate:[AuthGuard] }, 
   { path: 'fees', component: FeesComponent },
   { path: 'calculator', component: CalculatorComponent, canActivate:[AuthGuard] },
   { path: 'logout', component: LogoutComponent }
