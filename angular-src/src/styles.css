@@ -77,3 +77,7 @@
   height: 500px;
   overflow: auto;
 }
+
+.even-row{
+    background-color: #efefef;
+}

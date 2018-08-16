@@ -97,7 +97,7 @@ module.exports.getShipMethodById = function(shipMethodId, callback){
             {"$project":{"shipCompanies.shipMethods":1}},
             {"$group":{"_id":"$shipCompanies.shipMethods"}}
         ], (err, shipMethod) =>{
-            callback(err, shipMethod);
+            callback(err, shipMethod[0]._id);
         }
     );
 };
