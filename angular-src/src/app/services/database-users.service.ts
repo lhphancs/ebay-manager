@@ -9,15 +9,20 @@ export class DatabaseUsersService {
   authToken;
   user;
 
+  normalHeader;
+
   constructor(private httpClient: HttpClient) {
     this.loadToken();
   }
 
+  ngOnInit() {
+    this.normalHeader = new HttpHeaders();
+    this.normalHeader.append('Content-Type', 'application/json');
+  }
+
   auth(email, password){
-    let headers = new HttpHeaders();
-    headers.append('Content-Type', 'application/json');
     return this.httpClient.post('/api/users/auth'
-      , {email: email, password: password}, {headers: headers});
+      , {email: email, password: password}, {headers: this.normalHeader});
   }
 
   storeUserData(token, user){
@@ -28,10 +33,8 @@ export class DatabaseUsersService {
   }
 
   addUser(user){
-    let headers = new HttpHeaders();
-    headers.append('Content-Type', 'application/json');
     return this.httpClient.post('/api/users/add'
-    , user, {headers: headers});
+    , user, {headers: this.normalHeader});
   }
 
   loadToken(){
@@ -61,30 +64,33 @@ export class DatabaseUsersService {
   }
   
   getFees(userId){
-    let headers = new HttpHeaders();
-    headers.append('Content-Type', 'application/json');
     return this.httpClient.get(`/api/users/fees/${userId}`
-    , {headers: headers});
+    , {headers: this.normalHeader});
   }
 
   updateFees(userId, newFees){
-    let headers = new HttpHeaders();
-    headers.append('Content-Type', 'application/json');
     return this.httpClient.put('/api/users/fees/update'
-    , {userId: userId, newFees: newFees}, {headers: headers});
+    , {userId: userId, newFees: newFees}, {headers: this.normalHeader});
   }
 
   getShipCompanies(userId){
-    let headers = new HttpHeaders();
-    headers.append('Content-Type', 'application/json');
     return this.httpClient.get(`/api/users/ship-companies/${userId}`
-    , {headers: headers});
+    , {headers: this.normalHeader});
   }
 
   getShipMethodById(shipMethodId){
-    let headers = new HttpHeaders();
-    headers.append('Content-Type', 'application/json');
     return this.httpClient.get(`/api/users/ship-method/${shipMethodId}`
-    , {headers: headers});
+    , {headers: this.normalHeader});
+  }
+
+  addShipMethod(userId, shipMethod){
+    return this.httpClient.post(`/api/users/ship-method/add`
+    , {userId:userId, shipMethod:shipMethod}, {headers: this.normalHeader});
+  }
+
+  updateShipMethod(shipMethodId, shipMethod){
+    return this.httpClient.put(`/api/users/ship-method/update`
+    , {shipMethodId:shipMethodId, shipMethod:shipMethod}
+    , {headers: this.normalHeader});
   }
 }

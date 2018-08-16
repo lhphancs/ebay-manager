@@ -91,4 +91,17 @@ router.get('/ship-method/:shipMethodId', (req, res, next) => {
         else res.json({success:true, shipMethod:shipMethod});
     });
 });
-module.exports = router;
+router.post('/ship-method/add', (req, res, next) => {
+    User.addShipMethod(req.body, (err, shipMethod) => {
+        if(err) res.json({success: false, msg: `Failed to find ship method: ${err.message}`});
+        else res.json({success:true, shipMethod:shipMethod});
+    });
+});
+router.put('/ship-method/update', (req, res, next) => {
+    User.updateShipMethod(req.body.shipMethodId
+        , req.body.shipMethod, (err, shipMethod) => {
+            if(err) res.json({success: false, msg: `Failed to find ship method: ${err.message}`});
+            else res.json({success:true, shipMethod:shipMethod});
+    });
+});
+module.exports = router

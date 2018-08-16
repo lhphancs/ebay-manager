@@ -159,7 +159,7 @@ export class ProductsAddOrUpdateComponent implements OnInit {
     return validEntriesASIN;
   }
 
-  successResponse(form){
+  addSuccessResponse(form){
     //Clear form completely
     this.dataSource.data = [{ASIN: null, packAmt: null, preparation: null}];
     this.dataSource = new MatTableDataSource<EntryASIN>(this.dataSource.data);
@@ -179,7 +179,7 @@ export class ProductsAddOrUpdateComponent implements OnInit {
     this.databaseProductsService.addProduct(this.userId
       , product).subscribe(data => {
       if(data['success'])
-        this.successResponse(form);
+        this.addSuccessResponse(form);
       else
         openSnackbar(this.snackBar, `Failed to add product: ${data['msg']}`);
     });

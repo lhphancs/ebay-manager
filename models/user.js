@@ -101,3 +101,15 @@ module.exports.getShipMethodById = function(shipMethodId, callback){
         }
     );
 };
+
+module.exports.addShipMethod = function(userId, shipMethod, callback){
+    User.findOneAndUpdate({_id:userId}, {
+        $push: {
+            "shipCompanies.shipMethods": shipMethod
+        }
+    })
+};
+
+module.exports.updateShipMethod = function(shipMethodId, shipMethod, callback){
+    /////////////////User.findOneAndUpdate()
+};

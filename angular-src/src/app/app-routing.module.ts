@@ -35,7 +35,7 @@ const routes: Routes = [
     ]
   },
   { path: 'shippings', component: ShippingsComponent, canActivate:[AuthGuard] }, 
-  { path: 'shippings/edit/:shipMethodId', component: ShippingsEditComponent, canActivate:[AuthGuard] }, 
+  { path: 'shippings/:mode/:id', component: ShippingsEditComponent, canActivate:[AuthGuard] }, 
   { path: 'fees', component: FeesComponent },
   { path: 'calculator', component: CalculatorComponent, canActivate:[AuthGuard] },
   { path: 'logout', component: LogoutComponent }
