@@ -12,3 +12,7 @@ th.mat-sort-header-sorted {
 .filter{
   width:50%;
 }
+
+.header-row{
+  background-color: #d9e5ff;
+}

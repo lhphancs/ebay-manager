@@ -16,6 +16,8 @@ import { DatabaseProductsService } from '../../../services/database-products.ser
 })
 
 export class ProductsDisplayComponent implements OnInit {
+  loadingMsg = "Loading products..."
+
   userId;
   filterValue: string;
   products: Product[];

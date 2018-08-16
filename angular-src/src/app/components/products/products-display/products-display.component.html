@@ -11,95 +11,95 @@
   </button>
 </div>
 
-<div class="table-container">
-  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-    <!-- checkbox column -->
-    <ng-container matColumnDef="select">
-      <th mat-header-cell *matHeaderCellDef>
-        <mat-checkbox (change)="$event ? masterToggle() : null"
-          [checked]="selection.hasValue() && isAllSelected()"
-          [indeterminate]="selection.hasValue() && !isAllSelected()">
-        </mat-checkbox>
-      </th>
-      <td mat-cell *matCellDef="let row; let i=index;">
-        <mat-checkbox #chkbox (click)="$event.stopPropagation()"
-          (change)="$event ? selection.toggle(row) : null"
-          [checked]="selection.isSelected(row)">
-        </mat-checkbox>
-      </td>
-    </ng-container>
+<progress-spinner *ngIf="!dataSource" [msg]="loadingMsg"></progress-spinner>
 
-    <!-- brand column -->
-    <ng-container matColumnDef="brand">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Brand</th>
-      <td mat-cell *matCellDef="let element"> {{element.brand}} </td>
-    </ng-container>
+<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+  <!-- checkbox column -->
+  <ng-container matColumnDef="select">
+    <th mat-header-cell *matHeaderCellDef>
+      <mat-checkbox (change)="$event ? masterToggle() : null"
+        [checked]="selection.hasValue() && isAllSelected()"
+        [indeterminate]="selection.hasValue() && !isAllSelected()">
+      </mat-checkbox>
+    </th>
+    <td mat-cell *matCellDef="let row; let i=index;">
+      <mat-checkbox #chkbox (click)="$event.stopPropagation()"
+        (change)="$event ? selection.toggle(row) : null"
+        [checked]="selection.isSelected(row)">
+      </mat-checkbox>
+    </td>
+  </ng-container>
 
-    <!-- name column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-      <td mat-cell *matCellDef="let element"><a routerLink='/products/update/{{element.UPC}}'>{{element.name}}</a></td>
-    </ng-container>
+  <!-- brand column -->
+  <ng-container matColumnDef="brand">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Brand</th>
+    <td mat-cell *matCellDef="let element"> {{element.brand}} </td>
+  </ng-container>
 
-    <!-- stockNo column -->
-    <ng-container matColumnDef="stockNo">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Stock No.</th>
-      <td mat-cell *matCellDef="let element"> {{element.stockNo}} </td>
-    </ng-container>
+  <!-- name column -->
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+    <td mat-cell *matCellDef="let element"><a routerLink='/products/update/{{element.UPC}}'>{{element.name}}</a></td>
+  </ng-container>
 
-    <!-- costPerBox column -->
-    <ng-container matColumnDef="costPerBox">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Cost/Box</th>
-      <td mat-cell *matCellDef="let element"> {{element.costPerBox}} </td>
-    </ng-container>
+  <!-- stockNo column -->
+  <ng-container matColumnDef="stockNo">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Stock No.</th>
+    <td mat-cell *matCellDef="let element"> {{element.stockNo}} </td>
+  </ng-container>
 
-    <!-- quantityPerBox column -->
-    <ng-container matColumnDef="quantityPerBox">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity/Box</th>
-      <td mat-cell *matCellDef="let element"> {{element.quantityPerBox}} </td>
-    </ng-container>
+  <!-- costPerBox column -->
+  <ng-container matColumnDef="costPerBox">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Cost/Box</th>
+    <td mat-cell *matCellDef="let element"> {{element.costPerBox}} </td>
+  </ng-container>
 
-    <!-- UPC column -->
-    <ng-container matColumnDef="UPC">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>UPC</th>
-      <td mat-cell *matCellDef="let element"> {{element.UPC}} </td>
-    </ng-container>
+  <!-- quantityPerBox column -->
+  <ng-container matColumnDef="quantityPerBox">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity/Box</th>
+    <td mat-cell *matCellDef="let element"> {{element.quantityPerBox}} </td>
+  </ng-container>
 
-    <!-- purchasedLocation column -->
-    <ng-container matColumnDef="purchasedLocation">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Purchased Location</th>
-      <td mat-cell *matCellDef="let element"> {{element.purchasedLocation}} </td>
-    </ng-container>
+  <!-- UPC column -->
+  <ng-container matColumnDef="UPC">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>UPC</th>
+    <td mat-cell *matCellDef="let element"> {{element.UPC}} </td>
+  </ng-container>
 
-    <ng-container matColumnDef="asins">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>ASINS</th>
-      <td mat-cell *matCellDef="let element">
-          <ng-template #popContent>
-              <table class="table table-striped table-dark">
-                  <thead>
-                    <tr>
-                      <th scope="col">ASIN</th>
-                      <th scope="col">Pack Amt</th>
-                      <th scope="col">Preparation</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let entry of element.ASINS">
-                      <td>{{entry.ASIN}}</td>
-                      <td>{{entry.packAmt}}</td>
-                      <td>{{entry.preparation}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-          </ng-template>
-            
-          <button class="btn btn-secondary btn-sm" type="button"
-            popoverTitle="ASINS" [ngbPopover]="popContent"
-            placement="left" triggers="mouseenter:mouseleave">ASINS</button>
-      </td>
-    </ng-container>
+  <!-- purchasedLocation column -->
+  <ng-container matColumnDef="purchasedLocation">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Purchased Location</th>
+    <td mat-cell *matCellDef="let element"> {{element.purchasedLocation}} </td>
+  </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-</div>
+  <ng-container matColumnDef="asins">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>ASINS</th>
+    <td mat-cell *matCellDef="let element">
+        <ng-template #popContent>
+            <table class="table table-striped table-dark">
+                <thead>
+                  <tr>
+                    <th scope="col">ASIN</th>
+                    <th scope="col">Pack Amt</th>
+                    <th scope="col">Preparation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let entry of element.ASINS">
+                    <td>{{entry.ASIN}}</td>
+                    <td>{{entry.packAmt}}</td>
+                    <td>{{entry.preparation}}</td>
+                  </tr>
+                </tbody>
+              </table>
+        </ng-template>
+          
+        <button class="btn btn-secondary btn-sm" type="button"
+          popoverTitle="ASINS" [ngbPopover]="popContent"
+          placement="left" triggers="mouseenter:mouseleave">ASINS</button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header-row"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

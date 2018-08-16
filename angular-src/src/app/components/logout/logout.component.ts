@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./logout.component.css']
 })
 export class LogoutComponent implements OnInit {
+  loadingMsg="Logging Out...";
 
   constructor(private databaseUsersService:DatabaseUsersService
     , private router: Router) { }

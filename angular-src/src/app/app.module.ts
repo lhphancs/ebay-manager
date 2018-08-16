@@ -33,6 +33,7 @@ import { LogoutComponent } from './components/logout/logout.component';
 import { FeesComponent } from './components/fees/fees.component';
 import { ShippingsComponent } from './components/shippings/shippings.component';
 import { ShippingsEditComponent } from './components/shippings-edit/shippings-edit.component';
+import { ProgressSpinnerComponent } from './components/progress-spinner/progress-spinner.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { ShippingsEditComponent } from './components/shippings-edit/shippings-ed
     LogoutComponent,
     FeesComponent,
     ShippingsComponent,
-    ShippingsEditComponent
+    ShippingsEditComponent,
+    ProgressSpinnerComponent
   ],
   imports: [
     NgbModule.forRoot(),
