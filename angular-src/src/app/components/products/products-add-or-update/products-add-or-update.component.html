@@ -4,7 +4,7 @@
   </div>
 </div>
 
-<form *ngIf="displayRdy" #productForm="ngForm" class="entire-form" ngNativeValidate (ngSubmit)="onSubmit(productForm)">
+<form *ngIf="entries" #productForm="ngForm" class="entire-form" ngNativeValidate (ngSubmit)="onSubmit(productForm)">
   <div class="form-row-container"fxLayoutWrap fxLayoutGap="0.5%">
     <div fxFlex="33%">
         <mat-form-field fxFlex>
@@ -61,9 +61,7 @@
     </div>
   </div>
 
-  
-
-  <table-dynamic-input *ngIf="entries" [headers]="headers" [entries]="entries"></table-dynamic-input>
+  <table-dynamic-input [headers]="headers" [entries]="entries"></table-dynamic-input>
   <button mat-raised-button color="primary"
     type="submit" class="btn-block btn-submit mt-2">Submit
   </button>

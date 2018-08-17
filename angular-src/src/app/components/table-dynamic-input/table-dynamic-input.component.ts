@@ -13,6 +13,7 @@ export class TableDynamicInputComponent implements OnInit {
   @Input('entries') entries: Object[];
 
   headerNames:string[];
+  headerNamesWithSelect:string[];
   dataSource = new MatTableDataSource<Object>();
   selection = new SelectionModel<Object>(true, []);
 
@@ -24,9 +25,17 @@ export class TableDynamicInputComponent implements OnInit {
       this.headerNames.push(element['name']);
     });
   }
+  setHeaderNamesWithSelect(){
+    this.headerNamesWithSelect = [];
+    this.headerNamesWithSelect.push("select");
+    this.headerNames.forEach(element => {
+      this.headerNamesWithSelect.push(element);
+    });
+  }
 
   ngOnInit() {
     this.setHeaderNames();
+    this.setHeaderNamesWithSelect();
     this.dataSource.data = this.entries;
     this.dataSource.data.push( getNullValuesObj(this.headerNames) );
     this.dataSource = new MatTableDataSource<Object>(this.dataSource.data);
@@ -72,5 +81,12 @@ export class TableDynamicInputComponent implements OnInit {
       if( lastObj[key] != null) return true;
     }
     return false;
+  }
+
+  resetTable(emptyReferencedEntries){
+    this.entries = emptyReferencedEntries;
+    this.entries.push(getNullValuesObj(this.headerNames));
+    this.dataSource.data = this.entries;
+    this.dataSource = new MatTableDataSource<Object>(this.entries);
   }
 }

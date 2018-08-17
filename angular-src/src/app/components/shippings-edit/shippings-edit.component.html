@@ -1,5 +1,5 @@
 
-<form *ngIf="dataSource" #shipMethodForm="ngForm" class="entire-form" ngNativeValidate (ngSubmit)="onSubmit(shipMethodForm)">
+<form *ngIf="entries" #shipMethodForm="ngForm" class="entire-form" ngNativeValidate (ngSubmit)="onSubmit(shipMethodForm)">
   <div class="form-row-container"fxLayoutWrap fxLayoutGap="0.5%">
     <div fxFlex="33%">
         <mat-form-field fxFlex>
@@ -14,53 +14,8 @@
       </mat-form-field>
     </div>
   </div>
-  
-  <button type="button" mat-raised-button
-    [disabled]="selection.selected.length == 0" (click)="removeSelectedRows()">Delete
-  </button>
 
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    <!-- checkbox column -->
-    <ng-container matColumnDef="select">
-      <th mat-header-cell *matHeaderCellDef>
-        <mat-checkbox (change)="$event ? masterToggle() : null"
-          [checked]="selection.hasValue() && isAllSelected()"
-          [indeterminate]="selection.hasValue() && !isAllSelected()">
-        </mat-checkbox>
-      </th>
-      <td mat-cell *matCellDef="let row; let i=index;">
-        <mat-checkbox #chkbox (click)="$event.stopPropagation()"
-          (change)="$event ? selection.toggle(row) : null"
-          [checked]="selection.isSelected(row)">
-        </mat-checkbox>
-      </td>
-    </ng-container>
-  
-    <!-- oz column -->
-    <ng-container matColumnDef="oz">
-      <th mat-header-cell *matHeaderCellDef>Oz</th>
-      <td mat-cell *matCellDef="let entry">
-        <input [(ngModel)]="entry.oz"
-        ngModel [ngModelOptions]="{standalone: true}"
-        (ngModelChange)="addBlankEntryIfNeeded()" type="number" min="-1" step="any">
-      </td>
-    </ng-container>
-  
-    <!-- price column -->
-    <ng-container matColumnDef="price">
-      <th mat-header-cell *matHeaderCellDef>Price</th>
-      <td mat-cell *matCellDef="let entry">
-        <input [(ngModel)]="entry.price"
-        ngModel [ngModelOptions]="{standalone: true}"
-        (ngModelChange)="addBlankEntryIfNeeded()" type="number" min="0" step="any">
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; let isEvenRow=even; columns: displayedColumns;"
-      [class.even-row]="isEvenRow">
-    </tr>
-  </table>
+  <table-dynamic-input [headers]="headers" [entries]="entries"></table-dynamic-input>
 
   <button mat-raised-button color="primary"
     type="submit" class="btn-block btn-submit mt-2">Submit

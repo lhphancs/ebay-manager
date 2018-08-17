@@ -1,8 +1,7 @@
+import { TableDynamicInputComponent } from './../../table-dynamic-input/table-dynamic-input.component';
 import { ProductsComponent } from '../products.component';
 import { ViewChild, ElementRef } from '@angular/core';
 //Add and update page do almost the same thing, so just clump code together
-
-import { EntryASIN } from '../../../classesAndInterfaces/entryASIN';
 
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,7 +9,8 @@ import { Product } from '../../../classesAndInterfaces/product';
 import { MatSnackBar } from '@angular/material';
 import { openSnackbar } from '../../snackbar';
 import { DatabaseProductsService } from '../../../services/database-products.service';
-import { getNullValuesObj } from '../../table-methods'
+import { getProcessedEntries } from '../../table-methods'
+import { getHeaderNames } from '../../table-methods'
 
 @Component({
   selector: 'products-add-or-update',
@@ -19,6 +19,8 @@ import { getNullValuesObj } from '../../table-methods'
 })
 
 export class ProductsAddOrUpdateComponent implements OnInit {
+  @ViewChild(TableDynamicInputComponent) viewTable;
+
   //used for update page
   userId;
   displayRdy = false;
@@ -32,14 +34,13 @@ export class ProductsAddOrUpdateComponent implements OnInit {
   inputCostPerBox;
   inputQuantityPerBox;
 
-  entries;
+  entries:object[];
   headers: object[] = [
-    {name:'select'}
-    , {name:'ASIN', type:"string"}
+    {name:'ASIN', type:"string"}
     , {name:'packAmt', type:"number", min:1, step:"1"}
     , {name:'preparation', type:"string"}
   ];
-  headerNames;
+  headerNames:string[];
 
 
   oldProductUPC: string;
@@ -53,7 +54,7 @@ export class ProductsAddOrUpdateComponent implements OnInit {
   { }
 
   ngOnInit() {
-    this.setHeaderNames();
+    this.headerNames = getHeaderNames(this.headers);
     this.userId = this.productsComponent.userId;
     this.activatedRoute.paramMap.subscribe(params => {
       this.oldProductUPC = params.get('UPC');
@@ -63,13 +64,6 @@ export class ProductsAddOrUpdateComponent implements OnInit {
         this.entries = [];
         this.displayRdy = true;
       }
-    });
-  }
-
-  setHeaderNames(){
-    this.headerNames = [];
-    this.headers.forEach(element => {
-      this.headerNames.push(element['name']);
     });
   }
 
@@ -102,50 +96,11 @@ export class ProductsAddOrUpdateComponent implements OnInit {
     });
   }
 
-  isEmptyStringField(value){
-    if(value == null) return true;
-      return value.trim() == "";
-  }
-
-  isEmptyEntry(entry){
-    return this.isEmptyStringField(entry.ASIN)
-      && entry.packAmt == null && this.isEmptyStringField(entry.preparation);
-  }
-
-  isCompleteEntry(entry){
-    return !this.isEmptyStringField(entry.ASIN)
-      && entry.packAmt != null && !this.isEmptyStringField(entry.preparation);
-  }
-
-  //Gets all the entries. Returns null if half complete entry exist
-  getEntriesASIN(){
-    console.log(this.entries)
-    let validEntriesASIN = [];
-    for(let entry of this.entries){
-      if(this.isEmptyEntry(entry))
-        continue;
-      if( this.isCompleteEntry(entry) )
-        validEntriesASIN.push(entry);
-      else
-        return null;
-    };
-    return validEntriesASIN;
-   return null;
-  }
-
-  addSuccessResponse(form){
-    //Clear form completely
-    this.entries = getNullValuesObj(this.headerNames);
-    form.resetForm();
-
-    openSnackbar(this.snackBar, 'Successfully added product');
-  }
-
-  getNewProductObject(processedEntriesASIN){
+  getNewProductObject(processedEntries){
     return new Product(this.inputBrand, this.inputName, this.inputUPC
       , this.inputCostPerBox, this.inputQuantityPerBox
         , this.inputPurchasedLocation, this.inputStockNo, this.inputOz
-        , processedEntriesASIN);
+        , processedEntries);
   }
 
   addProduct(product, form){
@@ -156,6 +111,15 @@ export class ProductsAddOrUpdateComponent implements OnInit {
       else
         openSnackbar(this.snackBar, `Failed to add product: ${data['msg']}`);
     });
+  }
+
+  addSuccessResponse(form){
+    //Clear form completely
+    form.resetForm();
+    this.entries=[];
+    this.viewTable.resetTable(this.entries);
+
+    openSnackbar(this.snackBar, 'Successfully added product');
   }
 
   updateProduct(oldProductUPC, newProduct){
@@ -169,11 +133,11 @@ export class ProductsAddOrUpdateComponent implements OnInit {
   }
   
   onSubmit(form){
-    let processedEntriesASIN = this.getEntriesASIN();
-    if(processedEntriesASIN == null)
+    let processedEntries = getProcessedEntries(this.entries);
+    if(processedEntries == null)
       openSnackbar(this.snackBar, 'Failed to add product: Partially filled ASIN entry exists. Complete or remove the entry.');
     else{
-      let newProduct = this.getNewProductObject(processedEntriesASIN);
+      let newProduct = this.getNewProductObject(processedEntries);
       if(this.oldProductUPC)
         this.updateProduct(this.oldProductUPC, newProduct)
       else
