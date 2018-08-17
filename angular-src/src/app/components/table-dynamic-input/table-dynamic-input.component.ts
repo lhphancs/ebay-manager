@@ -1,6 +1,7 @@
 import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, Input } from '@angular/core';
+import { getNullValuesObj } from '../table-methods'
 
 @Component({
   selector: 'table-dynamic-input',
@@ -8,26 +9,26 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./table-dynamic-input.component.css']
 })
 export class TableDynamicInputComponent implements OnInit {
-  @Input('normalHeaders') normalHeaders: string[];
-  @Input('nonTableHeaders') nonTableHeaders: string[];
+  @Input('headers') headers: Object[];
   @Input('entries') entries: Object[];
 
+  headerNames:string[];
   dataSource = new MatTableDataSource<Object>();
   selection = new SelectionModel<Object>(true, []);
 
-  getNullValuesObj(){
-      let nullValueObj = {};
-      for(let key of this.normalHeaders){
-        nullValueObj[key] = null;
-      }
-      return nullValueObj;
-  }
-
   constructor() {}
 
+  setHeaderNames(){
+    this.headerNames = [];
+    this.headers.forEach(element => {
+      this.headerNames.push(element['name']);
+    });
+  }
+
   ngOnInit() {
+    this.setHeaderNames();
     this.dataSource.data = this.entries;
-    this.dataSource.data.push({ASIN:null, packAmt:null, preparation: null});
+    this.dataSource.data.push( getNullValuesObj(this.headerNames) );
     this.dataSource = new MatTableDataSource<Object>(this.dataSource.data);
   }
 
@@ -47,7 +48,7 @@ export class TableDynamicInputComponent implements OnInit {
 
   addBlankEntryIfNeeded(): void{
     if(this.dataSource.data.length <= 0 || this.isFilledLastEntry()){
-      this.dataSource.data.push(this.getNullValuesObj());
+      this.dataSource.data.push( getNullValuesObj(this.headerNames) );
       this.dataSource = new MatTableDataSource<Object>(this.dataSource.data);
     }  
   }
