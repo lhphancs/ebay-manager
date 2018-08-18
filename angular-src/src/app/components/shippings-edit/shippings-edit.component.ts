@@ -20,6 +20,9 @@ export class ShippingsEditComponent implements OnInit {
   mode:string;
   paramId:string;
 
+  isFlatRate:boolean;
+  flatRateCost:number;
+
   name:string;
   description:string;
   entries:object[];

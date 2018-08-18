@@ -107,7 +107,15 @@ module.exports.addShipMethod = function(userId, shipMethod, callback){
         $push: {
             "shipCompanies.shipMethods": shipMethod
         }
-    })
+    }, callback);
+};
+
+module.exports.deleteShipMethod = function(userId, shipMethodId, callback){
+    User.findOneAndUpdate({_id:userId},
+        {$pull: {"shipCompanies.$[].shipMethods": {"_id":shipMethodId}}
+        }, (err, user) =>{
+            callback(err, shipMethodId);
+    });
 };
 
 module.exports.updateShipMethod = function(shipMethodId, shipMethod, callback){

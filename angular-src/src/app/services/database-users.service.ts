@@ -1,6 +1,7 @@
-import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { HttpHeaders, HttpClient} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { RequestOptions } from '@angular/http';
 
 @Injectable({
   providedIn: 'root'
@@ -86,6 +87,15 @@ export class DatabaseUsersService {
   addShipMethod(userId, shipMethod){
     return this.httpClient.post(`/api/users/ship-method/add`
     , {userId:userId, shipMethod:shipMethod}, {headers: this.normalHeader});
+  }
+
+  deleteShipMethod(userId, shipMethodId){
+    let options = {
+      headers: this.normalHeader,
+      body: {userId:userId, shipMethodId:shipMethodId}
+    }
+    return this.httpClient.delete(`/api/users/ship-method/delete`
+    , options);
   }
 
   updateShipMethod(shipMethodId, shipMethod){

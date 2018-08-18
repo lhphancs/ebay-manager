@@ -1,3 +1,9 @@
 table {
     width: 50%;
 }
+
+.flat-rate-container{
+    background-color:#e8d977;
+    width: 50%;
+    border: 1px solid grey;
+}

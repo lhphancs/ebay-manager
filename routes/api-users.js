@@ -104,4 +104,11 @@ router.put('/ship-method/update', (req, res, next) => {
             else res.json({success:true, shipMethod:shipMethod});
     });
 });
+
+router.delete('/ship-method/delete', (req, res, next) => {
+    User.deleteShipMethod(req.body.userId, req.body.shipMethodId, (err, shipMethodId) =>{
+        if(err) res.json({success: false, msg: `Failed to delete ship method: ${err.message}`});
+        else res.json({success:true, shipMethodId:shipMethodId});
+    });
+});
 module.exports = router
