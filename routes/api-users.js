@@ -65,28 +65,28 @@ router.post('/auth', (req, res, next) =>{
 });
 
 router.get('/fees/:userId', (req, res, next) => {
-    User.getFeesById( req.params.userId, (err, fees) => {
+    User.getFees( req.params.userId, (err, fees) => {
         if(err) res.json({success: false, msg: `Failed to grab fee: ${err.message}`});
         else res.json({success:true, fees: fees});
     });
 });
 
 router.put('/fees/update', (req, res, next) => {
-    User.updateFeesById( req.body.userId, req.body.newFees, (err, fees) => {
+    User.updateFees( req.body.userId, req.body.newFees, (err, fees) => {
         if(err) res.json({success: false, msg: err.message});
         else res.json({success:true, msg: fees});
     });
 });
 
 router.get('/ship-companies/:userId', (req, res, next) => {
-    User.getShipCompaniesById( req.params.userId, (err, shipCompanies) => {
+    User.getShipCompanies( req.params.userId, (err, shipCompanies) => {
         if(err) res.json({success: false, msg: `Failed to grab fee: ${err.message}`});
         else res.json({success:true, shipCompanies: shipCompanies});
     });
 });
 
 router.get('/ship-method/:shipMethodId', (req, res, next) => {
-    User.getShipMethodById(req.params.shipMethodId, (err, shipMethod) => {
+    User.getShipMethod(req.params.shipMethodId, (err, shipMethod) => {
         if(err) res.json({success: false, msg: `Failed to find ship method: ${err.message}`});
         else res.json({success:true, shipMethod:shipMethod});
     });
@@ -98,7 +98,7 @@ router.post('/ship-method/add', (req, res, next) => {
     });
 });
 router.put('/ship-method/update', (req, res, next) => {
-    User.updateShipMethod(req.body.shipMethodId
+    User.updateShipMethod(req.body.userId, req.body.shipMethodId
         , req.body.shipMethod, (err, shipMethod) => {
             if(err) res.json({success: false, msg: `Failed to find ship method: ${err.message}`});
             else res.json({success:true, shipMethod:shipMethod});

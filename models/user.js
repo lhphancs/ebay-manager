@@ -46,7 +46,7 @@ module.exports.addUser = function(newUser, callback){
     })
 };
 
-module.exports.getUserById  = function(userId, callback){
+module.exports.getUser = function(userId, callback){
     User.findOne({_id: userId}, null, {select:'-password -__v'}, callback);
 };
 
@@ -63,14 +63,14 @@ module.exports.comparePassword = function(inputPassword, hashPassword, callback)
     });
 }
 
-module.exports.getFeesById  = function(userId, callback){
+module.exports.getFees = function(userId, callback){
     User.findOne({_id: userId}, null, {select:'fees -_id'}, (err, user) =>{
         callback(err, user.fees);
     });
 };
 
 
-module.exports.updateFeesById = function(userId, newFees, callback){
+module.exports.updateFees = function(userId, newFees, callback){
     User.findOneAndUpdate({_id: userId}, {fees:newFees}
         , { select:'fees -_id', new: true, runValidators: true }, (err, user) =>{
             if(err) callback(err,null);
@@ -81,13 +81,13 @@ module.exports.updateFeesById = function(userId, newFees, callback){
     });
 };
 
-module.exports.getShipCompaniesById = function(userId, callback){
+module.exports.getShipCompanies = function(userId, callback){
     User.findOne({_id: userId}, null, {select:'shipCompanies -_id'}, (err, user) =>{
         callback(err, user.shipCompanies);
     });
 };
 
-module.exports.getShipMethodById = function(shipMethodId, callback){
+module.exports.getShipMethod = function(shipMethodId, callback){
     let shipMethodObjId = mongoose.Types.ObjectId(shipMethodId);
     //https://stackoverflow.com/questions/33422770/mongodb-find-a-specific-obj-within-nested-arrays
     User.aggregate([
@@ -102,22 +102,36 @@ module.exports.getShipMethodById = function(shipMethodId, callback){
     );
 };
 
-module.exports.addShipMethod = function(userId, shipMethod, callback){
-    User.findOneAndUpdate({_id:userId}, {
-        $push: {
-            "shipCompanies.shipMethods": shipMethod
-        }
-    }, callback);
-};
-
-module.exports.deleteShipMethod = function(userId, shipMethodId, callback){
+function deleteShipMethod(userId, shipMethodId, callback){
     User.findOneAndUpdate({_id:userId},
         {$pull: {"shipCompanies.$[].shipMethods": {"_id":shipMethodId}}
         }, (err, user) =>{
             callback(err, shipMethodId);
     });
+}
+
+function addShipMethod(userId, shipMethod, callback){
+    User.findOneAndUpdate({_id:userId}, {
+        $push: {
+            "shipCompanies.0.shipMethods": shipMethod
+        }
+    }, callback);
+}
+
+module.exports.deleteShipMethod = function(userId, shipMethodId, callback){
+    deleteShipMethod(userId, shipMethodId, callback);
 };
 
-module.exports.updateShipMethod = function(shipMethodId, shipMethod, callback){
-    /////////////////User.findOneAndUpdate()
+
+module.exports.addShipMethod = function(userId, shipMethod, callback){
+    addShipMethod(userId, shipMethod, callback);
+};
+
+module.exports.updateShipMethod = function(userId, shipMethodId, shipMethod, callback){
+    addShipMethod(userId, shipMethod, (err, user)=>{
+        if(err) callback(err, null);
+        else{
+            deleteShipMethod(userId, shipMethodId, callback);
+        }
+    });
 };

@@ -79,7 +79,7 @@ export class DatabaseUsersService {
     , {headers: this.normalHeader});
   }
 
-  getShipMethodById(shipMethodId){
+  getShipMethod(shipMethodId){
     return this.httpClient.get(`/api/users/ship-method/${shipMethodId}`
     , {headers: this.normalHeader});
   }
@@ -98,9 +98,9 @@ export class DatabaseUsersService {
     , options);
   }
 
-  updateShipMethod(shipMethodId, shipMethod){
+  updateShipMethod(userId, shipMethodId, shipMethod){
     return this.httpClient.put(`/api/users/ship-method/update`
-    , {shipMethodId:shipMethodId, shipMethod:shipMethod}
+    , {userId:userId, shipMethodId:shipMethodId, shipMethod:shipMethod}
     , {headers: this.normalHeader});
   }
 }

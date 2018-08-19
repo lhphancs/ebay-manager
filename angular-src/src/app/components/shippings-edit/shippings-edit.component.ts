@@ -60,7 +60,7 @@ export class ShippingsEditComponent implements OnInit {
   }
 
   loadShipMethod(shipMethodId){
-    this.databaseUsersService.getShipMethodById(shipMethodId).subscribe( (data) =>{
+    this.databaseUsersService.getShipMethod(shipMethodId).subscribe( (data) =>{
       let shipMethod = data['shipMethod'];
 
       this.fillInForm(shipMethod);
@@ -69,7 +69,7 @@ export class ShippingsEditComponent implements OnInit {
   }
 
   prepareShipMethodUpdate(shipMethodId){
-    this.databaseUsersService.getShipMethodById(shipMethodId).subscribe((data) =>{
+    this.databaseUsersService.getShipMethod(shipMethodId).subscribe((data) =>{
       if(data['success']){
         if(data['shipMethod']){
             this.loadShipMethod(this.paramId);
@@ -84,13 +84,14 @@ export class ShippingsEditComponent implements OnInit {
 
 
   updateShipMethod(shipMethodId, newShipMethod){
-    this.databaseUsersService.updateShipMethod(shipMethodId, newShipMethod).subscribe(data => {
-      if(data['success'])
-        openSnackbar(this.snackBar, `Update successful: ${data['msg']}`);
+    this.databaseUsersService.updateShipMethod(this.userId, shipMethodId, newShipMethod).subscribe(data => {
+      if(data['success']){
+        openSnackbar(this.snackBar, `Update successful: ${newShipMethod.name}`);
+        this.router.navigateByUrl('/shippings');
+      }
       else
         openSnackbar(this.snackBar, `Failed to add product: ${data['msg']}`);
     });
-    this.router.navigateByUrl('/shippings');
   }
 
   getNewShipMethodObject(processedEntriesOzPrice){
