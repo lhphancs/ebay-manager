@@ -81,3 +81,7 @@
 .even-row{
     background-color: #efefef;
 }
+
+.tooltip-background{
+    background-color:grey;
+}

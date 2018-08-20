@@ -8,12 +8,13 @@
         *ngFor="let shipMethodObj of companyObj.shipMethods; let shipMethodIndex=index">
         <a routerLink="/shippings/update/{{shipMethodObj._id}}">
           <button mat-icon-button>
-            <mat-icon >edit</mat-icon>
+            <mat-icon>edit</mat-icon>
           </button>
         </a>
         <button class="method-btn" mat-raised-button color="primary">
           {{shipMethodObj.name}}</button>
-        <mat-icon color="primary" matTooltip={{shipMethodObj.description}} class="center-vertically ml-2">info</mat-icon>
+        <mat-icon color="primary" matTooltip={{shipMethodObj.description}}
+          matTooltipClass="tooltip-background" class="center-vertically ml-2">info</mat-icon>
         <table class="table oz-price-tbl table-striped table-light ml-2">
           <tbody>
             <tr class="oz-price-tbl-row" *ngFor="let ozPrice of shipMethodObj.ozPrice">

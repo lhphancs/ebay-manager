@@ -26,10 +26,10 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
         , description: '1 size, (5.375in x 8.625in x 1.625in). Labeled "Small flat rate box". ' + noBulgeString + '.'
         , ozPrice:[ {oz: -1, price: 6.85}] },
     { name:"Flat rate medium box"
-        , description: '2 sizes, (11in x 8.5in x 5.5in) or (11.875in x 3.375in x 13.625). Labled "Medium flat rate box"' + noBulgeString + '.'
+        , description: '2 sizes, (11in x 8.5in x 5.5in) or (11.875in x 3.375in x 13.625). Labled "Medium flat rate box". ' + noBulgeString + '.'
         , ozPrice:[ {oz: -1, price: 12.45}] },
     { name:"Flat rate large box"
-        , description: '2 sizes, (12in x 12in x 5.5in) or (23.6875in x 11.75in x 3in). Labled "Large flat rate box"' + noBulgeString + '.'
+        , description: '2 sizes, (12in x 12in x 5.5in) or (23.6875in x 11.75in x 3in). Labled "Large flat rate box". ' + noBulgeString + '.'
         , ozPrice:[ {oz: -1, price: 17.10}] }
 ];
 
