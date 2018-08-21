@@ -1,3 +1,4 @@
+import { ShippingsAddOrUpdateComponent } from './components/shippings-add-or-update/shippings-add-or-update.component';
 import { ProductsDisplayComponent } from './components/products/products-display/products-display.component';
 import { ProductsAddOrUpdateComponent } from './components/products/products-add-or-update/products-add-or-update.component';
 import { ProductsComponent } from './components/products/products.component';
@@ -32,7 +33,6 @@ import { AmazonComponent } from './components/amazon/amazon.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { FeesComponent } from './components/fees/fees.component';
 import { ShippingsComponent } from './components/shippings/shippings.component';
-import { ShippingsEditComponent } from './components/shippings-edit/shippings-edit.component';
 import { ProgressSpinnerComponent } from './components/progress-spinner/progress-spinner.component';
 import { TableDynamicInputComponent } from './components/table-dynamic-input/table-dynamic-input.component';
 
@@ -54,7 +54,7 @@ import { TableDynamicInputComponent } from './components/table-dynamic-input/tab
     LogoutComponent,
     FeesComponent,
     ShippingsComponent,
-    ShippingsEditComponent,
+    ShippingsAddOrUpdateComponent,
     ProgressSpinnerComponent,
     TableDynamicInputComponent
   ],

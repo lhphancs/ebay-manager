@@ -1,4 +1,4 @@
-import { ShippingsEditComponent } from './components/shippings-edit/shippings-edit.component';
+import { ShippingsAddOrUpdateComponent } from './components/shippings-add-or-update/shippings-add-or-update.component';
 import { ShippingsComponent } from './components/shippings/shippings.component';
 import { FeesComponent } from './components/fees/fees.component';
 import { LogoutComponent } from './components/logout/logout.component';
@@ -35,7 +35,7 @@ const routes: Routes = [
     ]
   },
   { path: 'shippings', component: ShippingsComponent, canActivate:[AuthGuard] }, 
-  { path: 'shippings/:mode/:id', component: ShippingsEditComponent, canActivate:[AuthGuard] }, 
+  { path: 'shippings/:mode/:id', component: ShippingsAddOrUpdateComponent, canActivate:[AuthGuard] }, 
   { path: 'fees', component: FeesComponent },
   { path: 'calculator', component: CalculatorComponent, canActivate:[AuthGuard] },
   { path: 'logout', component: LogoutComponent }

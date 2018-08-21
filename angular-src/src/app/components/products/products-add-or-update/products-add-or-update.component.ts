@@ -1,4 +1,4 @@
-import { TableDynamicInputComponent } from './../../table-dynamic-input/table-dynamic-input.component';
+import { TableDynamicInputComponent } from '../../table-dynamic-input/table-dynamic-input.component';
 import { ProductsComponent } from '../products.component';
 import { ViewChild, ElementRef } from '@angular/core';
 //Add and update page do almost the same thing, so just clump code together

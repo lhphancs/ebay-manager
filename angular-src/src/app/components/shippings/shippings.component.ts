@@ -1,8 +1,9 @@
-import { ConfirmDialogComponent } from './../confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { MatDialog, MatSnackBar } from '@angular/material';
-import { DatabaseUsersService } from './../../services/database-users.service';
+import { DatabaseUsersService } from '../../services/database-users.service';
 import { Component, OnInit } from '@angular/core';
 import { openSnackbar } from '../snackbar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-shippings',
@@ -16,7 +17,8 @@ export class ShippingsComponent implements OnInit {
 
   constructor(private databaseUsersService:DatabaseUsersService
     , private dialog: MatDialog
-    , public snackBar: MatSnackBar) { }
+    , public snackBar: MatSnackBar
+    , private router: Router) { }
 
 
   ngOnInit() {
@@ -57,4 +59,7 @@ export class ShippingsComponent implements OnInit {
     });
   }
 
+  addResponse(shipCompanyId){
+    this.router.navigate([`/shippings/add/${shipCompanyId}`]);
+  }
 }

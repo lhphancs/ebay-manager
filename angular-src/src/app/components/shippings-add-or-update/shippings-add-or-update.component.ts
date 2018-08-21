@@ -1,6 +1,6 @@
-import { TableDynamicInputComponent } from './../table-dynamic-input/table-dynamic-input.component';
+import { TableDynamicInputComponent } from '../table-dynamic-input/table-dynamic-input.component';
 import { MatSnackBar } from '@angular/material';
-import { DatabaseUsersService } from './../../services/database-users.service';
+import { DatabaseUsersService } from '../../services/database-users.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { openSnackbar } from '../snackbar';
@@ -9,11 +9,11 @@ import { getProcessedEntries } from '../table-methods'
 import { getHeaderNames } from '../table-methods'
 
 @Component({
-  selector: 'app-shippings-edit',
-  templateUrl: './shippings-edit.component.html',
-  styleUrls: ['./shippings-edit.component.css']
+  selector: 'shippings-add-or-update',
+  templateUrl: './shippings-add-or-update.component.html',
+  styleUrls: ['./shippings-add-or-update.component.css']
 })
-export class ShippingsEditComponent implements OnInit {
+export class ShippingsAddOrUpdateComponent implements OnInit {
   @ViewChild(TableDynamicInputComponent) viewTable;
 
   userId:string;

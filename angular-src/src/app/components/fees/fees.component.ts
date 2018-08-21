@@ -1,5 +1,5 @@
 import { MatSnackBar } from '@angular/material';
-import { DatabaseUsersService } from './../../services/database-users.service';
+import { DatabaseUsersService } from '../../services/database-users.service';
 import { Component, OnInit } from '@angular/core';
 import { openSnackbar } from '../snackbar';
 
