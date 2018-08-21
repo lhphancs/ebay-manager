@@ -59,7 +59,7 @@ export class ShippingsComponent implements OnInit {
     });
   }
 
-  addResponse(shipCompanyId){
-    this.router.navigate([`/shippings/add/${shipCompanyId}`]);
+  addResponse(companyId){
+    this.router.navigate([`/shippings/add/${companyId}`]);
   }
 }

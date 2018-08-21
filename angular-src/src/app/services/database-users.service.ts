@@ -74,6 +74,12 @@ export class DatabaseUsersService {
     , {userId: userId, newFees: newFees}, {headers: this.normalHeader});
   }
 
+
+  getShipCompanyName(userId, companyId){
+    return this.httpClient.get(`/api/users/ship-company/name/${userId}/${companyId}`
+    , {headers: this.normalHeader});
+  }
+  
   getShipCompanies(userId){
     return this.httpClient.get(`/api/users/ship-companies/${userId}`
     , {headers: this.normalHeader});
@@ -84,9 +90,10 @@ export class DatabaseUsersService {
     , {headers: this.normalHeader});
   }
 
-  addShipMethod(userId, shipMethod){
+  addShipMethod(userId, companyId, shipMethod){
     return this.httpClient.post(`/api/users/ship-method/add`
-    , {userId:userId, shipMethod:shipMethod}, {headers: this.normalHeader});
+    , {userId:userId, companyId:companyId, shipMethod:shipMethod}
+    , {headers: this.normalHeader});
   }
 
   deleteShipMethod(userId, shipMethodId){
@@ -98,9 +105,9 @@ export class DatabaseUsersService {
     , options);
   }
 
-  updateShipMethod(userId, shipMethodId, shipMethod){
+  updateShipMethod(userId, companyId, shipMethodId, shipMethod){
     return this.httpClient.put(`/api/users/ship-method/update`
-    , {userId:userId, shipMethodId:shipMethodId, shipMethod:shipMethod}
+    , {userId:userId, companyId:companyId, shipMethodId:shipMethodId, shipMethod:shipMethod}
     , {headers: this.normalHeader});
   }
 }

@@ -23,6 +23,8 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
   isFlatRate:boolean;
   flatRateCost:number;
 
+  companyId:string;
+  shipCompanyName:string;
   name:string;
   description:string;
   entries:object[];
@@ -46,8 +48,11 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
         this.activatedRoute.paramMap.subscribe(params => {
           this.paramId = params.get('id');
           this.mode = params.get('mode');
-          if(this.mode == 'update'){
+          if(this.mode == 'update')
             this.prepareShipMethodUpdate(this.paramId);
+          else{
+            this.companyId = this.paramId;
+            this.prepareShipMethodAdd(this.companyId);
           }
         });
       }
@@ -72,6 +77,7 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
     this.databaseUsersService.getShipMethod(shipMethodId).subscribe((data) =>{
       if(data['success']){
         if(data['shipMethod']){
+            this.companyId = data['shipMethod']._id;
             this.loadShipMethod(this.paramId);
         }
         else
@@ -82,9 +88,26 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
     });
   }
 
+  prepareShipMethodAdd(companyId){
+    this.databaseUsersService.getShipCompanyName(this.userId, companyId).subscribe((data) =>{
+      if(data['success']){
+        if(data['shipCompanyName']){
+            this.shipCompanyName = data['shipCompanyName'];
+            this.entries = [];
+        }
+        else
+          openSnackbar(this.snackBar, "Error: Ship Company Id not found in database");
+      }
+      else
+        openSnackbar(this.snackBar, data['msg']);
+    });
+
+  }
+
 
   updateShipMethod(shipMethodId, newShipMethod){
-    this.databaseUsersService.updateShipMethod(this.userId, shipMethodId, newShipMethod).subscribe(data => {
+    this.databaseUsersService.updateShipMethod(this.userId, this.companyId
+      , shipMethodId, newShipMethod).subscribe(data => {
       if(data['success']){
         openSnackbar(this.snackBar, `Update successful: ${newShipMethod.name}`);
         this.router.navigateByUrl('/shippings');
@@ -99,7 +122,7 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
   }
 
   addShipMethod(shipMethod, form){
-    this.databaseUsersService.addShipMethod(this.userId, shipMethod).subscribe(data => {
+    this.databaseUsersService.addShipMethod(this.userId, this.companyId, shipMethod).subscribe(data => {
       if(data['success'])
         this.addSuccessResponse(form);
       else

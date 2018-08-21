@@ -1,5 +1,8 @@
 
 <form *ngIf="entries" #shipMethodForm="ngForm" class="entire-form" ngNativeValidate (ngSubmit)="onSubmit(shipMethodForm)">
+  <div>
+    <h1>{{shipCompanyName}}</h1>
+  </div>
   <div class="form-row-container"fxLayoutWrap fxLayoutGap="0.5%">
     <div fxFlex="33%">
         <mat-form-field fxFlex>
@@ -18,7 +21,10 @@
   <div>
     <mat-checkbox [(ngModel)]="isFlatRate"
       [ngModelOptions]="{standalone: true}">Flat Rate</mat-checkbox>
-    <mat-form-field *ngIf="isFlatRate" fxFlex class="ml-4">
+  </div>
+
+  <div *ngIf="isFlatRate">
+    <mat-form-field fxFlex>
       <input [(ngModel)]='flatRateShipCost' name="flatRateCost"
         matInput placeholder="Flat rate cost" type="number" step="any" required>
     </mat-form-field>

@@ -25,7 +25,6 @@ const userSchema = Schema({
                     price: { type: Number, required: true, min: 0} }]}
             }], required: true },
         }], default:defaultShipCompanies, required: true
-
     },
     ebayKey: {type: String, default:""}
 });
@@ -110,10 +109,10 @@ function deleteShipMethod(userId, shipMethodId, callback){
     });
 }
 
-function addShipMethod(userId, shipMethod, callback){
-    User.findOneAndUpdate({_id:userId}, {
+function addShipMethod(userId, companyId, shipMethod, callback){
+    User.update({_id:userId, "shipCompanies._id":companyId}, {
         $push: {
-            "shipCompanies.0.shipMethods": shipMethod
+            "shipCompanies.$.shipMethods": shipMethod
         }
     }, callback);
 }
@@ -122,16 +121,23 @@ module.exports.deleteShipMethod = function(userId, shipMethodId, callback){
     deleteShipMethod(userId, shipMethodId, callback);
 };
 
-
-module.exports.addShipMethod = function(userId, shipMethod, callback){
-    addShipMethod(userId, shipMethod, callback);
+module.exports.addShipMethod = function(userId, companyId, shipMethod, callback){
+    addShipMethod(userId, companyId, shipMethod, callback);
 };
 
-module.exports.updateShipMethod = function(userId, shipMethodId, shipMethod, callback){
-    addShipMethod(userId, shipMethod, (err, user)=>{
+module.exports.updateShipMethod = function(userId, companyId, shipMethodId, shipMethod, callback){
+    addShipMethod(userId, companyId, shipMethod, (err, user)=>{
         if(err) callback(err, null);
         else{
-            deleteShipMethod(userId, shipMethodId, callback);
+            callback(err,user);
+            ////deleteShipMethod(userId, shipMethodId, callback);
         }
+    });
+};
+
+module.exports.getShipCompanyName = function(userId, companyId, callback){
+    User.findOne({_id:userId, "shipCompanies._id":companyId}
+        , {"shipCompanies.$":1}, (err, result) =>{
+            callback(err, result.shipCompanies[0].name);
     });
 };
