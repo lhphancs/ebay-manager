@@ -85,8 +85,8 @@ export class DatabaseUsersService {
     , {headers: this.normalHeader});
   }
 
-  getShipMethod(shipMethodId){
-    return this.httpClient.get(`/api/users/ship-method/${shipMethodId}`
+  getShipMethod(userId, shipMethodId){
+    return this.httpClient.get(`/api/users/ship-method/${userId}/${shipMethodId}`
     , {headers: this.normalHeader});
   }
 

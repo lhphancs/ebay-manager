@@ -86,17 +86,16 @@ module.exports.getShipCompanies = function(userId, callback){
     });
 };
 
-module.exports.getShipMethod = function(shipMethodId, callback){
+module.exports.getShipMethod = function(userId, shipMethodId, callback){
     let shipMethodObjId = mongoose.Types.ObjectId(shipMethodId);
     //https://stackoverflow.com/questions/33422770/mongodb-find-a-specific-obj-within-nested-arrays
     User.aggregate([
             {"$unwind":"$shipCompanies"},
             {"$unwind":"$shipCompanies.shipMethods"},
             {"$match":{"shipCompanies.shipMethods._id":shipMethodObjId}},
-            {"$project":{"shipCompanies.shipMethods":1}},
-            {"$group":{"_id":"$shipCompanies.shipMethods"}}
-        ], (err, shipMethod) =>{
-            callback(err, shipMethod[0]._id);
+            {"$project":{"shipCompanies":1}},
+        ], (err, user) =>{
+            callback(err, user[0].shipCompanies);
         }
     );
 };

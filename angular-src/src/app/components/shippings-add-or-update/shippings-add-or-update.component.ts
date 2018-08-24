@@ -64,21 +64,27 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
     this.description = shipMethod['description'];
   }
 
-  loadShipMethod(shipMethodId){
-    this.databaseUsersService.getShipMethod(shipMethodId).subscribe( (data) =>{
-      let shipMethod = data['shipMethod'];
-
-      this.fillInForm(shipMethod);
-      this.entries = shipMethod['ozPrice'];
-    });
+  loadShipMethod(shipMethod){
+    this.fillInForm(shipMethod);
+    let tableEntries = shipMethod['ozPrice'];
+    if(tableEntries[0].oz == -1){
+      this.isFlatRate = true;
+      this.flatRateCost = tableEntries[0].price;
+      this.entries = [];
+    }
+    else
+      this.entries = tableEntries;
   }
 
   prepareShipMethodUpdate(shipMethodId){
-    this.databaseUsersService.getShipMethod(shipMethodId).subscribe((data) =>{
+    this.databaseUsersService.getShipMethod(this.userId, shipMethodId).subscribe((data) =>{
       if(data['success']){
-        if(data['shipMethod']){
-            this.companyId = data['shipMethod']._id;
-            this.loadShipMethod(this.paramId);
+        let shipCompany = data['shipCompany'];
+        if(shipCompany){
+            this.shipCompanyName = shipCompany.name;
+            let shipMethod = shipCompany.shipMethods;
+            this.companyId = shipMethod._id;
+            this.loadShipMethod(shipMethod);
         }
         else
           openSnackbar(this.snackBar, "Error: Ship Method Id not found in database");
@@ -130,10 +136,17 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
     });
   }
 
+  ///The add is currently connected, but edit needs companyId
   onSubmit(form){
-    let processedEntries = getProcessedEntries(this.entries);
+    let processedEntries;
+    if(this.isFlatRate)
+      processedEntries = [ {oz:-1, price:this.flatRateCost} ];
+    else
+      processedEntries = getProcessedEntries(this.entries);
+    
     if(processedEntries == null)
       openSnackbar(this.snackBar, 'Failed to add product: Partially filled ASIN entry exists. Complete or remove the entry.');
+
     else{
       let newShipMethod = this.getNewShipMethodObject(processedEntries);
       if(this.mode == "update")
@@ -144,11 +157,7 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
   }
 
   addSuccessResponse(form){
-    //Clear form completely
-    form.resetForm();
-    this.entries=[];
-    this.viewTable.resetTable(this.entries);
-
+    this.router.navigate(['/shippings']);
     openSnackbar(this.snackBar, 'Successfully added ship method');
   }
 }
