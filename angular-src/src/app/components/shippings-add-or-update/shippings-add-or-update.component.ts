@@ -81,9 +81,10 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
       if(data['success']){
         let shipCompany = data['shipCompany'];
         if(shipCompany){
+            this.companyId = shipCompany._id;
             this.shipCompanyName = shipCompany.name;
+
             let shipMethod = shipCompany.shipMethods;
-            this.companyId = shipMethod._id;
             this.loadShipMethod(shipMethod);
         }
         else

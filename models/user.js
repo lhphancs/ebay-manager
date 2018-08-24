@@ -125,11 +125,14 @@ module.exports.addShipMethod = function(userId, companyId, shipMethod, callback)
 };
 
 module.exports.updateShipMethod = function(userId, companyId, shipMethodId, shipMethod, callback){
+    console.log(userId)
+    console.log(companyId)
+    console.log(shipMethodId)
+    console.log(shipMethod)
     addShipMethod(userId, companyId, shipMethod, (err, user)=>{
         if(err) callback(err, null);
         else{
-            callback(err,user);
-            ////deleteShipMethod(userId, shipMethodId, callback);
+            deleteShipMethod(userId, shipMethodId, callback);
         }
     });
 };
