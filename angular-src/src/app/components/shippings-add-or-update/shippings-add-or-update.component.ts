@@ -77,6 +77,7 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
   }
 
   prepareShipMethodUpdate(shipMethodId){
+    /*
     this.databaseUsersService.getShipMethod(this.userId, shipMethodId).subscribe((data) =>{
       if(data['success']){
         let shipCompany = data['shipCompany'];
@@ -93,9 +94,11 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
       else
         openSnackbar(this.snackBar, data['msg']);
     });
+    */
   }
 
   prepareShipMethodAdd(companyId){
+    /*
     this.databaseUsersService.getShipCompanyName(this.userId, companyId).subscribe((data) =>{
       if(data['success']){
         if(data['shipCompanyName']){
@@ -108,11 +111,12 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
       else
         openSnackbar(this.snackBar, data['msg']);
     });
-
+*/
   }
 
 
   updateShipMethod(shipMethodId, newShipMethod){
+    /*
     this.databaseUsersService.updateShipMethod(this.userId, this.companyId
       , shipMethodId, newShipMethod).subscribe(data => {
       if(data['success']){
@@ -122,6 +126,7 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
       else
         openSnackbar(this.snackBar, `Failed to add product: ${data['msg']}`);
     });
+    */
   }
 
   getNewShipMethodObject(processedEntriesOzPrice){
@@ -129,12 +134,14 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
   }
 
   addShipMethod(shipMethod, form){
+    /*
     this.databaseUsersService.addShipMethod(this.userId, this.companyId, shipMethod).subscribe(data => {
       if(data['success'])
         this.addSuccessResponse(form);
       else
         openSnackbar(this.snackBar, `Failed to add product: ${data['msg']}`);
     });
+    */
   }
 
   ///The add is currently connected, but edit needs companyId

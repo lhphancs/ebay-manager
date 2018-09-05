@@ -1,7 +1,6 @@
 import { HttpHeaders, HttpClient} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { RequestOptions } from '@angular/http';
 
 @Injectable({
   providedIn: 'root'
@@ -72,42 +71,5 @@ export class DatabaseUsersService {
   updateFees(userId, newFees){
     return this.httpClient.put('/api/users/fees/update'
     , {userId: userId, newFees: newFees}, {headers: this.normalHeader});
-  }
-
-
-  getShipCompanyName(userId, companyId){
-    return this.httpClient.get(`/api/users/ship-company/name/${userId}/${companyId}`
-    , {headers: this.normalHeader});
-  }
-  
-  getShipCompanies(userId){
-    return this.httpClient.get(`/api/users/ship-companies/${userId}`
-    , {headers: this.normalHeader});
-  }
-
-  getShipMethod(userId, shipMethodId){
-    return this.httpClient.get(`/api/users/ship-method/${userId}/${shipMethodId}`
-    , {headers: this.normalHeader});
-  }
-
-  addShipMethod(userId, companyId, shipMethod){
-    return this.httpClient.post(`/api/users/ship-method/add`
-    , {userId:userId, companyId:companyId, shipMethod:shipMethod}
-    , {headers: this.normalHeader});
-  }
-
-  deleteShipMethod(userId, shipMethodId){
-    let options = {
-      headers: this.normalHeader,
-      body: {userId:userId, shipMethodId:shipMethodId}
-    }
-    return this.httpClient.delete(`/api/users/ship-method/delete`
-    , options);
-  }
-
-  updateShipMethod(userId, companyId, shipMethodId, shipMethod){
-    return this.httpClient.put(`/api/users/ship-method/update`
-    , {userId:userId, companyId:companyId, shipMethodId:shipMethodId, shipMethod:shipMethod}
-    , {headers: this.normalHeader});
   }
 }

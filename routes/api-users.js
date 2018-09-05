@@ -78,48 +78,4 @@ router.put('/fees/update', (req, res, next) => {
     });
 });
 
-
-router.get('/ship-company/name/:userId/:companyId', (req, res, next) => {
-    User.getShipCompanyName( req.params.userId, req.params.companyId, (err, shipCompanyName) => {
-        if(err) res.json({success: false, msg: `Failed to grab fee: ${err.message}`});
-        else res.json({success:true, shipCompanyName: shipCompanyName});
-    });
-});
-
-router.get('/ship-companies/:userId', (req, res, next) => {
-    User.getShipCompanies( req.params.userId, (err, shipCompanies) => {
-        if(err) res.json({success: false, msg: `Failed to grab fee: ${err.message}`});
-        else res.json({success:true, shipCompanies: shipCompanies});
-    });
-});
-
-router.get('/ship-method/:userId/:shipMethodId', (req, res, next) => {
-    User.getShipMethod(req.params.userId, req.params.shipMethodId, (err, shipCompany) => {
-        if(err) res.json({success: false, msg: `Failed to find ship method: ${err.message}`});
-        else res.json({success:true, shipCompany:shipCompany});
-    });
-});
-router.post('/ship-method/add', (req, res, next) => {
-    let body = req.body;
-    User.addShipMethod(body.userId, body.companyId, body.shipMethod, (err, shipMethod) => {
-        if(err) res.json({success: false, msg: `Failed to find ship method: ${err.message}`});
-        else res.json({success:true, shipMethod:shipMethod});
-    });
-});
-
-router.put('/ship-method/update', (req, res, next) => {
-    User.updateShipMethod(req.body.userId, req.body.companyId, req.body.shipMethodId
-        , req.body.shipMethod, (err, shipMethod) => {
-            if(err) res.json({success: false, msg: `Failed to find ship method: ${err.message}`});
-            else res.json({success:true, shipMethod:shipMethod});
-    });
-});
-
-router.delete('/ship-method/delete', (req, res, next) => {
-    User.deleteShipMethod(req.body.userId, req.body.shipMethodId, (err, shipMethodId) =>{
-        if(err) res.json({success: false, msg: `Failed to delete ship method: ${err.message}`});
-        else res.json({success:true, shipMethodId:shipMethodId});
-    });
-});
-
 module.exports = router;
