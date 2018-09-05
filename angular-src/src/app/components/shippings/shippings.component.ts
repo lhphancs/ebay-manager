@@ -63,24 +63,24 @@ export class ShippingsComponent implements OnInit {
 
   deleteShipMethod(companyIndex, shipMethodIndex){
     let shipMethodObj = this.shipCompanies[companyIndex].shipMethods[shipMethodIndex];
-    this.databaseShippingService.deleteShipMethod(this.userId, shipMethodObj._id)
+    this.databaseShippingService.deleteShipMethod(this.userId, shipMethodObj.shipMethodId)
       .subscribe( (data) =>{
         if(data['success']){
           this.removeShipMethodFromView(companyIndex, shipMethodIndex);
-          openSnackbar(this.snackBar, `Successfully deleted ship method: ${shipMethodObj.name}`);
+          openSnackbar(this.snackBar, `Successfully deleted ship method: ${shipMethodObj.shipMethodName}`);
         }
         else
           openSnackbar(this.snackBar, data['msg']);
       });
   }
 
-  openDeleteConfirmDialog(shipMethodId){
+  openDeleteConfirmDialog(companyIndex, shipMethodIndex){
     const confirmDialogRef = this.dialog.open(ConfirmDialogComponent, {
       data:{title: "Confirmation", msg: "Are you sure you want to delete?"}
     });
     confirmDialogRef.afterClosed().subscribe(result => {
       if(result)
-        this.deleteShipMethod(this.userId, shipMethodId);
+        this.deleteShipMethod(companyIndex, shipMethodIndex);
     });
   }
 

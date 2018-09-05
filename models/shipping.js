@@ -24,3 +24,9 @@ module.exports.getShipMethods = function(userId, callback){
         callback(err, shipMethods);
     });
 };
+
+module.exports.deleteShipMethod = function(userId, shipMethodId, callback){
+    Shipping.findOneAndRemove({userId: userId, _id: shipMethodId}, (err, shipMethod) =>{
+        callback(err, shipMethod);
+    });
+};

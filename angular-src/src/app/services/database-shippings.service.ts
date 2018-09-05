@@ -18,7 +18,11 @@ export class DatabaseShippingsService {
     return this.httpClient.get(`/api/shippings/${userId}`, {headers: this.normalHeader});
   }
 
-  deleteShipMethod(userId, shipId){
-    return this.httpClient.get(`/api/shippings/${userId}`, {headers: this.normalHeader});
+  deleteShipMethod(userId, shipMethodId){
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+      , body: {userId:userId, shipMethodId: shipMethodId}
+    };
+    return this.httpClient.delete('/api/shippings/delete', httpOptions);
   }
 }

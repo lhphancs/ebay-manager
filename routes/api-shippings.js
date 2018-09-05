@@ -9,4 +9,17 @@ router.get('/:userId', (req, res, next) => {
     });
 });
 
+router.delete('/delete', (req, res, next) => {
+    userId = req.body.userId;
+    shipMethodId = req.body.shipMethodId;
+    Shipping.deleteShipMethod(userId, shipMethodId, (err, shipMethod) => {
+        if(err || !shipMethod){
+            msg = err ? err.message: `Could not find ${shipMethodId}`
+            res.json({success: false, msg: `Failed to delete method: ${msg}`});
+        }
+        else
+            res.json({success:true, msg: `Successfully deleted product: ${shipMethodId}`});
+    });
+});
+
 module.exports = router;
