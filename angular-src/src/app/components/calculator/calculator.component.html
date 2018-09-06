@@ -1,6 +1,6 @@
 <mat-button-toggle-group #group="matButtonToggleGroup" [(ngModel)]="mode">
   <mat-button-toggle value="calcProfit">Calculate Profit</mat-button-toggle>
-  <mat-button-toggle value="calcNeededSale">Calculate Needed Sales</mat-button-toggle>
+  <mat-button-toggle value="calcNeededSale" (click)="onCalcNeededSaleClick()">Calculate Needed Sales</mat-button-toggle>
 </mat-button-toggle-group>
 
 <div class="mx-4 mt-4 entire-form">
@@ -13,15 +13,27 @@
         [(ngModel)]='saleValue' [disabled]="group.value!='calcProfit'"
         (input)="updateFees(); updateTotalOrSaleValue(group.value)">
     </div>
-    <div class="form-group col-md-2 mr-5">
+    <div class="form-group col-md-4 mr-5">
       <mat-icon color="primary" matTooltip="Price that you bought it for"
         matTooltipClass="tooltip-background" class="center-vertically">info</mat-icon>
       <label for="productCost">Product cost</label>
       <input type="number" step="any" class="form-control" id="productCost"
         [(ngModel)]='productCost' (input)="updateTotalOrSaleValue(group.value)">
+      <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group mr-2" role="group" aria-label="First group">
+          <button *ngFor="let multiplier of multiplierArray" (click)="multiplyProductCost(multiplier)"
+            type="button" class="btn btn-sm btn-primary btn-multiplier">{{multiplier}}x
+          </button>
+        </div>
+        <div class="btn-group mr-2" role="group" aria-label="Second group">
+            <button *ngFor="let multiplier of multiplierArray" (click)="multiplyProductCost(1/multiplier)"
+              type="button" class="btn btn-sm btn-primary btn-multiplier">1/{{multiplier}}
+            </button>
+        </div>
+      </div>
     </div>
     <div class="form-group col-md-2 mr-5">
-      <mat-icon color="primary" matTooltip="(Optional) ex) Cost for box, bag, labels, etc..."
+      <mat-icon color="primary" matTooltip="(Optional) Cost for box, bag, labels, etc..."
         matTooltipClass="tooltip-background" class="center-vertically">info</mat-icon>
       <label for="miscCost">Misc cost</label>
       <input type="number" step="any" class="form-control" id="miscCost"

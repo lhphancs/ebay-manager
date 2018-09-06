@@ -9,6 +9,8 @@ import { getProcessedShipMethods } from '../getProcessedShipMethods';
   styleUrls: ['./calculator.component.css']
 })
 export class CalculatorComponent implements OnInit {
+  multiplierArray = [2,3,5];
+
   objectKeys = Object.keys;
   userId;
   mode = "calcProfit";
@@ -33,6 +35,7 @@ export class CalculatorComponent implements OnInit {
 
   constructor(private databaseUsersService:DatabaseUsersService
     , private databaseShippingsService:DatabaseShippingsService) {
+      this.miscCost = 0;
   }
 
   loadAvailableShippings(){
@@ -92,5 +95,14 @@ export class CalculatorComponent implements OnInit {
   companySelect(companyIndex){
     this.selectedCompanyIndex = companyIndex;
     this.methodSelect(0);
+  }
+
+  multiplyProductCost(multiplier){
+    this.productCost = Math.round(this.productCost*multiplier*100)/100;
+  }
+
+  onCalcNeededSaleClick(){
+    this.totalProfit = 1;
+    this.updateTotalOrSaleValue();
   }
 }

@@ -31,3 +31,7 @@
 .mnu-btn:hover{
     background-color: #dfff30;
 }
+
+.btn-multiplier{
+    border-left: 1px solid #86c7fe;
+}
