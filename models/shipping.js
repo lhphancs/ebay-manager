@@ -5,7 +5,7 @@ const constShipping = require('./const/shipping');
 
 const shippingSchema = Schema({
         userId:{type: ObjectId, required: true},
-        shipCompany: {type: String, required: true},
+        shipCompanyName: {type: String, required: true},
         shipMethodName: {type: String, required: true},
         description:{type: String},
         ozPrice: {type:[{
@@ -18,6 +18,12 @@ const Shipping = module.exports = mongoose.model('Shipping', shippingSchema);
 module.exports.addDefaultShippings = function(userId, callback){
     let defaultShippings = constShipping.getDefaultShipMethods(userId);
     Shipping.insertMany(defaultShippings, callback);
+};
+
+module.exports.getShipCompanyName = function(shipMethodId, userId, callback){
+    Shipping.findOne({_id:shipMethodId, userId: userId}, (err, shipMethod) =>{
+        callback(err, shipMethod.shipCompanyName);
+    });
 };
 
 module.exports.getShipMethod = function(shipMethodId, userId, callback){
@@ -41,6 +47,12 @@ module.exports.deleteShipMethod = function(shipMethodId, userId, callback){
 module.exports.updateShipMethod = function(shipMethodId, userId, newShipMethod, callback){
     Shipping.findOneAndUpdate({_id: shipMethodId, userId:userId}
     , newShipMethod, (err, shipMethod) =>{
+        callback(err, shipMethod);
+    });
+};
+
+module.exports.addShipMethod = function(newShipMethod, callback){
+    Shipping.create(newShipMethod, (err, shipMethod) =>{
         callback(err, shipMethod);
     });
 };

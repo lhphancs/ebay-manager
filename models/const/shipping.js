@@ -43,13 +43,13 @@ module.exports.getDefaultShipMethods = function getDefaultShipMethods(userId){
     let shipMethods = [];
     for(let obj of DEFAULT_USPS_SHIP_METHOD_LIST){
         shipMethods.push(
-            { userId: userId, shipCompany: "USPS", shipMethodName: obj.shipMethodName
+            { userId: userId, shipCompanyName: "USPS", shipMethodName: obj.shipMethodName
             , description: obj.description, ozPrice: obj.ozPrice }
         );
     }
     for(let obj of DEFAULT_FEDEX_SHIP_METHOD_LIST){
         shipMethods.push(
-            { userId: userId, shipCompany: "FEDEX", shipMethodName: obj.shipMethodName
+            { userId: userId, shipCompanyName: "FEDEX", shipMethodName: obj.shipMethodName
             , description: obj.description, ozPrice: obj.ozPrice }
         );
     }

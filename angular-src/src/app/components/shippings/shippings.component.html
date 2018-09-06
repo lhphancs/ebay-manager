@@ -1,7 +1,7 @@
 <ngb-tabset>
   <ngb-tab *ngFor="let companyObj of shipCompanies; let companyIndex=index" title={{companyObj.name}}>
     <ng-template ngbTabContent>
-      <button class="mt-3" mat-icon-button (click)="addResponse(companyObj._id)">
+      <button class="mt-3" mat-icon-button (click)="addResponse(companyIndex)">
         <mat-icon color="primary">add_circle</mat-icon>
       </button>
       <div class="row-container p-3"

@@ -14,6 +14,11 @@ export class DatabaseShippingsService {
     this.normalHeader.append('Content-Type', 'application/json');
   }
 
+  getShipCompanyName(shipMethodId, userId){
+    return this.httpClient.get(`/api/shippings/shipCompanyName/${shipMethodId}/${userId}`
+    , {headers: this.normalHeader});
+  }
+
   getShipMethod(shipMethodId, userId){
     return this.httpClient.get(`/api/shippings/shipMethod/${shipMethodId}/${userId}`
     , {headers: this.normalHeader});
@@ -34,6 +39,11 @@ export class DatabaseShippingsService {
   updateShipMethod(shipMethodId, userId, newShipMethod){
     return this.httpClient.put('/api/shippings/update'
     , {shipMethodId:shipMethodId, userId:userId, newShipMethod:newShipMethod}
+    , {headers: this.normalHeader});
+  }
+
+  addShipMethod(newShipMethod){
+    return this.httpClient.post('/api/shippings/add', {newShipMethod:newShipMethod}
     , {headers: this.normalHeader});
   }
 }

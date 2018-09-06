@@ -2,6 +2,19 @@ const express = require('express');
 const router = express.Router();
 const Shipping = require('../models/shipping');
 
+router.get('/shipCompanyName/:shipMethodId/:userId', (req, res, next) => {
+    shipMethodId = req.params.shipMethodId;
+    userId = req.params.userId;
+    
+    Shipping.getShipCompanyName(shipMethodId, userId, (err, shipCompanyName) => {
+        if(err || !shipCompanyName){
+            msg = err ? err.message: `Could not find ${shipMethodId}`
+            res.json({success: false, msg: msg});
+        }
+        else res.json({success:true, shipCompanyName:shipCompanyName, msg: `Success`});
+    });
+});
+
 router.get('/shipMethod/:shipMethodId/:userId', (req, res, next) => {
     shipMethodId = req.params.shipMethodId;
     userId = req.params.userId;
@@ -47,6 +60,16 @@ router.put('/update', (req, res, next) => {
         }
         else
             res.json({success:true, msg: `Successfully updated ship method: ${shipMethodId}`});   
+    });
+});
+
+router.post('/add', (req, res, next) => {
+    newShipMethod = req.body.newShipMethod;
+    Shipping.addShipMethod(newShipMethod, (err, newShipMethod) => {
+        if(err)
+            res.json({success: false, msg: `Failed: ${err.message}`});
+        else
+            res.json({success:true, msg: `Add successful: ${newShipMethod.shipMethodName}`});   
     });
 });
 

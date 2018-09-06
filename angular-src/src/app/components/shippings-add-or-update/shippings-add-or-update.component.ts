@@ -51,10 +51,8 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
           this.mode = params.get('mode');
           if(this.mode == 'update')
             this.prepareShipMethodUpdate(this.paramId);
-          else{
-            this.companyId = this.paramId;
-            this.prepareShipMethodAdd(this.companyId);
-          }
+          else
+            this.prepareShipMethodAdd(this.paramId);
         });
       }
     });
@@ -77,7 +75,7 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
         let shipMethod = data['shipMethod'];
         this.shipMethodId = shipMethod._id;
 
-        this.shipCompanyName = shipMethod.shipCompany;
+        this.shipCompanyName = shipMethod.shipCompanyName;
         this.shipMethodName = shipMethod.shipMethodName;
         this.description = shipMethod['description'];
         
@@ -88,21 +86,16 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
     });
   }
 
-  prepareShipMethodAdd(companyId){
-    /*
-    this.databaseUsersService.getShipCompanyName(this.userId, companyId).subscribe((data) =>{
+  prepareShipMethodAdd(firstShipMethodIdOfCompany){
+    this.databaseShippingsService.getShipCompanyName(firstShipMethodIdOfCompany
+    , this.userId).subscribe((data) =>{
       if(data['success']){
-        if(data['shipCompanyName']){
-            this.shipCompanyName = data['shipCompanyName'];
-            this.entries = [];
-        }
-        else
-          openSnackbar(this.snackBar, "Error: Ship Company Id not found in database");
+          this.shipCompanyName = data['shipCompanyName'];
+          this.entries = [];
       }
       else
         openSnackbar(this.snackBar, data['msg']);
     });
-*/
   }
 
 
@@ -123,19 +116,18 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
       , this.shipMethodName, this.description, processedEntriesOzPrice);
   }
 
-  addShipMethod(shipMethod, form){
-    /*
-    this.databaseUsersService.addShipMethod(this.userId, this.companyId, shipMethod).subscribe(data => {
+  addShipMethod(newShipMethod){
+    delete newShipMethod['_id'];
+    this.databaseShippingsService.addShipMethod(newShipMethod).subscribe(data => {
       if(data['success'])
-        this.addSuccessResponse(form);
+        this.addSuccessResponse(data['msg']);
       else
         openSnackbar(this.snackBar, `Failed to add product: ${data['msg']}`);
     });
-    */
   }
 
   ///The add is currently connected, but edit needs companyId
-  onSubmit(form){
+  onSubmit(){
     let processedEntries;
     if(this.isFlatRate)
       processedEntries = [ {oz:-1, price:this.flatRateCost} ];
@@ -150,12 +142,12 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
       if(this.mode == "update")
         this.updateShipMethod(this.paramId, newShipMethod)
       else
-        this.addShipMethod(newShipMethod, form);
+        this.addShipMethod(newShipMethod);
     }
   }
 
-  addSuccessResponse(form){
+  addSuccessResponse(msg){
     this.router.navigate(['/shippings']);
-    openSnackbar(this.snackBar, 'Successfully added ship method');
+    openSnackbar(this.snackBar, msg);
   }
 }

@@ -27,13 +27,13 @@ export class ShippingsComponent implements OnInit {
     let processedShipMethods = [];
 
     for(let shipMethod of shipMethods){
-      let shipCompany = shipMethod['shipCompany'];
-      if( !(shipCompany in companyDict) ){
-        companyDict[shipCompany] = Object.keys(companyDict).length;
-        processedShipMethods.push(  { name:shipCompany, shipMethods:[] }  );
+      let shipCompanyName = shipMethod['shipCompanyName'];
+      if( !(shipCompanyName in companyDict) ){
+        companyDict[shipCompanyName] = Object.keys(companyDict).length;
+        processedShipMethods.push(  { name:shipCompanyName, shipMethods:[] }  );
       }
 
-      processedShipMethods[companyDict[shipCompany]].shipMethods.push(
+      processedShipMethods[companyDict[shipCompanyName]].shipMethods.push(
         {
           shipMethodId: shipMethod['_id']
           , shipMethodName: shipMethod['shipMethodName']
@@ -83,7 +83,8 @@ export class ShippingsComponent implements OnInit {
     });
   }
 
-  addResponse(companyId){
-    this.router.navigate([`/shippings/add/${companyId}`]);
+  addResponse(companyIndex){
+    let firstShipMethodIdOfCompany = this.shipCompanies[companyIndex].shipMethods[0].shipMethodId;
+    this.router.navigate([`/shippings/add/${firstShipMethodIdOfCompany}`]);
   }
 }
