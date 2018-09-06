@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { openSnackbar } from '../snackbar';
 import { Router } from '@angular/router';
 import { DatabaseShippingsService } from '../../services/database-shippings.service';
+import { getProcessedShipMethods } from '../getProcessedShipMethods';
 
 @Component({
   selector: 'app-shippings',
@@ -22,35 +23,14 @@ export class ShippingsComponent implements OnInit {
     , public snackBar: MatSnackBar
     , private router: Router) { }
 
-  getProcessedShipMethods(shipMethods){
-    let companyDict = {};
-    let processedShipMethods = [];
-
-    for(let shipMethod of shipMethods){
-      let shipCompanyName = shipMethod['shipCompanyName'];
-      if( !(shipCompanyName in companyDict) ){
-        companyDict[shipCompanyName] = Object.keys(companyDict).length;
-        processedShipMethods.push(  { name:shipCompanyName, shipMethods:[] }  );
-      }
-
-      processedShipMethods[companyDict[shipCompanyName]].shipMethods.push(
-        {
-          shipMethodId: shipMethod['_id']
-          , shipMethodName: shipMethod['shipMethodName']
-          , description: shipMethod['description']
-          , ozPrice: shipMethod['ozPrice']
-        }
-      );
-    }
-    return processedShipMethods;
-  }
+  
 
   ngOnInit() {
     this.databaseUsersService.getProfile().subscribe( (data) =>{
       if(data['_id']){
         this.userId = data['_id'];
         this.databaseShippingService.getShipMethods(this.userId).subscribe((data) =>{
-          this.shipCompanies = this.getProcessedShipMethods(data['shipMethods']);
+          this.shipCompanies = getProcessedShipMethods(data['shipMethods']);
         });
       }
     });

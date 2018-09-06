@@ -46,11 +46,11 @@
       <mat-icon color="primary" matTooltip="{{shipCompanies[selectedCompanyIndex]['shipMethods'][selectedMethodIndex].description}}"
         matTooltipClass="tooltip-background" class="center-vertically">info</mat-icon>
       <button class="ml-1" mat-raised-button color="primary" [matMenuTriggerFor]="menuMethods">
-        {{shipCompanies[selectedCompanyIndex]['shipMethods'][selectedMethodIndex].name}}
+        {{shipCompanies[selectedCompanyIndex]['shipMethods'][selectedMethodIndex].shipMethodName}}
       </button>
       <mat-menu #menuMethods="matMenu">
         <button class="mnu-btn" *ngFor="let methodObj of shipCompanies[selectedCompanyIndex]['shipMethods']; let i=index"
-          mat-menu-item (click)="methodSelect(i)">{{methodObj.name}}</button>
+          mat-menu-item (click)="methodSelect(i)">{{methodObj.shipMethodName}}</button>
       </mat-menu>
     </div>
     <div class="div-inline mr-5"

@@ -1,6 +1,7 @@
 import { DatabaseUsersService } from '../../services/database-users.service';
 import { Component, OnInit } from '@angular/core';
 import { DatabaseShippingsService } from '../../services/database-shippings.service';
+import { getProcessedShipMethods } from '../getProcessedShipMethods';
 
 @Component({
   selector: 'calculator',
@@ -37,7 +38,7 @@ export class CalculatorComponent implements OnInit {
   loadAvailableShippings(){
     this.databaseShippingsService.getShipMethods(this.userId).subscribe( (data) =>{
       if(data['success']){
-        this.shipCompanies=data['shipCompanies'];
+        this.shipCompanies = getProcessedShipMethods(data['shipMethods']);
         this.companySelect(0);
       }
     });
