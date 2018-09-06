@@ -51,7 +51,6 @@ export class ShippingsComponent implements OnInit {
         this.userId = data['_id'];
         this.databaseShippingService.getShipMethods(this.userId).subscribe((data) =>{
           this.shipCompanies = this.getProcessedShipMethods(data['shipMethods']);
-          console.log(this.shipCompanies);
         });
       }
     });
@@ -63,7 +62,7 @@ export class ShippingsComponent implements OnInit {
 
   deleteShipMethod(companyIndex, shipMethodIndex){
     let shipMethodObj = this.shipCompanies[companyIndex].shipMethods[shipMethodIndex];
-    this.databaseShippingService.deleteShipMethod(this.userId, shipMethodObj.shipMethodId)
+    this.databaseShippingService.deleteShipMethod(shipMethodObj.shipMethodId, this.userId)
       .subscribe( (data) =>{
         if(data['success']){
           this.removeShipMethodFromView(companyIndex, shipMethodIndex);

@@ -7,6 +7,7 @@ import { openSnackbar } from '../snackbar';
 import { ShipMethod } from '../../classesAndInterfaces/shipMethod';
 import { getProcessedEntries } from '../table-methods'
 import { getHeaderNames } from '../table-methods'
+import { DatabaseShippingsService } from '../../services/database-shippings.service';
 
 @Component({
   selector: 'shippings-add-or-update',
@@ -15,7 +16,7 @@ import { getHeaderNames } from '../table-methods'
 })
 export class ShippingsAddOrUpdateComponent implements OnInit {
   @ViewChild(TableDynamicInputComponent) viewTable;
-
+  shipMethodId:string;
   userId:string;
   mode:string;
   paramId:string;
@@ -23,9 +24,8 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
   isFlatRate:boolean;
   flatRateCost:number;
 
-  companyId:string;
   shipCompanyName:string;
-  name:string;
+  shipMethodName:string;
   description:string;
   entries:object[];
   headers: object[] = [
@@ -36,6 +36,7 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
 
   constructor( 
     private databaseUsersService:DatabaseUsersService
+    , private databaseShippingsService:DatabaseShippingsService
     , private activatedRoute: ActivatedRoute
     , public snackBar: MatSnackBar
     , private router: Router) { }
@@ -59,13 +60,7 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
     });
   }
 
-  fillInForm(shipMethod){
-    this.name = shipMethod['name'];
-    this.description = shipMethod['description'];
-  }
-
   loadShipMethod(shipMethod){
-    this.fillInForm(shipMethod);
     let tableEntries = shipMethod['ozPrice'];
     if(tableEntries[0].oz == -1){
       this.isFlatRate = true;
@@ -77,24 +72,20 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
   }
 
   prepareShipMethodUpdate(shipMethodId){
-    /*
-    this.databaseUsersService.getShipMethod(this.userId, shipMethodId).subscribe((data) =>{
+    this.databaseShippingsService.getShipMethod(shipMethodId, this.userId).subscribe((data) =>{
       if(data['success']){
-        let shipCompany = data['shipCompany'];
-        if(shipCompany){
-            this.companyId = shipCompany._id;
-            this.shipCompanyName = shipCompany.name;
+        let shipMethod = data['shipMethod'];
+        this.shipMethodId = shipMethod._id;
 
-            let shipMethod = shipCompany.shipMethods;
-            this.loadShipMethod(shipMethod);
-        }
-        else
-          openSnackbar(this.snackBar, "Error: Ship Method Id not found in database");
+        this.shipCompanyName = shipMethod.shipCompany;
+        this.shipMethodName = shipMethod.shipMethodName;
+        this.description = shipMethod['description'];
+        
+        this.loadShipMethod(shipMethod);
       }
       else
         openSnackbar(this.snackBar, data['msg']);
     });
-    */
   }
 
   prepareShipMethodAdd(companyId){
@@ -116,21 +107,20 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
 
 
   updateShipMethod(shipMethodId, newShipMethod){
-    /*
-    this.databaseUsersService.updateShipMethod(this.userId, this.companyId
-      , shipMethodId, newShipMethod).subscribe(data => {
+    this.databaseShippingsService.updateShipMethod(shipMethodId
+    , this.userId, newShipMethod).subscribe(data => {
       if(data['success']){
-        openSnackbar(this.snackBar, `Update successful: ${newShipMethod.name}`);
+        openSnackbar(this.snackBar, `Update successful: ${newShipMethod.shipMethodName}`);
         this.router.navigateByUrl('/shippings');
       }
       else
-        openSnackbar(this.snackBar, `Failed to add product: ${data['msg']}`);
+        openSnackbar(this.snackBar, `Update failed: ${data['msg']}`);
     });
-    */
   }
 
   getNewShipMethodObject(processedEntriesOzPrice){
-    return new ShipMethod(this.name, this.description, processedEntriesOzPrice);
+    return new ShipMethod(this.shipMethodId, this.userId, this.shipCompanyName
+      , this.shipMethodName, this.description, processedEntriesOzPrice);
   }
 
   addShipMethod(shipMethod, form){

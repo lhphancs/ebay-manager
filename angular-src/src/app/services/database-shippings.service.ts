@@ -14,15 +14,26 @@ export class DatabaseShippingsService {
     this.normalHeader.append('Content-Type', 'application/json');
   }
 
-  getShipMethods(userId){
-    return this.httpClient.get(`/api/shippings/${userId}`, {headers: this.normalHeader});
+  getShipMethod(shipMethodId, userId){
+    return this.httpClient.get(`/api/shippings/shipMethod/${shipMethodId}/${userId}`
+    , {headers: this.normalHeader});
   }
 
-  deleteShipMethod(userId, shipMethodId){
+  getShipMethods(userId){
+    return this.httpClient.get(`/api/shippings/all/${userId}`, {headers: this.normalHeader});
+  }
+
+  deleteShipMethod(shipMethodId, userId){
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-      , body: {userId:userId, shipMethodId: shipMethodId}
+      , body: {shipMethodId: shipMethodId, userId:userId}
     };
     return this.httpClient.delete('/api/shippings/delete', httpOptions);
+  }
+
+  updateShipMethod(shipMethodId, userId, newShipMethod){
+    return this.httpClient.put('/api/shippings/update'
+    , {shipMethodId:shipMethodId, userId:userId, newShipMethod:newShipMethod}
+    , {headers: this.normalHeader});
   }
 }

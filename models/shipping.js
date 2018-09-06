@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const ObjectId = Schema.ObjectId;
 const constShipping = require('./const/shipping');
 
 const shippingSchema = Schema({
-        userId:{type: String, required: true},
+        userId:{type: ObjectId, required: true},
         shipCompany: {type: String, required: true},
         shipMethodName: {type: String, required: true},
         description:{type: String},
@@ -19,14 +20,27 @@ module.exports.addDefaultShippings = function(userId, callback){
     Shipping.insertMany(defaultShippings, callback);
 };
 
+module.exports.getShipMethod = function(shipMethodId, userId, callback){
+    Shipping.findOne({_id:shipMethodId, userId: userId}, (err, shipMethod) =>{
+        callback(err, shipMethod);
+    });
+};
+
 module.exports.getShipMethods = function(userId, callback){
     Shipping.find({userId: userId}, (err, shipMethods) =>{
         callback(err, shipMethods);
     });
 };
 
-module.exports.deleteShipMethod = function(userId, shipMethodId, callback){
-    Shipping.findOneAndRemove({userId: userId, _id: shipMethodId}, (err, shipMethod) =>{
+module.exports.deleteShipMethod = function(shipMethodId, userId, callback){
+    Shipping.findOneAndRemove({_id: shipMethodId, userId: userId}, (err, shipMethod) =>{
+        callback(err, shipMethod);
+    });
+};
+
+module.exports.updateShipMethod = function(shipMethodId, userId, newShipMethod, callback){
+    Shipping.findOneAndUpdate({_id: shipMethodId, userId:userId}
+    , newShipMethod, (err, shipMethod) =>{
         callback(err, shipMethod);
     });
 };

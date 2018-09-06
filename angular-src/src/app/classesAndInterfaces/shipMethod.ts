@@ -1,10 +1,16 @@
 export class ShipMethod{
-  name:string;
+  _id:string;
+  userId:string;
+  shipCompanyName: string;
+  shipMethodName: string;
   description:string;
   ozPrice:object[];
 
-  constructor(name, description, ozPrice){
-    this.name = name;
+  constructor(_id, userId, shipCompanyName, shipMethodName, description, ozPrice){
+    this._id = _id;
+    this.userId = userId;
+    this.shipCompanyName = shipCompanyName;
+    this.shipMethodName = shipMethodName;
     this.description = description;
     this.ozPrice = ozPrice;
   }
