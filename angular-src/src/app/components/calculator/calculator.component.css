@@ -24,7 +24,8 @@
 
 .mnu-btn{
     font-size:0.8em;
-    height: 40px;
+    line-height: 30px;
+    height: 30px;
     border: 1px solid grey;
     background-color:#619cff;
 }
@@ -39,4 +40,8 @@
 
 .btn-multiplier:hover{
     background-color: #6fb2cb;
+}
+
+.expansion-panel{
+    background-color:red;
 }

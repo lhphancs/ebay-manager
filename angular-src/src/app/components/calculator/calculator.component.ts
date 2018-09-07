@@ -82,9 +82,10 @@ export class CalculatorComponent implements OnInit {
 
   weightSelect(ozPriceIndex){
     this.selectedOzPriceIndex = ozPriceIndex;
-    this.updateTotalOrSaleValue();
+    
     this.shippingCost = this.shipCompanies[this.selectedCompanyIndex]['shipMethods']
       [this.selectedMethodIndex]['ozPrice'][this.selectedOzPriceIndex]['price'];
+    this.updateTotalOrSaleValue();
   }
 
   methodSelect(methodIndex){
@@ -99,6 +100,7 @@ export class CalculatorComponent implements OnInit {
 
   multiplyProductCost(multiplier){
     this.productCost = Math.round(this.productCost*multiplier*100)/100;
+    this.updateTotalOrSaleValue();
   }
 
   onCalcNeededSaleClick(){
