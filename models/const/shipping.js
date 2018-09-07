@@ -34,9 +34,9 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
 ];
 
 const DEFAULT_FEDEX_SHIP_METHOD_LIST = [
-    { shipMethodName:"SOME FLAT RATE METHOD"
-        , description: "SOME DESCRIPTION"
-        , ozPrice:[ {oz: -1, price: 17.10}] }
+    { shipMethodName:"tempFlatRateMethod"
+        , description: "tempDescription"
+        , ozPrice:[ {oz: -1, price: 999.99}] }
 ];
 
 module.exports.getDefaultShipMethods = function getDefaultShipMethods(userId){

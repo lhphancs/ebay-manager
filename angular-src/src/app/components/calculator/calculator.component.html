@@ -11,14 +11,14 @@
       <label for="saleValue">Sale value</label>
       <input type="number" step="any" class="form-control" id="saleValue"
         [(ngModel)]='saleValue' [disabled]="group.value!='calcProfit'"
-        (input)="updateFees(); updateTotalOrSaleValue(group.value)">
+        (input)="updateFees(); updateTotalOrSaleValue()">
     </div>
     <div class="form-group col-md-4 mr-5">
       <mat-icon color="primary" matTooltip="Price that you bought it for"
         matTooltipClass="tooltip-background" class="center-vertically">info</mat-icon>
       <label for="productCost">Product cost</label>
       <input type="number" step="any" class="form-control" id="productCost"
-        [(ngModel)]='productCost' (input)="updateTotalOrSaleValue(group.value)">
+        [(ngModel)]='productCost' (input)="updateTotalOrSaleValue()">
       <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group mr-2" role="group" aria-label="First group">
           <button *ngFor="let multiplier of multiplierArray" (click)="multiplyProductCost(multiplier)"
@@ -37,7 +37,7 @@
         matTooltipClass="tooltip-background" class="center-vertically">info</mat-icon>
       <label for="miscCost">Misc cost</label>
       <input type="number" step="any" class="form-control" id="miscCost"
-        [(ngModel)]='miscCost' (input)="updateTotalOrSaleValue(group.value)">
+        [(ngModel)]='miscCost' (input)="updateTotalOrSaleValue()">
     </div>
   </div>
 
@@ -90,7 +90,7 @@
     <input type="number" step="any"
       class="input-profit mx-1 form-control {{ totalProfit >= 1 ? 'green-text' : 'red-text'}}" id="profit"
       [(ngModel)]="totalProfit" [disabled]="group.value=='calcProfit'"
-      type="number" step="any" (input)="updateTotalOrSaleValue(group.value)">
+      type="number" step="any" (input)="updateTotalOrSaleValue()">
   </div>
 
   <mat-accordion>
