@@ -28,6 +28,7 @@ function isCompletelyEmpty(entry){
 }
 
 export function getProcessedEntries(entries:object[]){
+    console.log(entries)
     let processedEntries = [];
     for(let entry of entries)
         if(!isCompletelyEmpty(entry))

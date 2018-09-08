@@ -11,7 +11,7 @@ import { openSnackbar } from '../../snackbar';
 import { DatabaseProductsService } from '../../../services/database-products.service';
 import { getProcessedEntries } from '../../table-methods'
 import { getHeaderNames } from '../../table-methods'
-import * as $ from 'jquery';
+import { DatabaseShippingsService } from '../../../services/database-shippings.service';
 
 @Component({
   selector: 'products-add-or-update',
@@ -34,21 +34,23 @@ export class ProductsAddOrUpdateComponent implements OnInit {
   inputCostPerBox;
   inputQuantityPerBox;
 
+  shipMethodDict = {};
   entries:object[];
+
   headers: object[] = [
-    {name:'ASIN', type:"string"}
-    , {name:'packAmt', type:"number", min:1, step:"1"}
-    , {name:'shipMethod', type:"button", class:"btn-ship-method"}
-    , {name:'ozWeight', type:"number", min:0, step:"any"}
-    , {name:'preparation', type:"string"}
+    {data:"input", name:'ASIN', type:"string"}
+    , {data:"input", name:'packAmt', type:"number", min:1, step:"1"}
+    , {data:"select", name:'shipMethod'}
+    , {data:"input", name:'ozWeight', type:"number", min:0, step:"any"}
+    , {data:"input", name:'preparation', type:"string"}
   ];
   headerNames:string[];
-
 
   oldProductUPC: string;
 
   constructor(private productsComponent:ProductsComponent,
       private databaseProductsService: DatabaseProductsService
+      , private databaseShippingsService: DatabaseShippingsService
       , private activatedRoute: ActivatedRoute
       , public snackBar: MatSnackBar
       , private router: Router)
@@ -56,31 +58,28 @@ export class ProductsAddOrUpdateComponent implements OnInit {
   { }
 
   ngOnInit() {
-    this.headerNames = getHeaderNames(this.headers);
     this.userId = this.productsComponent.userId;
-    this.activatedRoute.paramMap.subscribe(params => {
-      this.oldProductUPC = params.get('UPC');
-      if(this.oldProductUPC)
-        this.prepareProductUpdate();
-      else{
-        this.entries = [];
-        this.displayRdy = true;
-      }
-    });
-    this.setTableClickFunction(this.entries, this.getShipMethodByPopup);
-  }
+    this.databaseShippingsService.getShipMethods(this.userId).subscribe((data)=>{
+      this.handleShippingMethods(data['shipMethods']);
 
-  getShipMethodByPopup(){
-    return "AA";
-  }
-
-  setTableClickFunction(entries, getShipMethodByPopup){
-    $(document).ready(function(){
-      $("#tbl-id").on("click", ".btn-ship-method", function(){
-        let index = this.closest('tr').rowIndex - 1;
-        entries[index].shipMethod = getShipMethodByPopup();
+      this.headerNames = getHeaderNames(this.headers);
+      this.activatedRoute.paramMap.subscribe(params => {
+        this.oldProductUPC = params.get('UPC');
+        if(this.oldProductUPC)
+          this.prepareProductUpdate();
+        else{
+          this.entries = [];
+          this.displayRdy = true;
+        }
       });
     });
+  }
+
+  handleShippingMethods(methods){
+    for(let method of methods){
+      this.shipMethodDict[method.shipCompanyName + " - " + method.shipMethodName]= method._id;
+    }
+    this.headers[2]['options'] = Object.keys(this.shipMethodDict);
   }
 
   fillInForm(product){

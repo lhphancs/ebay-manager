@@ -21,11 +21,17 @@
   <ng-container *ngFor="let column of headers" matColumnDef={{column.name}}>
     <th mat-header-cell *matHeaderCellDef>{{column.name}}</th>
     <td mat-cell *matCellDef="let element">
-      <input [(ngModel)]="element[column.name]"
+      <input *ngIf="column.data == 'input'; else optionTemplate" [(ngModel)]="element[column.name]"
       ngModel [ngModelOptions]="{standalone: true}"
       (ngModelChange)="addBlankEntryIfNeeded()"
         [type]="column.type" [min]="column.min"
-        [step]="column.step" [class]="column.class">
+        [step]="column.step">
+
+      <ng-template #optionTemplate>
+        <select [(ngModel)]="element[column.name]" (ngModelChange)="addBlankEntryIfNeeded()">
+          <option *ngFor="let key of column.options" value={{key}}>{{key}}</option>
+        </select> 
+      </ng-template>
     </td>
   </ng-container>
 

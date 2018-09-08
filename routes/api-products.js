@@ -2,9 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Product = require('../models/product');
 
-const mongoose = require('mongoose');
-
-
 function getFilteredProductJson(newProductJson){
     return {
         brand: newProductJson.brand,
