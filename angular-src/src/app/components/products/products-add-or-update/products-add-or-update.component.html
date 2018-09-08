@@ -53,15 +53,9 @@
         <input [(ngModel)]='inputStockNo' name="stockNo" matInput placeholder="Stock No.">
       </mat-form-field>
     </div>
-
-    <div fxFlex="10%">
-      <mat-form-field fxFlex>
-        <input [(ngModel)]='inputOz' name="oz" matInput placeholder="Weight (oz)" type="number" min="0">
-      </mat-form-field>
-    </div>
   </div>
 
-  <table-dynamic-input [headers]="headers" [entries]="entries"></table-dynamic-input>
+  <table-dynamic-input [headers]="headers" [entries]="entries" id="tbl-id"></table-dynamic-input>
   <button mat-raised-button color="primary"
     type="submit" class="btn-block btn-submit mt-2">Submit
   </button>

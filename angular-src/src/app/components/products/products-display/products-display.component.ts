@@ -1,7 +1,7 @@
 import { ProductsComponent } from '../products.component';
-import { Stack } from '../../../classesAndInterfaces/stack';
+import { Stack } from '../../../classesAndInterfaces/Stack';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Product } from '../../../classesAndInterfaces/product';
+import { Product } from '../../../classesAndInterfaces/Product';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MatSort, MatTableDataSource, MatSnackBar, MatDialog, MatDialogRef } from '@angular/material';
 
@@ -21,7 +21,7 @@ export class ProductsDisplayComponent implements OnInit {
   userId;
   filterValue: string;
   products: Product[];
-  displayedColumns: string[] = ['select', 'brand', 'name', 'stockNo', 'costPerBox', 'quantityPerBox', 'UPC', 'purchasedLocation', 'asins'];
+  displayedColumns: string[] = ['select', 'brand', 'name', 'stockNo', 'costPerBox', 'quantityPerBox', 'UPC', 'purchasedLocation', 'packsInfo'];
   dataSource: MatTableDataSource<Product>;
   selection = new SelectionModel<Product>(true, []);
   deletedGroupsStack: Stack; // Used to undo delete

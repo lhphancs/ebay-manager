@@ -1,4 +1,4 @@
-import { EntryASIN } from './entryASIN';
+import { PackInfo } from './PackInfo';
 
 export class Product {
     brand: string;
@@ -8,10 +8,9 @@ export class Product {
     quantityPerBox: number;
     purchasedLocation: string;
     stockNo: string;
-    oz: number;
-    ASINS: EntryASIN[];
+    packsInfo: PackInfo[];
 
-    constructor(brand, name, UPC, costPerBox, quantityPerBox, purchasedLocation, stockNo, oz, ASINS){
+    constructor(brand, name, UPC, costPerBox, quantityPerBox, purchasedLocation, stockNo, packsInfo){
         this.brand = brand;
         this.name = name;
         this.UPC = UPC;
@@ -19,7 +18,6 @@ export class Product {
         this.quantityPerBox = quantityPerBox;
         this.purchasedLocation = purchasedLocation;
         this.stockNo = stockNo;
-        this.oz = oz;
-        this.ASINS = ASINS;
+        this.packsInfo = packsInfo;
     }
 }

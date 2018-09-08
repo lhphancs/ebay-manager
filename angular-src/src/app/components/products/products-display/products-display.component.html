@@ -72,8 +72,8 @@
     <td mat-cell *matCellDef="let element"> {{element.purchasedLocation}} </td>
   </ng-container>
 
-  <ng-container matColumnDef="asins">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>ASINS</th>
+  <ng-container matColumnDef="packsInfo">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>packsInfo</th>
     <td mat-cell *matCellDef="let element">
         <ng-template #popContent>
             <table class="table table-striped table-dark">
@@ -85,7 +85,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let entry of element.ASINS">
+                  <tr *ngFor="let entry of element.packsInfo">
                     <td>{{entry.ASIN}}</td>
                     <td>{{entry.packAmt}}</td>
                     <td>{{entry.preparation}}</td>
@@ -95,8 +95,8 @@
         </ng-template>
           
         <button class="btn btn-secondary btn-sm" type="button"
-          popoverTitle="ASINS" [ngbPopover]="popContent"
-          placement="left" triggers="mouseenter:mouseleave">ASINS</button>
+          popoverTitle="packsInfo" [ngbPopover]="popContent"
+          placement="left" triggers="mouseenter:mouseleave">packsInfo</button>
     </td>
   </ng-container>
 

@@ -11,11 +11,12 @@ const productSchema = Schema({
     quantityPerBox: {type: Number, required: true, min: 1},
     purchasedLocation: {type: String},
     stockNo: {type: String},
-    oz: {type: Number},
-    ASINS: {
+    packsInfo: {
         type:
-        [{ ASIN: { type: String, required: true },
-            packAmt: { type: Number, required: true, min: 1, },
+        [{ ASIN: { type: String},
+            packAmt: { type: Number, min: 1 },
+            shipMethodId:{ type: ObjectId },
+            weight:{ type: Number, min: 1 },
             preparation: { type: String} }]
         , default: []
     }

@@ -4,7 +4,7 @@ import { DatabaseUsersService } from '../../services/database-users.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { openSnackbar } from '../snackbar';
-import { ShipMethod } from '../../classesAndInterfaces/shipMethod';
+import { ShipMethod } from '../../classesAndInterfaces/ShipMethod';
 import { getProcessedEntries } from '../table-methods'
 import { getHeaderNames } from '../table-methods'
 import { DatabaseShippingsService } from '../../services/database-shippings.service';

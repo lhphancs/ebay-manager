@@ -5,12 +5,13 @@ import { ViewChild, ElementRef } from '@angular/core';
 
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Product } from '../../../classesAndInterfaces/product';
+import { Product } from '../../../classesAndInterfaces/Product';
 import { MatSnackBar } from '@angular/material';
 import { openSnackbar } from '../../snackbar';
 import { DatabaseProductsService } from '../../../services/database-products.service';
 import { getProcessedEntries } from '../../table-methods'
 import { getHeaderNames } from '../../table-methods'
+import * as $ from 'jquery';
 
 @Component({
   selector: 'products-add-or-update',
@@ -30,7 +31,6 @@ export class ProductsAddOrUpdateComponent implements OnInit {
   inputUPC;
   inputPurchasedLocation;
   inputStockNo;
-  inputOz;
   inputCostPerBox;
   inputQuantityPerBox;
 
@@ -38,6 +38,8 @@ export class ProductsAddOrUpdateComponent implements OnInit {
   headers: object[] = [
     {name:'ASIN', type:"string"}
     , {name:'packAmt', type:"number", min:1, step:"1"}
+    , {name:'shipMethod', type:"button", class:"btn-ship-method"}
+    , {name:'ozWeight', type:"number", min:0, step:"any"}
     , {name:'preparation', type:"string"}
   ];
   headerNames:string[];
@@ -65,6 +67,20 @@ export class ProductsAddOrUpdateComponent implements OnInit {
         this.displayRdy = true;
       }
     });
+    this.setTableClickFunction(this.entries, this.getShipMethodByPopup);
+  }
+
+  getShipMethodByPopup(){
+    return "AA";
+  }
+
+  setTableClickFunction(entries, getShipMethodByPopup){
+    $(document).ready(function(){
+      $("#tbl-id").on("click", ".btn-ship-method", function(){
+        let index = this.closest('tr').rowIndex - 1;
+        entries[index].shipMethod = getShipMethodByPopup();
+      });
+    });
   }
 
   fillInForm(product){
@@ -73,7 +89,6 @@ export class ProductsAddOrUpdateComponent implements OnInit {
     this.inputUPC = product.UPC;
     this.inputPurchasedLocation = product.purchasedLocation;
     this.inputStockNo = product.stockNo;
-    this.inputOz = product.oz;
     this.inputCostPerBox = product.costPerBox;
     this.inputQuantityPerBox = product.quantityPerBox;
   }
@@ -84,7 +99,7 @@ export class ProductsAddOrUpdateComponent implements OnInit {
       if(data['success']){
         if(data['product']){
           let product = data['product'];
-          this.entries = product.ASINS;
+          this.entries = product.packsInfo;
           this.fillInForm(product);
         }
         else
@@ -99,7 +114,7 @@ export class ProductsAddOrUpdateComponent implements OnInit {
   getNewProductObject(processedEntries){
     return new Product(this.inputBrand, this.inputName, this.inputUPC
       , this.inputCostPerBox, this.inputQuantityPerBox
-        , this.inputPurchasedLocation, this.inputStockNo, this.inputOz
+        , this.inputPurchasedLocation, this.inputStockNo
         , processedEntries);
   }
 

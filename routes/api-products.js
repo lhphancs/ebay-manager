@@ -15,7 +15,7 @@ function getFilteredProductJson(newProductJson){
         stockNo: newProductJson.stockNo,
         oz: newProductJson.oz,
         UPC: newProductJson.UPC,
-        ASINS: newProductJson.ASINS
+        packsInfo: newProductJson.packsInfo
     };
 }
 

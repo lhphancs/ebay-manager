@@ -24,12 +24,13 @@
       <input [(ngModel)]="element[column.name]"
       ngModel [ngModelOptions]="{standalone: true}"
       (ngModelChange)="addBlankEntryIfNeeded()"
-        [type]="column.type" [min]="column.min" [step]="column.step">
+        [type]="column.type" [min]="column.min"
+        [step]="column.step" [class]="column.class">
     </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="headerNamesWithSelect"></tr>
-  <tr mat-row *matRowDef="let row; let isEvenRow=even; columns: headerNamesWithSelect;"
-    [class.even-row]="isEvenRow">
+  <tr mat-row *matRowDef="let row; let i=index; let isEvenRow=even; columns: headerNamesWithSelect;"
+    [class.even-row]="isEvenRow" [attr.data-row-num]="i">
   </tr>
 </table>
