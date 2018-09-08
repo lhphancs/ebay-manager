@@ -85,3 +85,7 @@
 .tooltip-background{
     background-color:grey;
 }
+
+.popover {
+    max-width: none;
+}

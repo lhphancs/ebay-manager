@@ -8,6 +8,7 @@ import { MatSort, MatTableDataSource, MatSnackBar, MatDialog, MatDialogRef } fro
 import { openSnackbar } from '../../snackbar';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { DatabaseProductsService } from '../../../services/database-products.service';
+import { DatabaseShippingsService } from '../../../services/database-shippings.service';
 
 @Component({
   selector: 'products-display',
@@ -19,6 +20,7 @@ export class ProductsDisplayComponent implements OnInit {
   loadingMsg = "Loading products..."
 
   userId;
+  shipMethodDict = {};
   filterValue: string;
   products: Product[];
   displayedColumns: string[] = ['select', 'brand', 'name', 'stockNo', 'costPerBox', 'quantityPerBox', 'UPC', 'purchasedLocation', 'packsInfo'];
@@ -28,6 +30,7 @@ export class ProductsDisplayComponent implements OnInit {
 
   constructor(private productsComponent:ProductsComponent,
     private databaseProductsService: DatabaseProductsService
+    , private databaseShippingsService: DatabaseShippingsService
     , public snackBar: MatSnackBar, private dialog: MatDialog){
       this.deletedGroupsStack = new Stack();
   }
@@ -36,15 +39,23 @@ export class ProductsDisplayComponent implements OnInit {
   
   ngOnInit() {
     this.userId = this.productsComponent.userId;
-    this.databaseProductsService.getProducts(this.userId).subscribe( (data) => {
-      if(data['success']){
-        this.products = data['products'];
-        this.dataSource = new MatTableDataSource<Product>(this.products);
-        this.dataSource.sort = this.sort;
-      }
-      else
-        openSnackbar(this.snackBar, data['msg']);
+    this.databaseShippingsService.getShipMethods(this.userId).subscribe((data)=>{
+      this.handleShippingMethods(data['shipMethods']);
+      this.databaseProductsService.getProducts(this.userId).subscribe( (data) => {
+        if(data['success']){
+          this.products = data['products'];
+          this.dataSource = new MatTableDataSource<Product>(this.products);
+          this.dataSource.sort = this.sort;
+        }
+        else
+          openSnackbar(this.snackBar, data['msg']);
+      });
     });
+  }
+
+  handleShippingMethods(methods){
+    for(let method of methods)
+      this.shipMethodDict[method._id]= method.shipCompanyName + " - " + method.shipMethodName;
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
