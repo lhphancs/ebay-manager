@@ -73,7 +73,7 @@
   </ng-container>
 
   <ng-container matColumnDef="packsInfo">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>packsInfo</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Packs Info</th>
     <td mat-cell *matCellDef="let element">
         <ng-template #popContent>
           <table class="table table-striped table-dark">
@@ -100,7 +100,7 @@
         </ng-template>
           
         <button class="btn btn-secondary btn-sm" type="button"
-          popoverTitle="packsInfo" [ngbPopover]="popContent" popoverClass="packinfo"
+          popoverTitle="{{element.brand + ': ' + element.name}}" [ngbPopover]="popContent" popoverClass="packinfo"
           placement="left" triggers="mouseenter:mouseleave">Pack Info</button>
     </td>
   </ng-container>

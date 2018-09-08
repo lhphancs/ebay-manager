@@ -86,6 +86,14 @@
     background-color:grey;
 }
 
-.popover {
+.popover-header{
+    background-color:#619cff;
+    font-weight: bold;
+    border-radius: 0;
+}
+
+.popover{
+    width: 70%;
+    border: 2px solid grey;
     max-width: none;
 }
