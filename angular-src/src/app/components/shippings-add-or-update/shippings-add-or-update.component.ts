@@ -29,8 +29,8 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
   description:string;
   entries:object[];
   headers: object[] = [
-    {name:'oz', type:"string"}
-    , {name:'price', type:"number", min:0, step:"any"}
+    {data:"input", name:'oz', type:"number", min:0, step:"any"}
+    , {data:"input", name:'price', type:"number", min:0, step:"any"}
   ];
   headerNames:string[];
 

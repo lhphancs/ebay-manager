@@ -9,7 +9,7 @@ const shippingSchema = Schema({
         shipMethodName: {type: String, required: true},
         description:{type: String},
         ozPrice: {type:[{
-            oz: { type: Number, min: -1 },
+            oz: { type: Number, required: true, min: -1},
             price: { type: Number, required: true, min: 0} }]}
     });
     
