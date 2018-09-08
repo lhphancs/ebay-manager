@@ -42,9 +42,8 @@ router.get('/:userId/:offset?/:limit?', (req, res, next) => {
 router.post('/add', (req, res, next) => {
     let userId = req.body.userId;
     let newProductJson = req.body.newProduct;
-    let newProduct = getFilteredProductJson(newProductJson);
+    let newProductEntry = getFilteredProductJson(newProductJson);
 
-    let newProductEntry = newProduct;
     newProductEntry.userId = userId;
     Product.addProduct(newProductEntry, (err, product) => {
         if(err) res.json({success: false, msg: `Failed to add product: ${err.message}`});

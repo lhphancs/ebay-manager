@@ -28,10 +28,17 @@ function isCompletelyEmpty(entry){
 }
 
 export function getProcessedEntries(entries:object[]){
-    console.log(entries)
     let processedEntries = [];
     for(let entry of entries)
         if(!isCompletelyEmpty(entry))
             processedEntries.push(entry);
     return processedEntries;
 }
+
+export function getArrayFromDict(dict){
+    let arr = [];
+    for(let key in dict) 
+        arr.push({key: key, val: dict[key]});
+    return arr;
+}
+

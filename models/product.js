@@ -16,7 +16,7 @@ const productSchema = Schema({
         [{ ASIN: { type: String},
             packAmt: { type: Number, min: 1 },
             shipMethodId:{ type: ObjectId },
-            weight:{ type: Number, min: 1 },
+            ozWeight:{ type: Number, min: 1 },
             preparation: { type: String} }]
         , default: []
     }
@@ -44,8 +44,6 @@ module.exports.getProductByUPC = function(userId, productUPC, callback){
 module.exports.getProducts = function(userId, offset, limit, callback){
     Product.find({userId: userId}, null, {select:'-userId -_id -__v', skip:offset, limit: limit}, callback);
 };
-
-
 
 module.exports.deleteProducts = function(userId, UPCs, callback){
     Product.remove({ userId: userId, UPC: UPCs}, callback);

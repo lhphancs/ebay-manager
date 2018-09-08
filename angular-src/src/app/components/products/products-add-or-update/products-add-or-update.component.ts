@@ -10,8 +10,11 @@ import { MatSnackBar } from '@angular/material';
 import { openSnackbar } from '../../snackbar';
 import { DatabaseProductsService } from '../../../services/database-products.service';
 import { getProcessedEntries } from '../../table-methods'
-import { getHeaderNames } from '../../table-methods'
+
 import { DatabaseShippingsService } from '../../../services/database-shippings.service';
+import { getHeaderNames } from '../../table-methods'
+import { getArrayFromDict } from '../../table-methods'
+
 
 @Component({
   selector: 'products-add-or-update',
@@ -40,7 +43,7 @@ export class ProductsAddOrUpdateComponent implements OnInit {
   headers: object[] = [
     {data:"input", name:'ASIN', type:"string"}
     , {data:"input", name:'packAmt', type:"number", min:1, step:"1"}
-    , {data:"select", name:'shipMethod'}
+    , {data:"select", arrayOfKeyVal:[], name:'shipMethodId'}
     , {data:"input", name:'ozWeight', type:"number", min:0, step:"any"}
     , {data:"input", name:'preparation', type:"string"}
   ];
@@ -76,10 +79,9 @@ export class ProductsAddOrUpdateComponent implements OnInit {
   }
 
   handleShippingMethods(methods){
-    for(let method of methods){
-      this.shipMethodDict[method.shipCompanyName + " - " + method.shipMethodName]= method._id;
-    }
-    this.headers[2]['options'] = Object.keys(this.shipMethodDict);
+    for(let method of methods)
+      this.shipMethodDict[method._id]= method.shipCompanyName + " - " + method.shipMethodName;
+    this.headers[2]['arrayOfKeyVal'] = getArrayFromDict(this.shipMethodDict);
   }
 
   fillInForm(product){
@@ -108,13 +110,6 @@ export class ProductsAddOrUpdateComponent implements OnInit {
         openSnackbar(this.snackBar, data['msg']);
       this.displayRdy = true;
     });
-  }
-
-  getNewProductObject(processedEntries){
-    return new Product(this.inputBrand, this.inputName, this.inputUPC
-      , this.inputCostPerBox, this.inputQuantityPerBox
-        , this.inputPurchasedLocation, this.inputStockNo
-        , processedEntries);
   }
 
   addProduct(product, form){
@@ -146,6 +141,13 @@ export class ProductsAddOrUpdateComponent implements OnInit {
     this.router.navigateByUrl('/products/display');
   }
   
+  getNewProductObject(processedEntries){
+    return new Product(this.inputBrand, this.inputName, this.inputUPC
+      , this.inputCostPerBox, this.inputQuantityPerBox
+        , this.inputPurchasedLocation, this.inputStockNo
+        , processedEntries);
+  }
+
   onSubmit(form){
     let processedEntries = getProcessedEntries(this.entries);
     if(processedEntries == null)

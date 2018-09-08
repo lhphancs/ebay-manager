@@ -29,7 +29,7 @@
 
       <ng-template #optionTemplate>
         <select [(ngModel)]="element[column.name]" (ngModelChange)="addBlankEntryIfNeeded()">
-          <option *ngFor="let key of column.options" value={{key}}>{{key}}</option>
+          <option *ngFor="let obj of column.arrayOfKeyVal" value={{obj.key}}>{{obj.val}}</option>
         </select> 
       </ng-template>
     </td>
