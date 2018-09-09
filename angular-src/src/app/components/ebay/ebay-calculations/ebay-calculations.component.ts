@@ -78,9 +78,11 @@ export class EbayCalculationsComponent implements OnInit {
   handleShippingMethods(methods){
     for(let method of methods){
       this.dictShipIdToName[method._id]= method.shipCompanyName + " - " + method.shipMethodName;
-      for(let obj of method.ozPrice){
-        let oz = obj.oz ? obj.oz: "";
-        this.dictShipIdAndOzToCost[method._id + oz] = obj.price;
+      if(method.flatRatePrice)
+        this.dictShipIdAndOzToCost[method._id] = method.flatRatePrice;
+      else{
+        for(let obj of method.ozPrice)
+          this.dictShipIdAndOzToCost[method._id + obj.oz] = obj.price;
       }
     }
   }
@@ -89,12 +91,25 @@ export class EbayCalculationsComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  getErrMsg(roundedUpOz, totalProfit, totalProductCost, key){
+    let BASE_ERR_MSG = "Err: ";
+    let errMsg = BASE_ERR_MSG;
+    if(!roundedUpOz) errMsg += "oz ";
+    if(!totalProfit) errMsg += "desiredProfit ";
+    if(!totalProductCost) errMsg += "totalProductCost ";
+    if(!key) errMsg += "shipId/oz";
+    return errMsg == BASE_ERR_MSG ? null : errMsg;
+  }
+
   calculateNeededSale(packAmt, shipId, oz, costPerSingle){
     let roundedUpOz = oz ? Math.ceil(oz): "";
     let totalProfit = this.desiredProfitPerSingle * packAmt;
     let totalProductCost = costPerSingle * packAmt;
     let key = shipId + roundedUpOz;
-    console.log(key)
+    
+    let err = this.getErrMsg(roundedUpOz, totalProfit, totalProductCost, key);
+    if(err)
+      return err;
 
     let shipCost = this.dictShipIdAndOzToCost[key];
     return Math.round((totalProfit+this.paypalFlatFee

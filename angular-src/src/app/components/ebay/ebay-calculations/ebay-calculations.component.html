@@ -1,13 +1,18 @@
 <div class="d-flex justify-content-between align-items-center mt-3 px-3">
   <div></div>
+
   <input [(ngModel)]="filterValue" class="form-control border border-primary filter"
     placeholder="Filter" (keyup)="applyFilter($event.target.value)">
-
+  
+  <form class="entire-form mb-2 p-1" ngNativeValidate>
     <mat-form-field>
-      <input class="" [(ngModel)]='desiredProfitPerSingle' matInput placeholder="Desired profit/pack"
+      <input class="" [(ngModel)]='desiredProfitPerSingle' matInput
+        placeholder="Desired profit/pack" [ngModelOptions]="{standalone: true}"
         type="number" min="0" step="any" required>
       <span matPrefix>$&nbsp;</span>
     </mat-form-field>
+  </form>
+    
 </div>
 
 <progress-spinner *ngIf="!dataSource" [msg]="loadingMsg"></progress-spinner>
@@ -79,7 +84,7 @@
                   <td>{{entry.preparation}}</td>
                   <td>{{calculateNeededSale(entry.packAmt
                     , entry.shipMethodId, entry.ozWeight
-                    , element.costPerSingle) | number : '1.2-2'}}
+                    , element.costPerSingle)}}
                   </td>
                 </tr>
               </tbody>
