@@ -40,7 +40,7 @@ export class ProductsDisplayComponent implements OnInit {
   ngOnInit() {
     this.userId = this.productsComponent.userId;
     this.databaseShippingsService.getShipMethods(this.userId).subscribe((data)=>{
-      this.handleShippingMethods(data['shipMethods']);
+      this.initializeShippingMethods(data['shipMethods']);
       this.databaseProductsService.getProducts(this.userId).subscribe( (data) => {
         if(data['success']){
           this.products = data['products'];
@@ -63,7 +63,7 @@ export class ProductsDisplayComponent implements OnInit {
     }
   }
 
-  handleShippingMethods(methods){
+  initializeShippingMethods(methods){
     for(let method of methods)
       this.dictShipIdToName[method._id]= method.shipCompanyName + " - " + method.shipMethodName;
   }

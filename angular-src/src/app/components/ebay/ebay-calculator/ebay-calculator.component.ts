@@ -1,14 +1,14 @@
-import { DatabaseUsersService } from '../../services/database-users.service';
 import { Component, OnInit } from '@angular/core';
-import { DatabaseShippingsService } from '../../services/database-shippings.service';
-import { getProcessedShipMethods } from '../getProcessedShipMethods';
+import { DatabaseUsersService } from '../../../services/database-users.service';
+import { DatabaseShippingsService } from '../../../services/database-shippings.service';
+import { getProcessedShipMethods } from '../../getProcessedShipMethods';
 
 @Component({
-  selector: 'calculator',
-  templateUrl: './calculator.component.html',
-  styleUrls: ['./calculator.component.css']
+  selector: 'app-ebay-calculator',
+  templateUrl: './ebay-calculator.component.html',
+  styleUrls: ['./ebay-calculator.component.css']
 })
-export class CalculatorComponent implements OnInit {
+export class EbayCalculatorComponent implements OnInit {
   multiplierArray = [2,3,5];
 
   objectKeys = Object.keys;

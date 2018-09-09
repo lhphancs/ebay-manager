@@ -45,7 +45,7 @@ export class EbayCalculationsComponent implements OnInit {
     this.paypalFlatFee = this.ebayComponent.paypalFlatFee;
 
     this.databaseShippingsService.getShipMethods(this.userId).subscribe((data)=>{
-      this.handleShippingMethods(data['shipMethods']);
+      this.initializeShippingMethods(data['shipMethods']);
       this.databaseProductsService.getProducts(this.userId).subscribe( (data) => {
         if(data['success']){
           this.products = data['products'];
@@ -75,7 +75,7 @@ export class EbayCalculationsComponent implements OnInit {
     }
   }
 
-  handleShippingMethods(methods){
+  initializeShippingMethods(methods){
     for(let method of methods){
       this.dictShipIdToName[method._id]= method.shipCompanyName + " - " + method.shipMethodName;
       if(method.flatRatePrice)

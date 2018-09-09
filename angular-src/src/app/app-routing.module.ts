@@ -17,6 +17,7 @@ import { CalculatorComponent } from './components/calculator/calculator.componen
 import { EbayComponent } from './components/ebay/ebay.component';
 import { LoginComponent } from './components/login/login.component';
 import { EbayCalculationsComponent } from './components/ebay/ebay-calculations/ebay-calculations.component';
+import { EbayCalculatorComponent } from './components/ebay/ebay-calculator/ebay-calculator.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -28,6 +29,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'calculations', pathMatch: 'full' },
       { path: 'calculations', component: EbayCalculationsComponent },
+      { path: 'calculator', component: EbayCalculatorComponent },
     ]
   },
   { path: 'account', component: AccountComponent, canActivate:[AuthGuard] },
@@ -43,7 +45,6 @@ const routes: Routes = [
   { path: 'shippings', component: ShippingsComponent, canActivate:[AuthGuard] }, 
   { path: 'shippings/:mode/:id', component: ShippingsAddOrUpdateComponent, canActivate:[AuthGuard] }, 
   { path: 'fees', component: FeesComponent },
-  { path: 'calculator', component: CalculatorComponent, canActivate:[AuthGuard] },
   { path: 'logout', component: LogoutComponent }
 ];
 

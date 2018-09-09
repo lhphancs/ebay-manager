@@ -11,7 +11,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 
 import { EbayComponent } from './components/ebay/ebay.component';
-import { CalculatorComponent } from './components/calculator/calculator.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -36,13 +35,13 @@ import { ShippingsComponent } from './components/shippings/shippings.component';
 import { ProgressSpinnerComponent } from './components/progress-spinner/progress-spinner.component';
 import { TableDynamicInputComponent } from './components/table-dynamic-input/table-dynamic-input.component';
 import { EbayCalculationsComponent } from './components/ebay/ebay-calculations/ebay-calculations.component';
+import { EbayCalculatorComponent } from './components/ebay/ebay-calculator/ebay-calculator.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     EbayComponent,
-    CalculatorComponent,
     ProductsComponent,
     ProductsAddOrUpdateComponent,
     ProductsDisplayComponent,
@@ -58,7 +57,8 @@ import { EbayCalculationsComponent } from './components/ebay/ebay-calculations/e
     ShippingsAddOrUpdateComponent,
     ProgressSpinnerComponent,
     TableDynamicInputComponent,
-    EbayCalculationsComponent
+    EbayCalculationsComponent,
+    EbayCalculatorComponent
   ],
   imports: [
     NgbModule.forRoot(),

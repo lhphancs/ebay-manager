@@ -63,7 +63,7 @@ export class ProductsAddOrUpdateComponent implements OnInit {
   ngOnInit() {
     this.userId = this.productsComponent.userId;
     this.databaseShippingsService.getShipMethods(this.userId).subscribe((data)=>{
-      this.handleShippingMethods(data['shipMethods']);
+      this.initializeShippingMethods(data['shipMethods']);
 
       this.headerNames = getHeaderNames(this.headers);
       this.activatedRoute.paramMap.subscribe(params => {
@@ -78,7 +78,7 @@ export class ProductsAddOrUpdateComponent implements OnInit {
     });
   }
 
-  handleShippingMethods(methods){
+  initializeShippingMethods(methods){
     for(let method of methods)
       this.shipMethodDict[method._id]= method.shipCompanyName + " - " + method.shipMethodName;
     this.headers[2]['arrayOfKeyVal'] = getArrayFromDict(this.shipMethodDict);

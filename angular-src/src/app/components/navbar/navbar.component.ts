@@ -44,8 +44,7 @@ export class NavbarComponent implements OnInit {
   loggedRightLinks = [
       new Link("Products", "products"),
       new Link("Shippings", "shippings"),
-      new Link("Fees", "fees"),
-      new Link("Calculator", "calculator")
+      new Link("Fees", "fees")
   ];
 
   menuItemLinks = [
