@@ -12,31 +12,31 @@ const noBulgeString = "Package cannot be bulging when shipped."
 const DEFAULT_USPS_SHIP_METHOD_LIST = [
     { shipMethodName:"First class"
         , description: 'Ship with own envelope/box. Must be 16oz or less. Maximum combined length and girth is 108 inches.'
-        , ozPrice: DEFAULT_USPS_FIRST_CLASS_OZ_PRICE},
+        , flatRatePrice: null, ozPrice: DEFAULT_USPS_FIRST_CLASS_OZ_PRICE},
     { shipMethodName:"Flat rate envelope"
         , description: 'Labled "Flat rate envelope". Not the same as "legal flat rate envelope" or "padded envelope".'
-        , flatRatePrice: 6.35 },
+        , flatRatePrice: 6.35, ozPrice: null },
     { shipMethodName:"Flat rate legal envelope"
         , description: 'Labled "Flat rate envelope" with "legal flat rate enevelope" written in small prints. Does not come with padding. Not the same as "flat rate envelope" or "padded envelope".'
-        , flatRatePrice: 6.65 },
+        , flatRatePrice: 6.65, ozPrice: null },
     { shipMethodName:"Flat rate padded envelope"
         , description: 'Labeled "Flat rate envelope" and envelope comes with bubble padding inside. Not the same as "flat rate envelope" or "legal flat rate envelope".'
-        , flatRatePrice: 6.90 },
+        , flatRatePrice: 6.90, ozPrice: null },
     { shipMethodName:"Flat rate small box"
         , description: 'Labeled "Small flat rate box". ' + noBulgeString
-        , flatRatePrice: 6.85 },
+        , flatRatePrice: 6.85, ozPrice: null },
     { shipMethodName:"Flat rate medium box"
         , description: 'Labled "Medium flat rate box". ' + noBulgeString
-        , flatRatePrice: 12.45 },
+        , flatRatePrice: 12.45, ozPrice: null },
     { shipMethodName:"Flat rate large box"
         , description: 'Labled "Large flat rate box". ' + noBulgeString
-        , flatRatePrice: 17.10 }
+        , flatRatePrice: 17.10, ozPrice: null }
 ];
 
 const DEFAULT_FEDEX_SHIP_METHOD_LIST = [
     { shipMethodName:"tempFlatRateMethod"
         , description: "tempDescription"
-        , flatRatePrice: 999.99 }
+        , flatRatePrice: 999.99, ozPrice: null }
 ];
 
 module.exports.getDefaultShipMethods = function getDefaultShipMethods(userId){

@@ -1,12 +1,20 @@
-.method-btn{
+.ship-method-container{
+    padding:10px;
     width:300px;
+    border: 1px solid grey;
+    background: #3f51b5;
+    color:white;
+}
+
+.ship-method-container:hover{
+    background-color: #6fb2cb;
 }
 
 .oz-price-tbl-row{
     line-height: 0px
 }
 .price{
-    font-size: 0.7em;
+    font-size: 0.8em;
     background-color:white;
     width:120px;
     border: 1px solid grey;
@@ -15,10 +23,6 @@
     overflow-x: hidden;  /* Hide the horizontal scroll */
     max-height:100px;
     margin-bottom: 0px;
-}
-.tbl-header{
-    line-height:0px;
-    font-size: 0.7em;
 }
 
 .row-container{
@@ -30,4 +34,9 @@
   align-items:center;
   justify-content:center;
   display:flex;
+}
+
+.edit-icon{
+    color:white;
+    margin-right: 5px;
 }

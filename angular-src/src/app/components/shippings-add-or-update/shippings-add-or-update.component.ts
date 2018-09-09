@@ -112,10 +112,17 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
     obj['shipCompanyName'] = this.shipCompanyName;
     obj['shipMethodName'] = this.shipMethodName;
     obj['description'] = this.description;
-    if(flatRatePrice)
+    if(flatRatePrice){
       obj['flatRatePrice'] = flatRatePrice;
-    else
+      obj['ozPrice'] = null;
+    }
+      
+    else{
+      obj['flatRatePrice'] = null;
       obj['ozPrice'] = ozPrice;
+    }
+      
+
     return obj;
   }
 
