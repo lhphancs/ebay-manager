@@ -91,13 +91,12 @@ export class EbayCalculationsComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  getErrMsg(roundedUpOz, totalProfit, totalProductCost, key){
+  getErrMsg(totalProfit, totalProductCost, shipCost){
     let BASE_ERR_MSG = "Err: ";
     let errMsg = BASE_ERR_MSG;
-    if(!roundedUpOz) errMsg += "oz ";
     if(!totalProfit) errMsg += "desiredProfit ";
     if(!totalProductCost) errMsg += "totalProductCost ";
-    if(!key) errMsg += "shipId/oz";
+    if(!shipCost) errMsg += "shipId/oz";
     return errMsg == BASE_ERR_MSG ? null : errMsg;
   }
 
@@ -106,12 +105,12 @@ export class EbayCalculationsComponent implements OnInit {
     let totalProfit = this.desiredProfitPerSingle * packAmt;
     let totalProductCost = costPerSingle * packAmt;
     let key = shipId + roundedUpOz;
+    let shipCost = this.dictShipIdAndOzToCost[key];
     
-    let err = this.getErrMsg(roundedUpOz, totalProfit, totalProductCost, key);
+    let err = this.getErrMsg(totalProfit, totalProductCost, shipCost);
     if(err)
       return err;
 
-    let shipCost = this.dictShipIdAndOzToCost[key];
     return Math.round((totalProfit+this.paypalFlatFee
       + totalProductCost + shipCost)
       / (1-this.paypalPercentageFromSaleFee*0.01 - this.ebayPercentageFromSaleFee*0.01)*100)/100;
