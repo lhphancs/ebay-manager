@@ -113,6 +113,7 @@ export class ProductsAddOrUpdateComponent implements OnInit {
   }
 
   addProduct(product, form){
+    console.log(product);
     this.databaseProductsService.addProduct(this.userId
       , product).subscribe(data => {
       if(data['success'])
@@ -133,12 +134,14 @@ export class ProductsAddOrUpdateComponent implements OnInit {
 
   updateProduct(oldProductUPC, newProduct){
     this.databaseProductsService.updateProduct(this.userId, oldProductUPC, newProduct).subscribe(data => {
-      if(data['success'])
+      if(data['success']){
         openSnackbar(this.snackBar, `Update successful: ${data['msg']}`);
+        this.router.navigateByUrl('/products/display');
+      }
       else
-        openSnackbar(this.snackBar, `Failed to add product: ${data['msg']}`);
+        openSnackbar(this.snackBar, `Failed to update product: ${data['msg']}`);
     });
-    this.router.navigateByUrl('/products/display');
+    
   }
   
   getNewProductObject(processedEntries){

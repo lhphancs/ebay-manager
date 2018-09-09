@@ -3,10 +3,11 @@
 }
 
 .oz-price-tbl-row{
-    font-size: 0.7em;
     line-height: 0px
 }
-.oz-price-tbl{
+.price{
+    font-size: 0.7em;
+    background-color:white;
     width:120px;
     border: 1px solid grey;
     display:inline-block;

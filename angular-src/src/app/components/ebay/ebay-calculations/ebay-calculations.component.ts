@@ -78,8 +78,10 @@ export class EbayCalculationsComponent implements OnInit {
   handleShippingMethods(methods){
     for(let method of methods){
       this.dictShipIdToName[method._id]= method.shipCompanyName + " - " + method.shipMethodName;
-      for(let obj of method.ozPrice)
-        this.dictShipIdAndOzToCost[method._id + obj.oz] = obj.price;
+      for(let obj of method.ozPrice){
+        let oz = obj.oz ? obj.oz: "";
+        this.dictShipIdAndOzToCost[method._id + oz] = obj.price;
+      }
     }
   }
 
@@ -88,9 +90,12 @@ export class EbayCalculationsComponent implements OnInit {
   }
 
   calculateNeededSale(packAmt, shipId, oz, costPerSingle){
+    let roundedUpOz = oz ? Math.ceil(oz): "";
     let totalProfit = this.desiredProfitPerSingle * packAmt;
     let totalProductCost = costPerSingle * packAmt;
-    let key = shipId + oz;
+    let key = shipId + roundedUpOz;
+    console.log(key)
+
     let shipCost = this.dictShipIdAndOzToCost[key];
     return Math.round((totalProfit+this.paypalFlatFee
       + totalProductCost + shipCost)

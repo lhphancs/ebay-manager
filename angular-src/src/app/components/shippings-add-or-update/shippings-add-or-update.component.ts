@@ -4,7 +4,6 @@ import { DatabaseUsersService } from '../../services/database-users.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { openSnackbar } from '../snackbar';
-import { ShipMethod } from '../../classesAndInterfaces/ShipMethod';
 import { getProcessedEntries } from '../table-methods'
 import { getHeaderNames } from '../table-methods'
 import { DatabaseShippingsService } from '../../services/database-shippings.service';
@@ -59,10 +58,10 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
   }
 
   loadShipMethod(shipMethod){
+    this.isFlatRate = shipMethod['isFlatRate'];
     let tableEntries = shipMethod['ozPrice'];
-    if(tableEntries[0].oz == -1){
-      this.isFlatRate = true;
-      this.flatRateCost = tableEntries[0].price;
+    if(this.isFlatRate){
+      this.flatRateCost = shipMethod['flatRatePrice'];
       this.entries = [];
     }
     else
@@ -97,8 +96,7 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
         openSnackbar(this.snackBar, data['msg']);
     });
   }
-
-
+  
   updateShipMethod(shipMethodId, newShipMethod){
     this.databaseShippingsService.updateShipMethod(shipMethodId
     , this.userId, newShipMethod).subscribe(data => {
@@ -111,39 +109,44 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
     });
   }
 
-  getNewShipMethodObject(processedEntriesOzPrice){
-    return new ShipMethod(this.shipMethodId, this.userId, this.shipCompanyName
-      , this.shipMethodName, this.description, processedEntriesOzPrice);
+  getNewShipMethodObject(isFlatRate, flatRatePrice, ozPrice){
+    let obj = {};
+    obj['._id'] = this.shipMethodId;
+    obj['userId'] = this.userId;
+    obj['shipCompanyName'] = this.shipCompanyName;
+    obj['shipMethodName'] = this.shipMethodName;
+    obj['description'] = this.description;
+    obj['isFlatRate'] = isFlatRate;
+    if(isFlatRate)
+      obj['flatRatePrice'] = flatRatePrice;
+    else
+      obj['ozPrice'] = ozPrice;
+    return obj;
   }
 
   addShipMethod(newShipMethod){
     delete newShipMethod['_id'];
     this.databaseShippingsService.addShipMethod(newShipMethod).subscribe(data => {
       if(data['success'])
-        this.addSuccessResponse(data['msg']);
+        this.addSuccessResponse("Success: " + data['msg']);
       else
-        openSnackbar(this.snackBar, `Failed to add product: ${data['msg']}`);
+        openSnackbar(this.snackBar, `Failed: ${data['msg']}`);
     });
   }
 
   ///The add is currently connected, but edit needs companyId
   onSubmit(){
-    let processedEntries;
+    let newShipMethod;
     if(this.isFlatRate)
-      processedEntries = [ {oz:-1, price:this.flatRateCost} ];
-    else
-      processedEntries = getProcessedEntries(this.entries);
-    
-    if(processedEntries == null)
-      openSnackbar(this.snackBar, 'Failed to add product: Partially filled ASIN entry exists. Complete or remove the entry.');
-
+      newShipMethod = this.getNewShipMethodObject(true, this.flatRateCost, null);
     else{
-      let newShipMethod = this.getNewShipMethodObject(processedEntries);
-      if(this.mode == "update")
-        this.updateShipMethod(this.paramId, newShipMethod)
-      else
-        this.addShipMethod(newShipMethod);
+      let processedEntries = getProcessedEntries(this.entries);
+      newShipMethod = this.getNewShipMethodObject(false, null, processedEntries);
     }
+    if(this.mode == "update")
+      this.updateShipMethod(this.paramId, newShipMethod)
+    else
+      this.addShipMethod(newShipMethod);
   }
 
   addSuccessResponse(msg){

@@ -30,7 +30,7 @@ router.get('/shipMethod/:shipMethodId/:userId', (req, res, next) => {
 
 router.get('/all/:userId', (req, res, next) => {
     Shipping.getShipMethods(req.params.userId, (err, shipMethods) => {
-        if(err) res.json({success: false, msg: `Failed to get ship methods: ${err.message}`});
+        if(err) res.json({success: false, msg: err.message});
         else res.json({success:true, shipMethods:shipMethods, msg: `Success`});
     });
 });
@@ -41,10 +41,10 @@ router.delete('/delete', (req, res, next) => {
     Shipping.deleteShipMethod(shipMethodId, userId, (err, shipMethod) => {
         if(err || !shipMethod){
             msg = err ? err.message: `Could not find ${shipMethodId}`
-            res.json({success: false, msg: `Failed to delete method: ${msg}`});
+            res.json({success: false, msg: msg});
         }
         else
-            res.json({success:true, msg: `Successfully deleted product: ${shipMethodId}`});
+            res.json({success:true, msg: shipMethodId});
     });
 });
 
@@ -56,10 +56,10 @@ router.put('/update', (req, res, next) => {
     , newShipMethod, (err, newShipMethod) => {
         if(err || !newShipMethod){
             msg = err ? err.message: `Could not find ${shipMethodId}`
-            res.json({success: false, msg: `Failed to update ship method: ${msg}`});
+            res.json({success: false, msg: msg});
         }
         else
-            res.json({success:true, msg: `Successfully updated ship method: ${shipMethodId}`});   
+            res.json({success:true, msg: shipMethodId});   
     });
 });
 
@@ -67,9 +67,9 @@ router.post('/add', (req, res, next) => {
     newShipMethod = req.body.newShipMethod;
     Shipping.addShipMethod(newShipMethod, (err, newShipMethod) => {
         if(err)
-            res.json({success: false, msg: `Failed: ${err.message}`});
+            res.json({success: false, msg: err.message});
         else
-            res.json({success:true, msg: `Add successful: ${newShipMethod.shipMethodName}`});   
+            res.json({success:true, msg: newShipMethod.shipMethodName});   
     });
 });
 

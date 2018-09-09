@@ -14,15 +14,21 @@
         <button class="method-btn" mat-raised-button color="primary">
           {{shipMethodObj.shipMethodName}}</button>
         <mat-icon color="primary" matTooltip={{shipMethodObj.description}}
-          matTooltipClass="tooltip-background" class="center-vertically ml-2">info</mat-icon>
-        <table class="table oz-price-tbl table-striped table-light ml-2">
-          <tbody>
-            <tr class="oz-price-tbl-row" *ngFor="let ozPrice of shipMethodObj.ozPrice">
-              <td>{{ozPrice.oz == -1 ? '(Any)':ozPrice.oz}}oz</td>
-              <td>${{ozPrice.price}}</td>
-            </tr>
-          </tbody>
-        </table>
+          matTooltipClass="tooltip-background" class="center-vertically ml-2 mr-2">info</mat-icon>
+        <div *ngIf="shipMethodObj.isFlatRate; else ozPriceTable" class="price text-center">
+            {{shipMethodObj.flatRatePrice}}
+        </div>
+        <ng-template #ozPriceTable>
+          <table class="table price table-striped table-light">
+            <tbody>
+              <tr class="oz-price-tbl-row" *ngFor="let ozPrice of shipMethodObj.ozPrice">
+                <td>{{ozPrice.oz == -1 ? '(Any)':ozPrice.oz}}oz</td>
+                <td>${{ozPrice.price}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </ng-template>
+        
         <button mat-icon-button
           (click)="openDeleteConfirmDialog(companyIndex, shipMethodIndex)">
           <mat-icon>delete</mat-icon>

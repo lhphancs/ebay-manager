@@ -18,7 +18,7 @@ function getFilteredProductJson(newProductJson){
 
 router.get('/info/:userId/:UPC', (req, res, next) => {
     Product.getProductByUPC( req.params.userId, req.params.UPC, (err, product) => {
-        if(err) res.json({success: false, msg: `Failed to grab products: ${err.message}`});
+        if(err) res.json({success: false, msg: err.message});
         else res.json({success:true, product: product});
     });
 });
@@ -34,7 +34,7 @@ router.get('/:userId/:offset?/:limit?', (req, res, next) => {
     let limit = strLimit ? parseInt(strLimit):DEFAULT_LIMIT;
 
     Product.getProducts(userId, offset, limit, (err, products) => {
-        if(err) res.json({success: false, msg: `Failed to grab products: ${err.message}`});
+        if(err) res.json({success: false, msg: err.message});
         else res.json({success:true, products: products});
     });
 });
@@ -46,8 +46,8 @@ router.post('/add', (req, res, next) => {
 
     newProductEntry.userId = userId;
     Product.addProduct(newProductEntry, (err, product) => {
-        if(err) res.json({success: false, msg: `Failed to add product: ${err.message}`});
-        else res.json({success:true, msg: `Successfully added product: ${product}`});
+        if(err) res.json({success: false, msg: err.message});
+        else res.json({success:true, msg: product});
     });
 });
 
@@ -55,8 +55,8 @@ router.post('/add-many', (req, res, next) => {
     let userId = req.body.userId;
     let products = req.body.products;
     Product.addManyProducts(userId, products, (err, products) => {
-        if(err) res.json({success: false, msg: `Failed to add products: ${err.message}`});
-        else res.json({success:true, msg: `Successfully added products: ${products}`});
+        if(err) res.json({success: false, msg: err.message});
+        else res.json({success:true, msg: products});
     });
 });
 
@@ -64,8 +64,8 @@ router.delete('/delete', (req, res, next) => {
     userId = req.body.userId;
     UPCs = req.body.UPCs;
     Product.deleteProducts(userId, UPCs, (err) => {
-        if(err) res.json({success: false, msg: `Failed to delete product: ${err.message}`});
-        else res.json({success:true, msg: `Successfully deleted product: ${UPCs}`});
+        if(err) res.json({success: false, msg: err.message});
+        else res.json({success:true, msg: UPCs});
     });
 });
 
@@ -76,9 +76,9 @@ router.put('/update', (req, res, next) => {
     let newProduct = getFilteredProductJson(newProductJson);
 
     Product.updateProduct(userId, oldUPC, newProduct, (err, updatedProduct) => {
-        if(err) res.json({success: false, msg: `Failed to update product: ${err.message}`});
-        else if(!updatedProduct) res.json({success:false, msg: `Failed to update product: ${oldUPC} not found in database`});
-        else res.json({success:true, msg: `Successfully updated product: ${updatedProduct.UPC}`});
+        if(err) res.json({success: false, msg: err.message});
+        else if(!updatedProduct) res.json({success:false, msg: `${oldUPC} not found in database`});
+        else res.json({success:true, msg: updatedProduct.UPC});
     });
 });
 

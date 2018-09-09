@@ -14,7 +14,7 @@ const productSchema = Schema({
     packsInfo: {
         type:
         [{ ASIN: { type: String},
-            packAmt: { type: Number, min: 1 },
+            packAmt: { type: Number, min: 1, required: true},
             shipMethodId:{ type: ObjectId },
             ozWeight:{ type: Number, min: 1 },
             preparation: { type: String} }]

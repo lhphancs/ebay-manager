@@ -1,3 +1,13 @@
+function getRenamedShipMethod(shipMethod){
+  let newShipMethod = shipMethod;
+  newShipMethod.shipMethodId = newShipMethod._id
+  delete newShipMethod.__v;
+  delete newShipMethod.userId;
+  delete newShipMethod._id;
+  delete newShipMethod.shipCompanyName;
+  return newShipMethod;
+}
+
 export function getProcessedShipMethods(shipMethods){
   let companyDict = {};
   let processedShipMethods = [];
@@ -9,14 +19,7 @@ export function getProcessedShipMethods(shipMethods){
       processedShipMethods.push(  { name:shipCompanyName, shipMethods:[] }  );
     }
 
-    processedShipMethods[companyDict[shipCompanyName]].shipMethods.push(
-      {
-        shipMethodId: shipMethod['_id']
-        , shipMethodName: shipMethod['shipMethodName']
-        , description: shipMethod['description']
-        , ozPrice: shipMethod['ozPrice']
-      }
-    );
+    processedShipMethods[companyDict[shipCompanyName]].shipMethods.push(getRenamedShipMethod(shipMethod));
   }
   return processedShipMethods;
 }
