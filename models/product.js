@@ -9,7 +9,7 @@ const productSchema = Schema({
     UPC: {type: String, required: true},
     costPerBox: {type: Number, required: true, min: 0},
     quantityPerBox: {type: Number, required: true, min: 1},
-    purchasedLocation: {type: String},
+    wholesaleComp: {type: String},
     stockNo: {type: String},
     packsInfo: {
         type:

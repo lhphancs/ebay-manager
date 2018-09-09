@@ -1,3 +1,9 @@
-<p>
-  ebay works!
-</p>
+<ul class="nav nav-tabs">
+  <li class="nav-item" >
+    <a class="nav-link" routerLink='#' routerLinkActive='anchor-active'>TBD</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" routerLink='calculations' routerLinkActive='anchor-active'>Calculations</a>
+  </li>
+</ul>
+<router-outlet *ngIf="userId"></router-outlet>

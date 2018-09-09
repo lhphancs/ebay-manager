@@ -20,10 +20,10 @@ export class ProductsDisplayComponent implements OnInit {
   loadingMsg = "Loading products..."
 
   userId;
-  shipMethodDict = {};
+  dictShipIdToName = {};
   filterValue: string;
   products: Product[];
-  displayedColumns: string[] = ['select', 'brand', 'name', 'stockNo', 'costPerBox', 'quantityPerBox', 'UPC', 'purchasedLocation', 'packsInfo'];
+  displayedColumns: string[] = ['select', 'brand', 'name', 'stockNo', 'costPerBox', 'quantityPerBox', 'costPerSingle', 'ASINS', 'UPC', 'wholesaleComp', 'packsInfo'];
   dataSource: MatTableDataSource<Product>;
   selection = new SelectionModel<Product>(true, []);
   deletedGroupsStack: Stack; // Used to undo delete
@@ -44,6 +44,7 @@ export class ProductsDisplayComponent implements OnInit {
       this.databaseProductsService.getProducts(this.userId).subscribe( (data) => {
         if(data['success']){
           this.products = data['products'];
+          this.addAsinsToProducts(this.products);
           this.dataSource = new MatTableDataSource<Product>(this.products);
           this.dataSource.sort = this.sort;
         }
@@ -53,9 +54,18 @@ export class ProductsDisplayComponent implements OnInit {
     });
   }
 
+  addAsinsToProducts(products){
+    for(let product of products){
+      let strASINS = "";
+      for(let packInfo of product.packsInfo)
+        strASINS += packInfo.ASIN + '   |   ';
+      product.ASINS = strASINS;
+    }
+  }
+
   handleShippingMethods(methods){
     for(let method of methods)
-      this.shipMethodDict[method._id]= method.shipCompanyName + " - " + method.shipMethodName;
+      this.dictShipIdToName[method._id]= method.shipCompanyName + " - " + method.shipMethodName;
   }
 
   /** Whether the number of selected elements matches the total number of rows. */

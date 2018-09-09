@@ -8,7 +8,7 @@ function getFilteredProductJson(newProductJson){
         name: newProductJson.name,
         costPerBox: newProductJson.costPerBox,
         quantityPerBox: newProductJson.quantityPerBox,
-        purchasedLocation: newProductJson.purchasedLocation,
+        wholesaleComp: newProductJson.wholesaleComp,
         stockNo: newProductJson.stockNo,
         oz: newProductJson.oz,
         UPC: newProductJson.UPC,

@@ -29,7 +29,7 @@
   <div class="form-row-container" fxLayoutWrap fxLayoutGap="0.5%" >    
     <div fxFlex="33%">
       <mat-form-field fxFlex>
-        <input [(ngModel)]='inputCostPerBox' name="costPerBox" matInput placeholder="Cost/Box" type="number" min="0" required>
+        <input [(ngModel)]='inputCostPerBox' name="costPerBox" matInput placeholder="Cost/Box" type="number" min="0" step="any" required>
         <span matPrefix>$&nbsp;</span>
       </mat-form-field>
     </div>
@@ -44,7 +44,7 @@
   <div class="form-row-container" fxLayoutWrap fxLayoutGap="0.5%">    
     <div fxFlex="33%">
       <mat-form-field fxFlex>
-        <input [(ngModel)]='inputPurchasedLocation' name="purchasedLocation" matInput placeholder="Purchased Location">
+        <input [(ngModel)]='inputwholesaleComp' name="wholesaleComp" matInput placeholder="Wholesale Comp.">
       </mat-form-field>
     </div>
     

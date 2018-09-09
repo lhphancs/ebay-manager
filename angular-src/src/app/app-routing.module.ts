@@ -16,6 +16,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CalculatorComponent } from './components/calculator/calculator.component';
 import { EbayComponent } from './components/ebay/ebay.component';
 import { LoginComponent } from './components/login/login.component';
+import { EbayCalculationsComponent } from './components/ebay/ebay-calculations/ebay-calculations.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -23,7 +24,12 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
 
   { path: 'amazon', component: AmazonComponent, canActivate:[AuthGuard] },
-  { path: 'ebay', component: EbayComponent, canActivate:[AuthGuard] },
+  { path: 'ebay', component: EbayComponent, canActivate:[AuthGuard],
+    children: [
+      { path: '', redirectTo: 'calculations', pathMatch: 'full' },
+      { path: 'calculations', component: EbayCalculationsComponent },
+    ]
+  },
   { path: 'account', component: AccountComponent, canActivate:[AuthGuard] },
   { path: 'settings', component: SettingsComponent, canActivate:[AuthGuard] }, 
   { path: 'products', component: ProductsComponent, canActivate:[AuthGuard], 

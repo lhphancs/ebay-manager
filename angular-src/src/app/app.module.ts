@@ -35,6 +35,7 @@ import { FeesComponent } from './components/fees/fees.component';
 import { ShippingsComponent } from './components/shippings/shippings.component';
 import { ProgressSpinnerComponent } from './components/progress-spinner/progress-spinner.component';
 import { TableDynamicInputComponent } from './components/table-dynamic-input/table-dynamic-input.component';
+import { EbayCalculationsComponent } from './components/ebay/ebay-calculations/ebay-calculations.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { TableDynamicInputComponent } from './components/table-dynamic-input/tab
     ShippingsComponent,
     ShippingsAddOrUpdateComponent,
     ProgressSpinnerComponent,
-    TableDynamicInputComponent
+    TableDynamicInputComponent,
+    EbayCalculationsComponent
   ],
   imports: [
     NgbModule.forRoot(),

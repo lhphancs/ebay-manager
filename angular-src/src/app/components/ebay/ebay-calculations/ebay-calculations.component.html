@@ -1,39 +1,22 @@
-<div class="d-flex justify-content-between mt-3">
-  <button type="button" mat-raised-button color="warn"
-    [disabled]="selection.selected.length == 0" (click)="openDeleteConfirmDialog()">Delete
-  </button>
-
-  <input [(ngModel)]="filterValue" class="form-control mb-3 border border-primary filter"
+<div class="d-flex justify-content-between align-items-center mt-3 px-3">
+  <div></div>
+  <input [(ngModel)]="filterValue" class="form-control border border-primary filter"
     placeholder="Filter" (keyup)="applyFilter($event.target.value)">
-  
-  <button type="button" mat-raised-button color="warn"
-    [disabled]="deletedGroupsStack.isEmpty()" (click)="undoDelete()">Undo Delete
-  </button>
+
+    <mat-form-field>
+      <input class="" [(ngModel)]='desiredProfitPerSingle' matInput placeholder="Desired profit/pack"
+        type="number" min="0" step="any" required>
+      <span matPrefix>$&nbsp;</span>
+    </mat-form-field>
 </div>
 
 <progress-spinner *ngIf="!dataSource" [msg]="loadingMsg"></progress-spinner>
 
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-  <!-- checkbox column -->
-  <ng-container matColumnDef="select">
-    <th mat-header-cell *matHeaderCellDef>
-      <mat-checkbox (change)="$event ? masterToggle() : null"
-        [checked]="selection.hasValue() && isAllSelected()"
-        [indeterminate]="selection.hasValue() && !isAllSelected()">
-      </mat-checkbox>
-    </th>
-    <td mat-cell *matCellDef="let row; let i=index;">
-      <mat-checkbox #chkbox (click)="$event.stopPropagation()"
-        (change)="$event ? selection.toggle(row) : null"
-        [checked]="selection.isSelected(row)">
-      </mat-checkbox>
-    </td>
-  </ng-container>
-
   <!-- brand column -->
   <ng-container matColumnDef="brand">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Brand</th>
-    <td mat-cell *matCellDef="let element">{{element.brand}}</td>
+    <td mat-cell *matCellDef="let element"> {{element.brand}} </td>
   </ng-container>
 
   <!-- name column -->
@@ -45,31 +28,19 @@
   <!-- stockNo column -->
   <ng-container matColumnDef="stockNo">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Stock No.</th>
-    <td mat-cell *matCellDef="let element">{{element.stockNo}}</td>
-  </ng-container>
-
-  <!-- costPerBox column -->
-  <ng-container matColumnDef="costPerBox">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Cost/Box</th>
-    <td mat-cell *matCellDef="let element">${{element.costPerBox | number : '1.2-2'}}</td>
+    <td mat-cell *matCellDef="let element"> {{element.stockNo}} </td>
   </ng-container>
 
   <!-- quantityPerBox column -->
-  <ng-container matColumnDef="quantityPerBox">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity/Box</th>
-    <td mat-cell *matCellDef="let element">{{element.quantityPerBox}}</td>
-  </ng-container>
-
-  <!-- costPerSingle column -->
   <ng-container matColumnDef="costPerSingle">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>costPerSingle</th>
-    <td mat-cell *matCellDef="let element">${{element.costPerBox/element.quantityPerBox | number : '1.2-2'}}</td>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Cost/Single</th>
+    <td mat-cell *matCellDef="let element"> {{element.costPerSingle  | number : '1.2-2'}} </td>
   </ng-container>
 
   <!-- ASINS column -->
   <ng-container matColumnDef="ASINS">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>ASINS</th>
-    <td mat-cell *matCellDef="let element">{{element.ASINS}}</td>
+    <td mat-cell *matCellDef="let element"> {{element.ASINS}} </td>
   </ng-container>
 
   <!-- UPC column -->
@@ -96,6 +67,7 @@
                   <th scope="col">Ship</th>
                   <th scope="col">Oz</th>
                   <th scope="col">Preparation</th>
+                  <th scope="col">Sale Calc.</th>
                 </tr>
               </thead>
               <tbody>
@@ -105,6 +77,10 @@
                   <td>{{dictShipIdToName[entry.shipMethodId]}}</td>
                   <td>{{entry.ozWeight}}</td>
                   <td>{{entry.preparation}}</td>
+                  <td>{{calculateNeededSale(entry.packAmt
+                    , entry.shipMethodId, entry.ozWeight
+                    , element.costPerSingle) | number : '1.2-2'}}
+                  </td>
                 </tr>
               </tbody>
             </table>
