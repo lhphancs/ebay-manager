@@ -111,7 +111,7 @@
 
         </ng-template>
           
-        <button class="btn btn-secondary btn-sm" type="button"
+        <button class="btn btn-secondary btn-sm" type="button" [autoClose]="true"
           popoverTitle="{{element.brand + ': ' + element.name}}" [ngbPopover]="popContent" popoverClass="packinfo"
           placement="left">Pack Info</button>
     </td>
