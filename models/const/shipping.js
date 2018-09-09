@@ -12,39 +12,39 @@ const noBulgeString = "Package cannot be bulging when shipped."
 const DEFAULT_USPS_SHIP_METHOD_LIST = [
     { shipMethodName:"First class"
         , description: 'Ship with own envelope/box. Must be 16oz or less. Maximum combined length and girth is 108 inches.'
-        , isFlatRate: false, ozPrice: DEFAULT_USPS_FIRST_CLASS_OZ_PRICE},
+        , ozPrice: DEFAULT_USPS_FIRST_CLASS_OZ_PRICE},
     { shipMethodName:"Flat rate envelope"
         , description: 'Labled "Flat rate envelope". Not the same as "legal flat rate envelope" or "padded envelope".'
-        , isFlatRate: true, flatRatePrice: 6.35 },
+        , flatRatePrice: 6.35 },
     { shipMethodName:"Flat rate legal envelope"
         , description: 'Labled "Flat rate envelope" with "legal flat rate enevelope" written in small prints. Does not come with padding. Not the same as "flat rate envelope" or "padded envelope".'
-        , isFlatRate: true, flatRatePrice: 6.65 },
+        , flatRatePrice: 6.65 },
     { shipMethodName:"Flat rate padded envelope"
         , description: 'Labeled "Flat rate envelope" and envelope comes with bubble padding inside. Not the same as "flat rate envelope" or "legal flat rate envelope".'
-        , isFlatRate: true, flatRatePrice: 6.90 },
+        , flatRatePrice: 6.90 },
     { shipMethodName:"Flat rate small box"
         , description: 'Labeled "Small flat rate box". ' + noBulgeString
-        , isFlatRate: true, flatRatePrice: 6.85 },
+        , flatRatePrice: 6.85 },
     { shipMethodName:"Flat rate medium box"
         , description: 'Labled "Medium flat rate box". ' + noBulgeString
-        , isFlatRate: true, flatRatePrice: 12.45 },
+        , flatRatePrice: 12.45 },
     { shipMethodName:"Flat rate large box"
         , description: 'Labled "Large flat rate box". ' + noBulgeString
-        , isFlatRate: true, flatRatePrice: 17.10 }
+        , flatRatePrice: 17.10 }
 ];
 
 const DEFAULT_FEDEX_SHIP_METHOD_LIST = [
     { shipMethodName:"tempFlatRateMethod"
         , description: "tempDescription"
-        , isFlatRate: true, flatRatePrice: 999.99 }
+        , flatRatePrice: 999.99 }
 ];
 
 module.exports.getDefaultShipMethods = function getDefaultShipMethods(userId){
     let shipMethods = [];
     for(let obj of DEFAULT_USPS_SHIP_METHOD_LIST){
         method = {userId: userId, shipCompanyName: "USPS", shipMethodName: obj.shipMethodName
-        , description: obj.description, isFlatRate: obj.isFlatRate, ozPrice: obj.ozPrice};
-        if(obj.isFlatRate)
+        , description: obj.description};
+        if(obj.flatRatePrice)
             method.flatRatePrice = obj.flatRatePrice;
         else
             method.ozPrice = obj.ozPrice;
@@ -52,8 +52,8 @@ module.exports.getDefaultShipMethods = function getDefaultShipMethods(userId){
     }
     for(let obj of DEFAULT_FEDEX_SHIP_METHOD_LIST){
         method = {userId: userId, shipCompanyName: "FEDEX", shipMethodName: obj.shipMethodName
-        , description: obj.description, isFlatRate: obj.isFlatRate, ozPrice: obj.ozPrice};
-        if(obj.isFlatRate)
+        , description: obj.description};
+        if(obj.flatRatePrice)
             method.flatRatePrice = obj.flatRatePrice;
         else
             method.ozPrice = obj.ozPrice;

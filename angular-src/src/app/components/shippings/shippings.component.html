@@ -15,7 +15,7 @@
           {{shipMethodObj.shipMethodName}}</button>
         <mat-icon color="primary" matTooltip={{shipMethodObj.description}}
           matTooltipClass="tooltip-background" class="center-vertically ml-2 mr-2">info</mat-icon>
-        <div *ngIf="shipMethodObj.isFlatRate; else ozPriceTable" class="price text-center">
+        <div *ngIf="shipMethodObj.flatRatePrice; else ozPriceTable" class="price text-center">
             {{shipMethodObj.flatRatePrice}}
         </div>
         <ng-template #ozPriceTable>

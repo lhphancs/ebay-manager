@@ -19,18 +19,18 @@
   </div>
 
   <div>
-    <mat-checkbox [(ngModel)]="isFlatRate"
+    <mat-checkbox [(ngModel)]="flatRatePrice"
       [ngModelOptions]="{standalone: true}">Flat Rate</mat-checkbox>
   </div>
 
-  <div *ngIf="isFlatRate">
+  <div *ngIf="flatRatePrice">
     <mat-form-field fxFlex>
       <input [(ngModel)]='flatRateCost' name="flatRateCost"
         matInput placeholder="Flat rate cost" type="number" step="any" required>
     </mat-form-field>
   </div>
 
-  <table-dynamic-input class="mt-2" *ngIf="!isFlatRate"
+  <table-dynamic-input class="mt-2" *ngIf="!flatRatePrice"
     [headers]="headers" [entries]="entries"></table-dynamic-input>
 
   <button mat-raised-button color="primary"

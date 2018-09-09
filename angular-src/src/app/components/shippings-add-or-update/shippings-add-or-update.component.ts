@@ -20,8 +20,7 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
   mode:string;
   paramId:string;
 
-  isFlatRate:boolean;
-  flatRateCost:number;
+  flatRatePrice:number;
 
   shipCompanyName:string;
   shipMethodName:string;
@@ -58,14 +57,11 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
   }
 
   loadShipMethod(shipMethod){
-    this.isFlatRate = shipMethod['isFlatRate'];
-    let tableEntries = shipMethod['ozPrice'];
-    if(this.isFlatRate){
-      this.flatRateCost = shipMethod['flatRatePrice'];
+    this.flatRatePrice = shipMethod['flatRatePrice'];
+    if(this.flatRatePrice)
       this.entries = [];
-    }
     else
-      this.entries = tableEntries;
+      this.entries = shipMethod['ozPrice'];
   }
 
   prepareShipMethodUpdate(shipMethodId){
@@ -109,15 +105,14 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
     });
   }
 
-  getNewShipMethodObject(isFlatRate, flatRatePrice, ozPrice){
+  getNewShipMethodObject(flatRatePrice, ozPrice){
     let obj = {};
     obj['._id'] = this.shipMethodId;
     obj['userId'] = this.userId;
     obj['shipCompanyName'] = this.shipCompanyName;
     obj['shipMethodName'] = this.shipMethodName;
     obj['description'] = this.description;
-    obj['isFlatRate'] = isFlatRate;
-    if(isFlatRate)
+    if(flatRatePrice)
       obj['flatRatePrice'] = flatRatePrice;
     else
       obj['ozPrice'] = ozPrice;
@@ -137,11 +132,11 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
   ///The add is currently connected, but edit needs companyId
   onSubmit(){
     let newShipMethod;
-    if(this.isFlatRate)
-      newShipMethod = this.getNewShipMethodObject(true, this.flatRateCost, null);
+    if(this.flatRatePrice)
+      newShipMethod = this.getNewShipMethodObject(this.flatRatePrice, null);
     else{
       let processedEntries = getProcessedEntries(this.entries);
-      newShipMethod = this.getNewShipMethodObject(false, null, processedEntries);
+      newShipMethod = this.getNewShipMethodObject(null, processedEntries);
     }
     if(this.mode == "update")
       this.updateShipMethod(this.paramId, newShipMethod)

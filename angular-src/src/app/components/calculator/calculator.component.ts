@@ -81,10 +81,12 @@ export class CalculatorComponent implements OnInit {
   }
 
   weightSelect(ozPriceIndex){
-    this.selectedOzPriceIndex = ozPriceIndex;
-    
-    this.shippingCost = this.shipCompanies[this.selectedCompanyIndex]['shipMethods']
-      [this.selectedMethodIndex]['ozPrice'][this.selectedOzPriceIndex]['price'];
+    this.shippingCost = this.shipCompanies[this.selectedCompanyIndex]['shipMethods'][this.selectedMethodIndex].flatRatePrice;
+    if(!this.shippingCost){
+      this.selectedOzPriceIndex = ozPriceIndex;
+      this.shippingCost = this.shipCompanies[this.selectedCompanyIndex]['shipMethods']
+        [this.selectedMethodIndex]['ozPrice'][this.selectedOzPriceIndex]['price']; 
+    }
     this.updateTotalOrSaleValue();
   }
 

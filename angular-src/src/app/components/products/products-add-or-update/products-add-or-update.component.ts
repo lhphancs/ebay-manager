@@ -113,7 +113,6 @@ export class ProductsAddOrUpdateComponent implements OnInit {
   }
 
   addProduct(product, form){
-    console.log(product);
     this.databaseProductsService.addProduct(this.userId
       , product).subscribe(data => {
       if(data['success'])

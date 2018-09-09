@@ -8,7 +8,6 @@ const shippingSchema = Schema({
         shipCompanyName: {type: String, required: true},
         shipMethodName: {type: String, required: true},
         description:{type: String},
-        isFlatRate:{type: Boolean, required: true},
         flatRatePrice:{type: Number},
         ozPrice: {type:[{
             oz: { type: Number, required: true, min: 0},
