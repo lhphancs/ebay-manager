@@ -21,7 +21,7 @@ The column order of the header names for a csv file do not matter.
 class InvalidColNum(Exception):
    pass
 
-def getLoweredAlphaNumericStr(string):
+def getLoweredAlphaNumericStr(string:str)->str:
     string = re.sub('[^A-Za-z0-9]+', '', string)
     string = str.lower(string)
     return string
@@ -40,31 +40,26 @@ def getColForHeaderName(csvReader, headerName:str)->int:
             return i
     raise InvalidColNum( str.format('{} not found in header', headerName) )
 
-def getcolNumToHeaderNameDict(csvFile, csvReader, headerNameToMongoDbNameDict:dict)->dict:
+def getcolNumToHeaderNameDict(csvFile, csvReader, headersToMongoNameDict:dict)->dict:
     colNumToHeaderNameDict = {}
-    allHeadersFound = True
-    for headerName in headerNameToMongoDbNameDict:
+    for headerName in headersToMongoNameDict:
         try:
             csvFile.seek(0)
             headerCol = getColForHeaderName(csvReader, headerName)
             colNumToHeaderNameDict[headerCol] = headerName
         except InvalidColNum as e:
-            isSuccess = False
             print(e)
-    if allHeadersFound:
-        return colNumToHeaderNameDict
-    else:
-        return None
+    return colNumToHeaderNameDict
 
 '''
 Returns true if in the form of '$#.##'
 ex) isMoneyCellVal('$4.2') == true  isMoneyCellVal('4.2') == false
 ex) isMoneyCellVal('$.2') == true  isMoneyCellVal('abc') == false
 '''
-def isMoneyCellVal(val)->bool:
+def isMoneyCellVal(val:str)->bool:
     return val[0] == '$' and eval(val[1:])
 
-def getProductToInsert(collection, row, headerNameToMongoDbNameDict:dict
+def getDictMongoHeaderToCellVal(row:list, headersToMongoNameDict:dict
                           , colNumToHeaderNameDict:dict) ->dict:
     retDict = {}
     i = -1
@@ -75,29 +70,39 @@ def getProductToInsert(collection, row, headerNameToMongoDbNameDict:dict
                 cellVal = cellVal[1:] #Trims the '$' in front
 
             csvHeaderName = colNumToHeaderNameDict[i]
-            mongoDbName = headerNameToMongoDbNameDict[csvHeaderName]
+            mongoDbName = headersToMongoNameDict[csvHeaderName]
             retDict[mongoDbName] = cellVal
     return retDict
 
-def insertAllValidRowsToMongoDb(userId, collection, csvReader, baseFileName, headerNameToMongoDbNameDict:dict
-                                , colNumToHeaderNameDict:dict)->None:
-    listToInsert = []
+def placeProductToInsert(dictOfProdsToInsert:dict, productToInsert:dict, packInfoToInsert:dict, baseFileName:str):
+    if len(productToInsert) > 0:
+        upc = productToInsert['UPC']
+        if upc not in dictOfProdsToInsert:
+            productToInsert['userId'] = ObjectId(userId)
+            productToInsert['wholesaleComp'] = baseFileName
+            productToInsert['packsInfo'] = []
+            productToInsert['brand'] = 'tempBrand' ################
+            dictOfProdsToInsert[upc] = productToInsert
+        dictOfProdsToInsert[upc]['packsInfo'].append(packInfoToInsert)
+
+def insertAllValidRowsToMongoDb(userId:str, collection, csvReader
+    , baseFileName:str, mainHeadersToMongoNameDict:dict, colNumToHeaderNameDict:dict
+    , packInfoHeadersToMongoNameDict, packInfoColNumToHeaderNameDict)->None:
+    dictOfProdsToInsert = {}
     for row in csvReader:
-        productToInsert = getProductToInsert(collection, row, headerNameToMongoDbNameDict
+        productToInsert = getDictMongoHeaderToCellVal(row, mainHeadersToMongoNameDict
                                              , colNumToHeaderNameDict)
-        
+        packInfoToInsert = getDictMongoHeaderToCellVal(row, packInfoHeadersToMongoNameDict
+                                             , packInfoColNumToHeaderNameDict)
         try:
-            if len(productToInsert) > 0:
-                productToInsert['userId'] = ObjectId(userId)
-                productToInsert['wholesaleComp'] = baseFileName
-                productToInsert['brand'] = 'tempBrand' ################
-                listToInsert.append(productToInsert)  
+            placeProductToInsert(dictOfProdsToInsert, productToInsert, packInfoToInsert, baseFileName)
         except pymongo.errors.DuplicateKeyError as e:
             print(e)
-    if len(listToInsert) > 0:
-        collection.insert_many(listToInsert)
+    if len(dictOfProdsToInsert) > 0:
+        collection.insert_many( dictOfProdsToInsert.items() )
             
-def processFile(userId, collection, filePath, headerNameToMongoDbNameDict:dict):
+def processFile(userId:str, collection, filePath:str
+, mainHeadersToMongoNameDict:dict, packInfoHeadersToMongoNameDict:dict):
     head, tail = os.path.split(filePath)
     baseFileName = os.path.splitext(tail)[0]
     print('')
@@ -105,13 +110,17 @@ def processFile(userId, collection, filePath, headerNameToMongoDbNameDict:dict):
     
     with open(filePath, "r",) as csvFile:
         csvReader = csv.reader(csvFile, delimiter=',', skipinitialspace=True)
-        colNumToHeaderNameDict = getcolNumToHeaderNameDict(csvFile, csvReader, headerNameToMongoDbNameDict)
-        if(colNumToHeaderNameDict != None):
-            insertAllValidRowsToMongoDb(userId, collection, csvReader, baseFileName, headerNameToMongoDbNameDict, colNumToHeaderNameDict)
+        mainColNumToHeaderNameDict = getcolNumToHeaderNameDict(csvFile, csvReader, mainHeadersToMongoNameDict)
+        packInfoColNumToHeaderNameDict = getcolNumToHeaderNameDict(csvFile, csvReader, packInfoHeadersToMongoNameDict)
+        
+        insertAllValidRowsToMongoDb(userId, collection, csvReader, baseFileName
+        , mainHeadersToMongoNameDict, mainColNumToHeaderNameDict
+        , packInfoHeadersToMongoNameDict, packInfoColNumToHeaderNameDict)
         
 if __name__ == '__main__':
-    headerNameToMongoDbNameDict = {'UPC':'UPC', 'product name':'name', 'stock no':'stockNo'
+    mainHeadersToMongoNameDict = {'UPC':'UPC', 'product name':'name', 'stock no':'stockNo'
                                    , 'total cost':'costPerBox', 'box amount':'quantityPerBox'}
+    packInfoHeadersToMongoNameDict = {'pack':'packAmt', 'ASIN':'ASIN', 'Prep':'preparation'}
     rootFolderName = Path( os.getcwd() )
     csvsFolderName = 'outputCsvs'
     folderToReadFromPath = rootFolderName/csvsFolderName
@@ -124,7 +133,7 @@ if __name__ == '__main__':
         for file in os.listdir(folderToReadFromPath):
             filePath  = folderToReadFromPath/file
             if file.endswith('csv'):
-                processFile(userId, collection, filePath, headerNameToMongoDbNameDict)
+                processFile(userId, collection, filePath, mainHeadersToMongoNameDict, packInfoHeadersToMongoNameDict)
     except pymongo.errors.ConnectionFailure as e:
         print(e)
     print('\n Program done...')
