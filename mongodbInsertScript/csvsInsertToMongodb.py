@@ -40,11 +40,14 @@ def getColForHeaderName(csvReader, headerName:str)->int:
             return i
     raise InvalidColNum( str.format('{} not found in header', headerName) )
 
-def getcolNumToHeaderNameDict(csvFile, csvReader, headersToMongoNameDict:dict)->dict:
+def getcolNumToHeaderNameDict(csvFile, csvReader
+                            , headerRow:int, headersToMongoNameDict:dict)->dict:
     colNumToHeaderNameDict = {}
     for headerName in headersToMongoNameDict:
         try:
             csvFile.seek(0)
+            for i in range(headerRow):
+                next(csvReader)
             headerCol = getColForHeaderName(csvReader, headerName)
             colNumToHeaderNameDict[headerCol] = headerName
         except InvalidColNum as e:
@@ -99,9 +102,9 @@ def insertAllValidRowsToMongoDb(userId:str, collection, csvReader
         except pymongo.errors.DuplicateKeyError as e:
             print(e)
     if len(dictOfProdsToInsert) > 0:
-        collection.insert_many( dictOfProdsToInsert.items() )
+        collection.insert_many( dictOfProdsToInsert.values() )
             
-def processFile(userId:str, collection, filePath:str
+def processFile(userId:str, collection, filePath:str, headerRow:int
 , mainHeadersToMongoNameDict:dict, packInfoHeadersToMongoNameDict:dict):
     head, tail = os.path.split(filePath)
     baseFileName = os.path.splitext(tail)[0]
@@ -110,8 +113,8 @@ def processFile(userId:str, collection, filePath:str
     
     with open(filePath, "r",) as csvFile:
         csvReader = csv.reader(csvFile, delimiter=',', skipinitialspace=True)
-        mainColNumToHeaderNameDict = getcolNumToHeaderNameDict(csvFile, csvReader, mainHeadersToMongoNameDict)
-        packInfoColNumToHeaderNameDict = getcolNumToHeaderNameDict(csvFile, csvReader, packInfoHeadersToMongoNameDict)
+        mainColNumToHeaderNameDict = getcolNumToHeaderNameDict(csvFile, csvReader, headerRow, mainHeadersToMongoNameDict)
+        packInfoColNumToHeaderNameDict = getcolNumToHeaderNameDict(csvFile, csvReader, headerRow, packInfoHeadersToMongoNameDict)
         
         insertAllValidRowsToMongoDb(userId, collection, csvReader, baseFileName
         , mainHeadersToMongoNameDict, mainColNumToHeaderNameDict
@@ -125,6 +128,7 @@ if __name__ == '__main__':
     csvsFolderName = 'outputCsvs'
     folderToReadFromPath = rootFolderName/csvsFolderName
     userId = input('Enter userId: ')
+    headerRow = int(input('With row number starting with 0, enter header row number: '))
     try: 
         client = pymongo.MongoClient() #This connects to 'localhost', port# 27017 by default
         db = client['inventory-manager']
@@ -133,7 +137,7 @@ if __name__ == '__main__':
         for file in os.listdir(folderToReadFromPath):
             filePath  = folderToReadFromPath/file
             if file.endswith('csv'):
-                processFile(userId, collection, filePath, mainHeadersToMongoNameDict, packInfoHeadersToMongoNameDict)
+                processFile(userId, collection, filePath, headerRow, mainHeadersToMongoNameDict, packInfoHeadersToMongoNameDict)
     except pymongo.errors.ConnectionFailure as e:
         print(e)
     print('\n Program done...')
