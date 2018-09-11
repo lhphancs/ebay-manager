@@ -1,39 +1,65 @@
 
-<form *ngIf="entries" class="entire-form" ngNativeValidate (ngSubmit)="onSubmit()">
-  <div>
-    <h1 class="text-center">{{shipCompanyName}}</h1>
+<!-- For new ship company -->
+<div *ngIf="mode != 'add' && mode !='update'" class="mx-4 mt-2">
+  <div class="alert alert-warning text-center" role="alert">
+    New ship company will add only after completing first ship method entry
   </div>
+</div>
+
+<form *ngIf="!shipCompanyName" class="entire-form m-4" ngNativeValidate (ngSubmit)="initiateNewShipCompany()">
   <div class="form-row-container"fxLayoutWrap fxLayoutGap="0.5%">
     <div fxFlex="33%">
         <mat-form-field fxFlex>
-          <input [(ngModel)]='shipMethodName' name="shipMethodName" matInput placeholder="Ship method name" required>
+          <input [(ngModel)]='newShipCompanyName' matInput
+          placeholder="New Ship company name"
+          [ngModelOptions]="{standalone: true}" required>
         </mat-form-field>
     </div>
   </div>
-  <div class="form-row-container"fxLayoutWrap fxLayoutGap="0.5%">
-    <div fxFlex="100%">
-      <mat-form-field fxFlex>
-        <textarea [(ngModel)]='description' name='description' matInput placeholder="Description"></textarea>
-      </mat-form-field>
-    </div>
-  </div>
-
-  <div>
-    <mat-checkbox [(ngModel)]="flatRatePrice"
-      [ngModelOptions]="{standalone: true}">Flat Rate</mat-checkbox>
-  </div>
-
-  <div *ngIf="flatRatePrice">
-    <mat-form-field fxFlex>
-      <input [(ngModel)]='flatRatePrice' name="flatRatePrice"
-        matInput placeholder="Flat rate cost" type="number" step="any" required>
-    </mat-form-field>
-  </div>
-
-  <table-dynamic-input class="mt-2" *ngIf="!flatRatePrice"
-    [headers]="headers" [entries]="entries"></table-dynamic-input>
-
   <button mat-raised-button color="primary"
-    type="submit" class="btn-block btn-submit mt-2">Submit
+    type="submit" class="btn-block btn-submit mt-2">Next
   </button>
+</form>
+<!-- End -->
+
+<form *ngIf="shipCompanyName && entries" class="entire-form" ngNativeValidate (ngSubmit)="onSubmit()">
+    <div *ngIf="shipCompanyName">
+      <div>
+        <h1 class="text-center">{{shipCompanyName}}</h1>
+      </div>
+
+      <div class="form-row-container"fxLayoutWrap fxLayoutGap="0.5%">
+        <div fxFlex="33%">
+            <mat-form-field fxFlex>
+              <input [(ngModel)]='shipMethodName' name="shipMethodName" matInput placeholder="Ship method name" required>
+            </mat-form-field>
+        </div>
+      </div>
+      <div class="form-row-container"fxLayoutWrap fxLayoutGap="0.5%">
+        <div fxFlex="100%">
+          <mat-form-field fxFlex>
+            <textarea [(ngModel)]='description' name='description' matInput placeholder="Description"></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+    
+      <div>
+        <mat-checkbox [(ngModel)]="flatRatePrice"
+          [ngModelOptions]="{standalone: true}">Flat Rate</mat-checkbox>
+      </div>
+    
+      <div *ngIf="flatRatePrice">
+        <mat-form-field fxFlex>
+          <input [(ngModel)]='flatRatePrice' name="flatRatePrice"
+            matInput placeholder="Flat rate cost" type="number" step="any" required>
+        </mat-form-field>
+      </div>
+    
+      <table-dynamic-input class="mt-2" *ngIf="!flatRatePrice"
+        [headers]="headers" [entries]="entries"></table-dynamic-input>
+    
+      <button mat-raised-button color="primary"
+        type="submit" class="btn-block btn-submit mt-2">Submit
+      </button>
+  </div>
 </form>

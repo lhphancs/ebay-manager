@@ -15,6 +15,7 @@ import { DatabaseShippingsService } from '../../services/database-shippings.serv
 })
 export class ShippingsAddOrUpdateComponent implements OnInit {
   @ViewChild(TableDynamicInputComponent) viewTable;
+  newShipCompanyName:string; //Only used if they are trying to add new
   shipMethodId:string;
   userId:string;
   mode:string;
@@ -47,10 +48,16 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
         this.activatedRoute.paramMap.subscribe(params => {
           this.paramId = params.get('id');
           this.mode = params.get('mode');
+          this.entries = [];
           if(this.mode == 'update')
             this.prepareShipMethodUpdate(this.paramId);
-          else
-            this.prepareShipMethodAdd(this.paramId);
+          else{
+            if(this.mode =='add')
+              this.prepareShipMethodAdd(this.paramId);
+            else{
+              ;
+            }
+          }
         });
       }
     });
@@ -58,9 +65,7 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
 
   loadShipMethod(shipMethod){
     this.flatRatePrice = shipMethod['flatRatePrice'];
-    if(this.flatRatePrice)
-      this.entries = [];
-    else
+    if(!this.flatRatePrice)
       this.entries = shipMethod['ozPrice'];
   }
 
@@ -84,10 +89,9 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
   prepareShipMethodAdd(firstShipMethodIdOfCompany){
     this.databaseShippingsService.getShipCompanyName(firstShipMethodIdOfCompany
     , this.userId).subscribe((data) =>{
-      if(data['success']){
+      if(data['success'])
           this.shipCompanyName = data['shipCompanyName'];
-          this.entries = [];
-      }
+
       else
         openSnackbar(this.snackBar, data['msg']);
     });
@@ -130,9 +134,9 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
     delete newShipMethod['_id'];
     this.databaseShippingsService.addShipMethod(newShipMethod).subscribe(data => {
       if(data['success'])
-        this.addSuccessResponse("Success: " + data['msg']);
+        this.addSuccessResponse("Add successful: " + data['msg']);
       else
-        openSnackbar(this.snackBar, `Failed: ${data['msg']}`);
+        openSnackbar(this.snackBar, `Add failed: ${data['msg']}`);
     });
   }
 
@@ -154,5 +158,11 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
   addSuccessResponse(msg){
     this.router.navigate(['/shippings']);
     openSnackbar(this.snackBar, msg);
+  }
+
+  
+  
+  initiateNewShipCompany(){
+    this.shipCompanyName = this.newShipCompanyName;
   }
 }

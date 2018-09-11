@@ -1,37 +1,43 @@
-<ngb-tabset>
-  <ngb-tab *ngFor="let companyObj of shipCompanies; let companyIndex=index" title={{companyObj.name}}>
-    <ng-template ngbTabContent>
-      <button class="mt-3" mat-icon-button (click)="addResponse(companyIndex)">
-        <mat-icon color="primary">add_circle</mat-icon>
-      </button>
-      <div class="row-container p-3"
-      *ngFor="let shipMethodObj of companyObj.shipMethods; let shipMethodIndex=index">
-        <a routerLink="/shippings/update/{{shipMethodObj.shipMethodId}}" class="ship-method-container d-flex align-items-center">
-          <mat-icon class="edit-icon">edit</mat-icon>
-          {{shipMethodObj.shipMethodName}}
-        </a>
+<div class="mt-3 ml-2">
+    <a routerLink="/shippings/new-ship-company" class="main-btn">New ship company</a>
+</div>
 
-        <mat-icon color="primary" matTooltip={{shipMethodObj.description}}
-          matTooltipClass="tooltip-background" class="center-vertically ml-2 mr-2">info</mat-icon>
-        <div *ngIf="shipMethodObj.flatRatePrice; else ozPriceTable" class="price text-center">
-            ${{shipMethodObj.flatRatePrice}}
-        </div>
-        <ng-template #ozPriceTable>
-          <table class="table price price-tbl table-striped table-light">
-            <tbody>
-              <tr class="oz-price-tbl-row" *ngFor="let ozPrice of shipMethodObj.ozPrice">
-                <td>{{ozPrice.oz}}oz</td>
-                <td>${{ozPrice.price  | number : '1.2-2'}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </ng-template>
-        
-        <button mat-icon-button
-          (click)="openDeleteConfirmDialog(companyIndex, shipMethodIndex)">
-          <mat-icon color="primary">delete</mat-icon>
+<div class="mt-3">
+  <ngb-tabset>
+    <ngb-tab *ngFor="let companyObj of shipCompanies; let companyIndex=index" title={{companyObj.name}}>
+      <ng-template ngbTabContent>
+        <button class="mt-3" mat-icon-button (click)="addResponse(companyIndex)">
+          <mat-icon color="primary">add_circle</mat-icon>
         </button>
-      </div>
-    </ng-template>
-  </ngb-tab>
-</ngb-tabset>
+        <div class="row-container p-3"
+        *ngFor="let shipMethodObj of companyObj.shipMethods; let shipMethodIndex=index">
+          <a routerLink="/shippings/update/{{shipMethodObj.shipMethodId}}" class="main-btn ship-method-container d-flex align-items-center">
+            <mat-icon class="edit-icon">edit</mat-icon>
+            {{shipMethodObj.shipMethodName}}
+          </a>
+  
+          <mat-icon color="primary" matTooltip={{shipMethodObj.description}}
+            matTooltipClass="tooltip-background" class="center-vertically ml-2 mr-2">info</mat-icon>
+          <div *ngIf="shipMethodObj.flatRatePrice; else ozPriceTable" class="price text-center">
+              ${{shipMethodObj.flatRatePrice}}
+          </div>
+          <ng-template #ozPriceTable>
+            <table class="table price price-tbl table-striped table-light">
+              <tbody>
+                <tr class="oz-price-tbl-row" *ngFor="let ozPrice of shipMethodObj.ozPrice">
+                  <td>{{ozPrice.oz}}oz</td>
+                  <td>${{ozPrice.price  | number : '1.2-2'}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </ng-template>
+          
+          <button mat-icon-button
+            (click)="openDeleteConfirmDialog(companyIndex, shipMethodIndex)">
+            <mat-icon color="primary">delete</mat-icon>
+          </button>
+        </div>
+      </ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+</div>

@@ -42,6 +42,7 @@ const routes: Routes = [
     ]
   },
   { path: 'shippings', component: ShippingsComponent, canActivate:[AuthGuard] }, 
+  { path: 'shippings/new-ship-company', component: ShippingsAddOrUpdateComponent, canActivate:[AuthGuard] }, 
   { path: 'shippings/:mode/:id', component: ShippingsAddOrUpdateComponent, canActivate:[AuthGuard] }, 
   { path: 'fees', component: FeesComponent },
   { path: 'logout', component: LogoutComponent }

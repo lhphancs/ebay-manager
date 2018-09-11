@@ -67,4 +67,8 @@ export class ShippingsComponent implements OnInit {
     let firstShipMethodIdOfCompany = this.shipCompanies[companyIndex].shipMethods[0].shipMethodId;
     this.router.navigate([`/shippings/add/${firstShipMethodIdOfCompany}`]);
   }
+
+  addNewShipCompanyResponse(){
+    this.router.navigate(['/shippings/new-ship-company']);
+  }
 }
