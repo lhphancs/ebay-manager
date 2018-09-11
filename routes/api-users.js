@@ -20,8 +20,19 @@ function getNewUser(body){
 router.post('/add', (req, res, next) => {
     let newUser = getNewUser(req.body);
     User.addUser(newUser, (err, user) => {
-        if(err) res.json({success: false, msg: `Failed to add user: ${err.message}`});
-        else res.json({success:true, msg: `Successfully added user: ${user}`});
+        if(err) res.json({success: false, msg: err.message});
+        else res.json({success:true, msg: {user}});
+    });
+});
+
+router.patch('/update-password', (req, res, next) => {
+    let formValues = req.body.formValues;
+    let userId = req.body.userId;
+    let oldPassword = formValues.oldPassword;
+    let newPassword = formValues.newPassword;
+    User.updatePassword(userId, oldPassword, newPassword, (err, user) => {
+        if(err) res.json({success: false, msg: err.message});
+        else res.json({success:true, msg: 'Password changed'});
     });
 });
 

@@ -22,12 +22,12 @@
       <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group mr-2" role="group" aria-label="First group">
           <button *ngFor="let multiplier of multiplierArray" (click)="multiplyProductCost(multiplier)"
-            type="button" class="btn btn-sm btn-primary btn-multiplier">{{multiplier}}x
+            type="button" class="btn btn-sm btn-primary btn-multiplier hover-hightlight">{{multiplier}}x
           </button>
         </div>
         <div class="btn-group mr-2" role="group" aria-label="Second group">
             <button *ngFor="let multiplier of multiplierArray" (click)="multiplyProductCost(1/multiplier)"
-              type="button" class="btn btn-sm btn-primary btn-multiplier">1/{{multiplier}}
+              type="button" class="btn btn-sm btn-primary btn-multiplier hover-hightlight">1/{{multiplier}}
             </button>
         </div>
       </div>
@@ -48,7 +48,7 @@
         {{shipCompanies[selectedCompanyIndex].name}}
       </button>
       <mat-menu #menuCompanies="matMenu">
-        <button class="mnu-btn" *ngFor="let companyObj of shipCompanies; let i=index"
+        <button class="mnu-btn hover-highlight" *ngFor="let companyObj of shipCompanies; let i=index"
           mat-menu-item (click)="companySelect(i)">{{companyObj.name}}</button>
       </mat-menu>
     </div>
@@ -64,7 +64,7 @@
         {{shipCompanies[selectedCompanyIndex]['shipMethods'][selectedMethodIndex].shipMethodName}}
       </button>
       <mat-menu #menuMethods="matMenu">
-        <button class="mnu-btn" *ngFor="let methodObj of shipCompanies[selectedCompanyIndex]['shipMethods']; let i=index"
+        <button class="mnu-btn hover-highlight" *ngFor="let methodObj of shipCompanies[selectedCompanyIndex]['shipMethods']; let i=index"
           mat-menu-item (click)="methodSelect(i)">{{methodObj.shipMethodName}}</button>
       </mat-menu>
     </div>
@@ -75,7 +75,7 @@
         {{shipCompanies[selectedCompanyIndex]['shipMethods'][selectedMethodIndex]['ozPrice'][selectedOzPriceIndex].oz}}
       </button>
       <mat-menu #menuWeights="matMenu">
-        <button class="mnu-btn" *ngFor="let ozPriceObj of
+        <button class="mnu-btn hover-highlight" *ngFor="let ozPriceObj of
             shipCompanies[selectedCompanyIndex]['shipMethods'][selectedMethodIndex]['ozPrice'];
             let i=index"
           mat-menu-item (click)="weightSelect(i)">{{ozPriceObj['oz']}}</button>

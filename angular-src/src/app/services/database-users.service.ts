@@ -37,6 +37,11 @@ export class DatabaseUsersService {
     , user, {headers: this.normalHeader});
   }
 
+  updatePassword(userId, formValues){
+    return this.httpClient.patch('/api/users/update-password'
+    , {userId: userId, formValues:formValues}, {headers: this.normalHeader});
+  }
+
   loadToken(){
     const token = localStorage.getItem('token');
     this.authToken = token;

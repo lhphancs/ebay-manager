@@ -36,6 +36,7 @@ import { ProgressSpinnerComponent } from './components/progress-spinner/progress
 import { TableDynamicInputComponent } from './components/table-dynamic-input/table-dynamic-input.component';
 import { EbayCalculationsComponent } from './components/ebay/ebay-calculations/ebay-calculations.component';
 import { EbayCalculatorComponent } from './components/ebay/ebay-calculator/ebay-calculator.component';
+import { AccountPasswordComponent } from './components/account/account-password/account-password.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { EbayCalculatorComponent } from './components/ebay/ebay-calculator/ebay-
     ProgressSpinnerComponent,
     TableDynamicInputComponent,
     EbayCalculationsComponent,
-    EbayCalculatorComponent
+    EbayCalculatorComponent,
+    AccountPasswordComponent
   ],
   imports: [
     NgbModule.forRoot(),

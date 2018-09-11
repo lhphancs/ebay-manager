@@ -1,3 +1,6 @@
-<p>
-  account works!
-</p>
+<div *ngIf="userId" class="entire-form m-4">
+  <h5 class="text-right">{{email}}</h5>
+  <h4>Change password</h4>
+    <hr>
+    <account-password></account-password>
+</div>

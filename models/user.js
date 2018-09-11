@@ -33,8 +33,40 @@ module.exports.addUser = function(newUser, callback){
     })
 };
 
+function handleUpdatePassword(user, oldPassword, newPassword, callback){
+    User.comparePassword(oldPassword, user.password, (err, isMatch) =>{
+        if(err) callback(err);
+        else{
+            if(isMatch){
+                bcrypt.genSalt(saltRounds, (err, salt) =>{
+                    bcrypt.hash(newPassword, salt, (err, hash) => {
+                        if(err) callback(err, null);
+                        else{
+                            user.password = hash;
+                            user.save(callback);
+                        }
+                    });
+                });
+            }
+            else
+                callback(new Error("Incorrect old password"), null)
+        }
+    });
+}
+
+module.exports.updatePassword = function(userId, oldPassword, newPassword, callback){
+    User.findOne({_id: userId}, (err, user) =>{
+            if(err) callback(err, null);
+            else{
+                if(user)
+                    handleUpdatePassword(user, oldPassword, newPassword, callback);
+                else callback(new Error("userId not found"), null);
+            }
+    });
+};
+
 module.exports.getUser = function(userId, callback){
-    User.findOne({_id: userId}, null, {select:'-password -__v'}, callback);
+    User.findOne({_id: userId}, null, {select:'-password -ebayKey -__v'}, callback);
 };
 
 module.exports.getUserByEmail  = function(email, callback){

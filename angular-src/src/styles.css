@@ -101,3 +101,7 @@
     padding-left: 10px !important;
     padding-right: 10px !important;
 }
+
+.hover-highlight:hover{
+    background-color: #eeff9d !important;
+}

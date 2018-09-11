@@ -29,18 +29,12 @@
     border: 1px solid grey;
     background-color:#619cff;
 }
-.mnu-btn:hover{
-    background-color: #6fb2cb;
-}
 
 .btn-multiplier{
     background-color: #3f51b5;
     border-left: 1px solid #86c7fe;
 }
 
-.btn-multiplier:hover{
-    background-color: #6fb2cb;
-}
 
 .expansion-panel{
     background-color:red;
