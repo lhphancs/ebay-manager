@@ -12,7 +12,7 @@
   <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
     <ul class="navbar-nav mr-auto">
       <li *ngFor="let link of loggedLeftLinks" class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink={{link.href}}>{{link.text}}</a>
+          <a class="nav-link" [routerLink]="[link.href]">{{link.text}}</a>
       </li>
     </ul>
   </div>
@@ -20,7 +20,7 @@
   <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
     <ul class="navbar-nav ml-auto">
       <li *ngFor="let link of loggedRightLinks" class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink={{link.href}}>{{link.text}}</a>
+          <a class="nav-link" [routerLink]="[link.href]">{{link.text}}</a>
       </li>
       <li class="nav-item ">
         <button mat-icon-button class="grey-icon" [matMenuTriggerFor]="menu">

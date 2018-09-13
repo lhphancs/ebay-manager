@@ -1,9 +1,6 @@
 <ul class="nav nav-tabs">
-  <li class="nav-item">
-    <a class="nav-link" routerLink='calculations' routerLinkActive='anchor-active'>Calculations</a>
-  </li>
-  <li class="nav-item" >
-    <a class="nav-link" routerLink='calculator' routerLinkActive='anchor-active'>Calculator</a>
+  <li class="nav-item" *ngFor="let link of sublinks">
+    <a class="nav-link" [routerLink]="[link.href]" routerLinkActive='anchor-active'>{{link.text}}</a>
   </li>
 </ul>
 <router-outlet *ngIf="userId"></router-outlet>

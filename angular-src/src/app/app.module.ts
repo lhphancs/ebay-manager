@@ -37,6 +37,7 @@ import { TableDynamicInputComponent } from './components/table-dynamic-input/tab
 import { EbayCalculationsComponent } from './components/ebay/ebay-calculations/ebay-calculations.component';
 import { EbayCalculatorComponent } from './components/ebay/ebay-calculator/ebay-calculator.component';
 import { AccountPasswordComponent } from './components/account/account-password/account-password.component';
+import { EbayListingsComponent } from './components/ebay/ebay-listings/ebay-listings.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { AccountPasswordComponent } from './components/account/account-password/
     TableDynamicInputComponent,
     EbayCalculationsComponent,
     EbayCalculatorComponent,
-    AccountPasswordComponent
+    AccountPasswordComponent,
+    EbayListingsComponent
   ],
   imports: [
     NgbModule.forRoot(),

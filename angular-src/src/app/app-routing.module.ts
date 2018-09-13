@@ -17,6 +17,7 @@ import { EbayComponent } from './components/ebay/ebay.component';
 import { LoginComponent } from './components/login/login.component';
 import { EbayCalculationsComponent } from './components/ebay/ebay-calculations/ebay-calculations.component';
 import { EbayCalculatorComponent } from './components/ebay/ebay-calculator/ebay-calculator.component';
+import { EbayListingsComponent } from './components/ebay/ebay-listings/ebay-listings.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -28,6 +29,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'calculations', pathMatch: 'full' },
       { path: 'calculations', component: EbayCalculationsComponent },
+      { path: 'listings', component: EbayListingsComponent },
       { path: 'calculator', component: EbayCalculatorComponent },
     ]
   },

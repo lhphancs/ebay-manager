@@ -1,15 +1,6 @@
 import { DatabaseUsersService } from '../../services/database-users.service';
 import { Component, OnInit } from '@angular/core';
-
-class Link{
-  text:string;
-  href:string;
-
-  constructor(text, href){
-    this.text=text;
-    this.href=href;
-  }
-}
+import { Link } from '../../classesAndInterfaces/Link';
 
 class MenuItemLink{
   icon:string;

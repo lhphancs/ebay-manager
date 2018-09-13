@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DatabaseUsersService } from '../../services/database-users.service';
-
+import { Link } from '../../classesAndInterfaces/Link';
 @Component({
   selector: 'ebay',
   templateUrl: './ebay.component.html',
@@ -11,6 +11,12 @@ export class EbayComponent implements OnInit {
   ebayPercentageFromSaleFee;
   paypalFlatFee;
   paypalPercentageFromSaleFee;
+
+  sublinks = [
+    new Link("Calculations", "calculations")
+    , new Link("Listings", "listings")
+    , new Link("Calculator", "calculator")
+  ];
   
   constructor(private databaseUsersService: DatabaseUsersService) { }
 
