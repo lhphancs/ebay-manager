@@ -38,6 +38,7 @@ import { EbayCalculationsComponent } from './components/ebay/ebay-calculations/e
 import { EbayCalculatorComponent } from './components/ebay/ebay-calculator/ebay-calculator.component';
 import { AccountPasswordComponent } from './components/account/account-password/account-password.component';
 import { EbayListingsComponent } from './components/ebay/ebay-listings/ebay-listings.component';
+import { AccountEbayKeyComponent } from './components/account/account-ebay-key/account-ebay-key.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { EbayListingsComponent } from './components/ebay/ebay-listings/ebay-list
     EbayCalculationsComponent,
     EbayCalculatorComponent,
     AccountPasswordComponent,
-    EbayListingsComponent
+    EbayListingsComponent,
+    AccountEbayKeyComponent
   ],
   imports: [
     NgbModule.forRoot(),

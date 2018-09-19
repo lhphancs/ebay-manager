@@ -56,12 +56,22 @@ function handleUpdatePassword(user, oldPassword, newPassword, callback){
 
 module.exports.updatePassword = function(userId, oldPassword, newPassword, callback){
     User.findOne({_id: userId}, (err, user) =>{
-            if(err) callback(err, null);
-            else{
-                if(user)
-                    handleUpdatePassword(user, oldPassword, newPassword, callback);
-                else callback(new Error("userId not found"), null);
-            }
+        if(err) callback(err, null);
+        else{
+            if(user)
+                handleUpdatePassword(user, oldPassword, newPassword, callback);
+            else callback(new Error("userId not found"), null);
+        }
+    });
+};
+
+module.exports.updateEbayKey = function(userId, ebayKey, callback){
+    User.findOneAndUpdate({_id: userId}, {ebayKey:ebayKey}, (err, user) =>{
+        if(err) callback(err,null);
+        else{
+            if(user) callback(err, user);
+            else callback(new Error("userId not found"), null);
+        }
     });
 };
 

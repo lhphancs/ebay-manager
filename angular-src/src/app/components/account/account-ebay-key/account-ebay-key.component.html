@@ -1,0 +1,16 @@
+<form ngNativeValidate #updateEbayKeyForm="ngForm" (ngSubmit)="updateEbayKey(updateEbayKeyForm)">
+  <div class="container">
+    <div>
+      <div fxFlex="30%">
+        <mat-form-field fxFlex>
+        <input ngModel name="ebayKey"
+            matInput placeholder="eBay key" required>
+        </mat-form-field>
+      </div>
+    </div>
+    
+    <button mat-raised-button color="primary"
+      type="submit" class="btn-block btn-submit mt-2">Update eBay key
+    </button>
+  </div>
+</form>

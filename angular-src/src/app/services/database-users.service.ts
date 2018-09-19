@@ -42,6 +42,11 @@ export class DatabaseUsersService {
     , {userId: userId, formValues:formValues}, {headers: this.normalHeader});
   }
 
+  updateEbayKey(userId, ebayKey){
+    return this.httpClient.patch('/api/users/update-ebay-key'
+    , {userId: userId, ebayKey:ebayKey}, {headers: this.normalHeader});
+  }
+
   loadToken(){
     const token = localStorage.getItem('token');
     this.authToken = token;
