@@ -12,10 +12,15 @@ export class EbayComponent implements OnInit {
   paypalFlatFee;
   paypalPercentageFromSaleFee;
 
-  sublinks = [
+  leftSublinks = [
     new Link("Calculations", "calculations")
     , new Link("Listings", "listings")
     , new Link("Calculator", "calculator")
+  ];
+
+  rightSublinks = [
+    new Link("Update Fees", "update-fees")
+    , new Link("Update Key", "update-key")
   ];
   
   constructor(private databaseUsersService: DatabaseUsersService) { }

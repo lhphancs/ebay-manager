@@ -1,30 +1,28 @@
 import { Component, OnInit } from '@angular/core';
-import { AccountComponent } from '../account.component';
+import { EbayComponent } from '../ebay.component';
 import { DatabaseUsersService } from '../../../services/database-users.service';
 import { MatSnackBar } from '@angular/material';
 import { openSnackbar } from '../../snackbar';
 
 @Component({
-  selector: 'account-ebay-key',
-  templateUrl: './account-ebay-key.component.html',
-  styleUrls: ['./account-ebay-key.component.css']
+  selector: 'ebay-update-key',
+  templateUrl: './ebay-update-key.component.html',
+  styleUrls: ['./ebay-update-key.component.css']
 })
-export class AccountEbayKeyComponent implements OnInit {
+export class EbayUpdateKeyComponent implements OnInit {
   userId;
+  ebayKey;
 
-  constructor(private accountComponent: AccountComponent
+  constructor(private ebayComponent: EbayComponent
     , private databaseUsersService: DatabaseUsersService
     , public snackBar: MatSnackBar) { }
 
   ngOnInit() {
-    this.userId = this.accountComponent.userId;
+    this.userId = this.ebayComponent.userId;
   }
 
-  updateEbayKey(updateEbayKeyForm){
-    let formValues = updateEbayKeyForm.value;
-    let ebayKey = formValues['ebayKey'];
-
-    this.databaseUsersService.updateEbayKey(this.userId, ebayKey).subscribe(data => {
+  onUpdate(){
+    this.databaseUsersService.updateEbayKey(this.userId, this.ebayKey).subscribe(data => {
       if(data['success'])
         openSnackbar(this.snackBar, `eBay key update successful!`);
       else

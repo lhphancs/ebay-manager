@@ -1,6 +1,5 @@
 import { ShippingsAddOrUpdateComponent } from './components/shippings-add-or-update/shippings-add-or-update.component';
 import { ShippingsComponent } from './components/shippings/shippings.component';
-import { FeesComponent } from './components/fees/fees.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { ProductsComponent } from './components/products/products.component';
 import { ProductsAddOrUpdateComponent } from './components/products/products-add-or-update/products-add-or-update.component';
@@ -18,6 +17,8 @@ import { LoginComponent } from './components/login/login.component';
 import { EbayCalculationsComponent } from './components/ebay/ebay-calculations/ebay-calculations.component';
 import { EbayCalculatorComponent } from './components/ebay/ebay-calculator/ebay-calculator.component';
 import { EbayListingsComponent } from './components/ebay/ebay-listings/ebay-listings.component';
+import { EbayUpdateFeesComponent } from './components/ebay/ebay-update-fees/ebay-update-fees.component';
+import { EbayUpdateKeyComponent } from './components/ebay/ebay-update-key/ebay-update-key.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -31,6 +32,8 @@ const routes: Routes = [
       { path: 'calculations', component: EbayCalculationsComponent },
       { path: 'listings', component: EbayListingsComponent },
       { path: 'calculator', component: EbayCalculatorComponent },
+      { path: 'update-fees', component: EbayUpdateFeesComponent },
+      { path: 'update-key', component: EbayUpdateKeyComponent },
     ]
   },
   { path: 'account', component: AccountComponent, canActivate:[AuthGuard] },
@@ -46,7 +49,6 @@ const routes: Routes = [
   { path: 'shippings', component: ShippingsComponent, canActivate:[AuthGuard] }, 
   { path: 'shippings/new-ship-company', component: ShippingsAddOrUpdateComponent, canActivate:[AuthGuard] }, 
   { path: 'shippings/:mode/:id', component: ShippingsAddOrUpdateComponent, canActivate:[AuthGuard] }, 
-  { path: 'fees', component: FeesComponent },
   { path: 'logout', component: LogoutComponent }
 ];
 

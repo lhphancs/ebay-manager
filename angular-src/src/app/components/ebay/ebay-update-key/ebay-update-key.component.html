@@ -1,0 +1,14 @@
+<form *ngIf="userId" class="entire-form m-4" ngNativeValidate (ngSubmit)="onUpdate()">
+  <div class="form-row-container" fxLayoutWrap fxLayoutGap="0.5%">
+    <div fxFlex="33%">
+        <mat-form-field fxFlex>
+          <input [(ngModel)]='ebayKey' name="ebayKey"
+            placeholder="eBay OAuth Key" matInput required>
+        </mat-form-field>
+    </div>
+  </div>
+  
+  <button mat-raised-button color="primary"
+    type="submit" class="btn-block btn-submit">Update
+  </button>
+</form>

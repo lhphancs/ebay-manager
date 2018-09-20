@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { DatabaseUsersService } from '../../../services/database-users.service';
 import { DatabaseShippingsService } from '../../../services/database-shippings.service';
 import { getProcessedShipMethods } from '../../getProcessedShipMethods';
+import { EbayComponent } from '../ebay.component';
 
 @Component({
   selector: 'app-ebay-calculator',
@@ -33,7 +33,7 @@ export class EbayCalculatorComponent implements OnInit {
   selectedMethodIndex;
   selectedOzPriceIndex;
 
-  constructor(private databaseUsersService:DatabaseUsersService
+  constructor(private ebayComponent:EbayComponent
     , private databaseShippingsService:DatabaseShippingsService) {
       this.miscCost = 0;
   }
@@ -48,16 +48,12 @@ export class EbayCalculatorComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.databaseUsersService.getProfile().subscribe( (data) =>{
-      if(data['_id']){
-        this.userId = data['_id'];
-        let fees = data['fees'];
-        this.ebayPercentageFromSaleFee = fees['ebayPercentageFromSaleFee'];
-        this.paypalPercentageFromSaleFee = fees['paypalPercentageFromSaleFee'];
-        this.paypalFlatFee = fees['paypalFlatFee'];
-        this.loadAvailableShippings();
-      }
-    });
+    this.userId = this.ebayComponent.userId;
+    this.ebayPercentageFromSaleFee = this.ebayComponent.ebayPercentageFromSaleFee;
+    this.paypalPercentageFromSaleFee = this.ebayComponent.paypalPercentageFromSaleFee;
+    this.paypalFlatFee = this.ebayComponent.paypalFlatFee;
+    this.loadAvailableShippings();
+
   }
   
   updateFees(){

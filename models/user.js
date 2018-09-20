@@ -67,9 +67,10 @@ module.exports.updatePassword = function(userId, oldPassword, newPassword, callb
 
 module.exports.updateEbayKey = function(userId, ebayKey, callback){
     User.findOneAndUpdate({_id: userId}, {ebayKey:ebayKey}, (err, user) =>{
-        if(err) callback(err,null);
+        if(err) callback(err, null);
         else{
-            if(user) callback(err, user);
+            if(user)
+                callback(err,user);
             else callback(new Error("userId not found"), null);
         }
     });

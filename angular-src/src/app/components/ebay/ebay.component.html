@@ -1,6 +1,15 @@
-<ul class="nav nav-tabs">
-  <li class="nav-item" *ngFor="let link of sublinks">
-    <a class="nav-link" [routerLink]="[link.href]" routerLinkActive='anchor-active'>{{link.text}}</a>
-  </li>
-</ul>
+<div class="d-flex justify-content-between border-bottom">
+  <ul class="nav nav-tabs">
+    <li class="nav-item" *ngFor="let link of leftSublinks">
+      <a class="nav-link" [routerLink]="[link.href]" routerLinkActive='anchor-active'>{{link.text}}</a>
+    </li>
+  </ul>
+
+  <ul class="nav nav-tabs">
+    <li class="nav-item" *ngFor="let link of rightSublinks">
+      <a class="nav-link" [routerLink]="[link.href]" routerLinkActive='anchor-active'>{{link.text}}</a>
+    </li>
+  </ul>
+</div>
+
 <router-outlet *ngIf="userId"></router-outlet>

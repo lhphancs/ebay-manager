@@ -1,22 +1,22 @@
-<form *ngIf="fees" #feesForm="ngForm" class="entire-form m-4" ngNativeValidate (ngSubmit)="onSubmit(feesForm)">
+<form *ngIf="userId" class="entire-form m-4" ngNativeValidate (ngSubmit)="onUpdate()">
   <div class="form-row-container" fxLayoutWrap fxLayoutGap="0.5%">
     <div fxFlex="33%">
         <mat-form-field fxFlex>
-          <input [(ngModel)]='fees.ebayPercentageFromSaleFee' name="ebayPercentageFromSaleFee"
+          <input [(ngModel)]='ebayComponent.ebayPercentageFromSaleFee' name="ebayPercentageFromSaleFee"
             placeholder="eBay Fee Percentage" matInput type="number" step="any" min="0" required>
         </mat-form-field>
     </div>
 
     <div fxFlex="33%">
       <mat-form-field fxFlex>
-        <input [(ngModel)]='fees.paypalPercentageFromSaleFee' name="paypalPercentageFromSaleFee"
+        <input [(ngModel)]='ebayComponent.paypalPercentageFromSaleFee' name="paypalPercentageFromSaleFee"
           placeholder="Paypal Fee Percentage" matInput type="number" step="any" min="0" required>
       </mat-form-field>
     </div>
 
     <div fxFlex="33%">
       <mat-form-field fxFlex>
-        <input [(ngModel)]='fees.paypalFlatFee' name="paypalFlatFee" matInput
+        <input [(ngModel)]='ebayComponent.paypalFlatFee' name="paypalFlatFee" matInput
           placeholder="Paypal Flat Fee" type="number" step="any" min="0" required>
         <span matPrefix>&nbsp;</span>
       </mat-form-field>

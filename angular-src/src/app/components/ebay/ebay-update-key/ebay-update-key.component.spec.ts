@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AccountEbayKeyComponent } from './account-ebay-key.component';
+import { EbayUpdateKeyComponent } from './ebay-update-key.component';
 
-describe('AccountEbayKeyComponent', () => {
-  let component: AccountEbayKeyComponent;
-  let fixture: ComponentFixture<AccountEbayKeyComponent>;
+describe('EbayUpdateKeyComponent', () => {
+  let component: EbayUpdateKeyComponent;
+  let fixture: ComponentFixture<EbayUpdateKeyComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AccountEbayKeyComponent ]
+      declarations: [ EbayUpdateKeyComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AccountEbayKeyComponent);
+    fixture = TestBed.createComponent(EbayUpdateKeyComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
