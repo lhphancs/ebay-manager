@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { EbayService } from '../../../services/ebay.service';
+import { EbayComponent } from '../ebay.component';
 
 @Component({
   selector: 'ebay-listings',
@@ -7,9 +9,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EbayListingsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private ebayService: EbayService
+    , private ebayComponent: EbayComponent) { }
 
   ngOnInit() {
+    this.ebayService.getListings(this.ebayComponent.userId).subscribe( (data) => {
+      console.log(data)
+    });
   }
 
 }

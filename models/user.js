@@ -110,3 +110,9 @@ module.exports.updateFees = function(userId, newFees, callback){
             }
     });
 };
+
+module.exports.getEbayKey = function(userId, callback){
+    User.findOne({_id: userId}, null, {select:'ebayKey -_id'}, (err, user) =>{
+        callback(err, user.ebayKey);
+    });
+};
