@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Product } from '../../../classesAndInterfaces/Product';
-import { MatTableDataSource, MatSort, MatDialog, MatSnackBar } from '@angular/material';
+import { MatTableDataSource, MatSort, MatSnackBar } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { EbayComponent } from '../ebay.component';
 import { DatabaseProductsService } from '../../../services/database-products.service';
@@ -15,15 +15,9 @@ import { openSnackbar } from '../../snackbar';
 export class EbayCalculationsComponent implements OnInit {
   loadingMsg = "Loading products..."
 
-  userId;
-  ebayPercentageFromSaleFee:number;
-  paypalPercentageFromSaleFee:number;
-  paypalFlatFee:number;
-
   desiredProfitPerSingle = 1;
   dictShipIdToName = {};
   dictShipIdAndOzToCost = {};
-  filterValue: string;
   products: Product[];
   displayedColumns: string[] = ['brand', 'name', 'stockNo', 'costPerSingle', 'ASINS', 'UPC', 'wholesaleComp', 'packsInfo'];
   dataSource: MatTableDataSource<Product>;
@@ -33,20 +27,15 @@ export class EbayCalculationsComponent implements OnInit {
     private ebayComponent:EbayComponent
     , private databaseProductsService: DatabaseProductsService
     , private databaseShippingsService: DatabaseShippingsService
-    , public snackBar: MatSnackBar, private dialog: MatDialog){
+    , public snackBar: MatSnackBar){
   }
 
   @ViewChild(MatSort) sort: MatSort;
   
   ngOnInit() {
-    this.userId = this.ebayComponent.userId;
-    this.ebayPercentageFromSaleFee = this.ebayComponent.ebayPercentageFromSaleFee;
-    this.paypalPercentageFromSaleFee = this.ebayComponent.paypalPercentageFromSaleFee;
-    this.paypalFlatFee = this.ebayComponent.paypalFlatFee;
-
-    this.databaseShippingsService.getShipMethods(this.userId).subscribe((data)=>{
+    this.databaseShippingsService.getShipMethods(this.ebayComponent.userId).subscribe((data)=>{
       this.initializeShippingMethods(data['shipMethods']);
-      this.databaseProductsService.getProducts(this.userId).subscribe( (data) => {
+      this.databaseProductsService.getProducts(this.ebayComponent.userId).subscribe( (data) => {
         if(data['success']){
           this.products = data['products'];
           this.addCostPerSingleToProducts(this.products);
@@ -111,9 +100,9 @@ export class EbayCalculationsComponent implements OnInit {
     if(err)
       return err;
 
-    return Math.round((totalProfit+this.paypalFlatFee
+    return Math.round((totalProfit+this.ebayComponent.paypalFlatFee
       + totalProductCost + shipCost)
-      / (1-this.paypalPercentageFromSaleFee*0.01 - this.ebayPercentageFromSaleFee*0.01)*100)/100;
+      / (1-this.ebayComponent.paypalPercentageFromSaleFee*0.01 - this.ebayComponent.ebayPercentageFromSaleFee*0.01)*100)/100;
   }
 }
 

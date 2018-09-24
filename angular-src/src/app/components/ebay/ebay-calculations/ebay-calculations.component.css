@@ -1,15 +1,15 @@
 table {
-    width: 100%;
-  }
-  
-  th.mat-sort-header-sorted {
-    color: black;
-  }
-  
-  .filter{
-    width:50%;
-  }
-  
-  .header-row{
-    background-color: #d9e5ff;
-  }
+  width: 100%;
+}
+
+th.mat-sort-header-sorted {
+  color: black;
+}
+
+.filter{
+  width:50%;
+}
+
+.header-row{
+  background-color: #d9e5ff;
+}
