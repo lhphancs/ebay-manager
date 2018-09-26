@@ -1,23 +1,18 @@
-import { PackInfo } from './PackInfo';
+import { Variation } from './Variation';
 
 export class Listing {
-    brand: string;
-    name: string;
+    imgUrl: string;
+    listTitle: string;
     UPC: string;
-    costPerBox: number;
+    costPerSingle: number;
     quantityPerBox: number;
     wholesaleComp: string;
     stockNo: string;
-    packsInfo: PackInfo[];
+    variations: Variation[];
 
-    constructor(imgUrl, brand, name, costPerSingle, UPC, stockNo, wholesaleComp, stockNo, packsInfo){
-        this.brand = brand;
-        this.name = name;
+    constructor(imgUrl, listTitle, UPC){
+        this.imgUrl = imgUrl;
+        this.listTitle = listTitle;
         this.UPC = UPC;
-        this.costPerBox = costPerBox;
-        this.quantityPerBox = quantityPerBox;
-        this.wholesaleComp = wholesaleComp;
-        this.stockNo = stockNo;
-        this.packsInfo = packsInfo;
     }
 }

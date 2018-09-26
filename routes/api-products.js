@@ -17,7 +17,7 @@ function getFilteredProductJson(newProductJson){
 }
 
 router.get('/info/:userId/:UPC', (req, res, next) => {
-    Product.getProductByUPC( req.params.userId, req.params.UPC, (err, product) => {
+    Product.getProductByUpc( req.params.userId, req.params.UPC, (err, product) => {
         if(err) res.json({success: false, msg: err.message});
         else res.json({success:true, product: product});
     });
@@ -57,6 +57,15 @@ router.post('/add-many', (req, res, next) => {
     Product.addManyProducts(userId, products, (err, products) => {
         if(err) res.json({success: false, msg: err.message});
         else res.json({success:true, msg: products});
+    });
+});
+
+router.post('/get-many-by-upcs', (req, res, next) => {
+    let userId = req.body.userId;
+    let upcs = req.body.upcs;
+    Product.getManyProductsByUpcs(userId, upcs, (err, products) => {
+        if(err) res.json({success: false, msg: err.message});
+        else res.json({success:true, products: products});
     });
 });
 

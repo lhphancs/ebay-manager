@@ -18,16 +18,16 @@
 
 <div *ngIf="dataSource" >
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-    <!-- brand column -->
-    <ng-container matColumnDef="brand">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Brand</th>
-      <td mat-cell *matCellDef="let element">{{element.brand}} </td>
+    <!-- imgUrl column -->
+    <ng-container matColumnDef="imgUrl">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Img</th>
+      <td mat-cell *matCellDef="let element">{{element.imgUrl}} </td>
     </ng-container>
-  
-    <!-- name column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-      <td mat-cell *matCellDef="let element"><a routerLink='/products/update/{{element.UPC}}'>{{element.name}}</a></td>
+
+    <!-- listTitle column -->
+    <ng-container matColumnDef="listTitle">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>List Title</th>
+      <td mat-cell *matCellDef="let element">{{element.listTitle}} </td>
     </ng-container>
   
     <!-- stockNo column -->
@@ -60,8 +60,8 @@
       <td mat-cell *matCellDef="let element">{{element.wholesaleComp}} </td>
     </ng-container>
   
-    <ng-container matColumnDef="packsInfo">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Calculations</th>
+    <ng-container matColumnDef="variations">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Variations</th>
       <td mat-cell *matCellDef="let element">
           <ng-template #popContent>
             <table class="table table-striped table-dark">
@@ -94,7 +94,7 @@
             
           <button class="btn btn-secondary btn-sm" type="button" [autoClose]="true"
             popoverTitle="{{element.brand + ': ' + element.name}}" [ngbPopover]="popContent" popoverClass="packinfo"
-            placement="left">Calculations</button>
+            placement="left">Variations</button>
       </td>
     </ng-container>
   

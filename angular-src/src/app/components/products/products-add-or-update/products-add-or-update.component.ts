@@ -95,7 +95,7 @@ export class ProductsAddOrUpdateComponent implements OnInit {
   }
   
   prepareProductUpdate(){
-    this.databaseProductsService.getProductByUPC(this.userId
+    this.databaseProductsService.getProductByUpc(this.userId
         , this.oldProductUPC).subscribe((data) =>{
       if(data['success']){
         if(data['product']){

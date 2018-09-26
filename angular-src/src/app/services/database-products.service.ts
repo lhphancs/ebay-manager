@@ -29,7 +29,7 @@ export class DatabaseProductsService {
     , {userId:userId, oldUPC: oldUPC, newProduct: newProduct}, {headers: headers});
   }
 
-  getProductByUPC(userId, productUPC){
+  getProductByUpc(userId, productUPC){
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
     return this.httpClient.get(`/api/products/info/${userId}/${productUPC}`
@@ -41,6 +41,13 @@ export class DatabaseProductsService {
     headers.append('Content-Type', 'application/json');
     return this.httpClient.get(`/api/products/${userId}`
     , {headers: headers});
+  }
+
+  getManyProductsByUpcs(userId, upcs){
+    let headers = new HttpHeaders();
+    headers.append('Content-Type', 'application/json');
+    return this.httpClient.post('/api/products/get-many-by-upcs'
+    , {userId:userId, upcs: upcs}, {headers: headers});
   }
 
   deleteProducts(userId, UPCs){
