@@ -17,7 +17,7 @@ function getFilteredProductJson(newProductJson){
 }
 
 router.get('/info/:userId/:UPC', (req, res, next) => {
-    Product.getProductByUpc( req.params.userId, req.params.UPC, (err, product) => {
+    Product.getProductByUpc(req.params.userId, req.params.UPC, (err, product) => {
         if(err) res.json({success: false, msg: err.message});
         else res.json({success:true, product: product});
     });

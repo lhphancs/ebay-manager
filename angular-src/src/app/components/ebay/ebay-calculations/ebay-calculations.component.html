@@ -79,7 +79,7 @@
                   <tr *ngFor="let entry of element.packsInfo">
                     <td>{{entry.ASIN}}</td>
                     <td>{{entry.packAmt}}</td>
-                    <td>{{dictShipIdToName[entry.shipMethodId]}}</td>
+                    <td>{{ebayComponent.dictShipIdToName[entry.shipMethodId]}}</td>
                     <td>{{entry.ozWeight}}</td>
                     <td>{{entry.preparation}}</td>
                     <td>{{calculateNeededSale(entry.packAmt
@@ -89,7 +89,6 @@
                   </tr>
                 </tbody>
               </table>
-  
           </ng-template>
             
           <button class="btn btn-secondary btn-sm" type="button" [autoClose]="true"

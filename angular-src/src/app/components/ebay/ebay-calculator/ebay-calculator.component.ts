@@ -44,7 +44,6 @@ export class EbayCalculatorComponent implements OnInit {
 
   ngOnInit() {
     this.loadAvailableShippings();
-
   }
   
   updateFees(){

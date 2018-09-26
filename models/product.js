@@ -25,8 +25,7 @@ productSchema.index({ userId: 1, UPC: 1 }, { unique: true })
 
 const Product = module.exports = mongoose.model('Product', productSchema);
 
-
-module.exports.getProductByUPC = function(userId, productUPC, callback){
+module.exports.getProductByUpc = function(userId, productUPC, callback){
     Product.findOne({userId: userId, UPC: productUPC}, callback);
 };
 

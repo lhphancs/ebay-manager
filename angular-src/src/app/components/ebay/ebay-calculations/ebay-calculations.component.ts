@@ -16,8 +16,7 @@ export class EbayCalculationsComponent implements OnInit {
   loadingMsg = "Loading products..."
 
   desiredProfitPerSingle = 1;
-  dictShipIdToName = {};
-  dictShipIdAndOzToCost = {};
+  
   products: Product[];
   displayedColumns: string[] = ['brand', 'name', 'stockNo', 'costPerSingle', 'ASINS', 'UPC', 'wholesaleComp', 'packsInfo'];
   dataSource: MatTableDataSource<Product>;
@@ -26,26 +25,22 @@ export class EbayCalculationsComponent implements OnInit {
   constructor(
     private ebayComponent:EbayComponent
     , private databaseProductsService: DatabaseProductsService
-    , private databaseShippingsService: DatabaseShippingsService
     , public snackBar: MatSnackBar){
   }
 
   @ViewChild(MatSort) sort: MatSort;
   
   ngOnInit() {
-    this.databaseShippingsService.getShipMethods(this.ebayComponent.userId).subscribe((data)=>{
-      this.initializeShippingMethods(data['shipMethods']);
-      this.databaseProductsService.getProducts(this.ebayComponent.userId).subscribe( (data) => {
-        if(data['success']){
-          this.products = data['products'];
-          this.addCostPerSingleToProducts(this.products);
-          this.addAsinsToProducts(this.products);
-          this.dataSource = new MatTableDataSource<Product>(this.products);
-          this.dataSource.sort = this.sort;
-        }
-        else
-          openSnackbar(this.snackBar, data['msg']);
-      });
+    this.databaseProductsService.getProducts(this.ebayComponent.userId).subscribe( (data) => {
+      if(data['success']){
+        this.products = data['products'];
+        this.addCostPerSingleToProducts(this.products);
+        this.addAsinsToProducts(this.products);
+        this.dataSource = new MatTableDataSource<Product>(this.products);
+        this.dataSource.sort = this.sort;
+      }
+      else
+        openSnackbar(this.snackBar, data['msg']);
     });
   }
 
@@ -61,18 +56,6 @@ export class EbayCalculationsComponent implements OnInit {
       for(let packInfo of product.packsInfo)
         strASINS += packInfo.ASIN + '   |   ';
       product.ASINS = strASINS;
-    }
-  }
-
-  initializeShippingMethods(methods){
-    for(let method of methods){
-      this.dictShipIdToName[method._id]= method.shipCompanyName + " - " + method.shipMethodName;
-      if(method.flatRatePrice)
-        this.dictShipIdAndOzToCost[method._id] = method.flatRatePrice;
-      else{
-        for(let obj of method.ozPrice)
-          this.dictShipIdAndOzToCost[method._id + obj.oz] = obj.price;
-      }
     }
   }
 
@@ -93,8 +76,8 @@ export class EbayCalculationsComponent implements OnInit {
     let roundedUpOz = oz ? Math.ceil(oz): "";
     let totalProfit = this.desiredProfitPerSingle * packAmt;
     let totalProductCost = costPerSingle * packAmt;
-    let key = shipId + roundedUpOz;
-    let shipCost = this.dictShipIdAndOzToCost[key];
+    let key = shipId in this.ebayComponent.dictShipIdAndOzToCost ? shipId: shipId + roundedUpOz;
+    let shipCost = this.ebayComponent.dictShipIdAndOzToCost[key];
     
     let err = this.getErrMsg(totalProfit, totalProductCost, shipCost);
     if(err)

@@ -78,6 +78,7 @@ export class EbayListingsComponent implements OnInit {
       let listing = listingDict[upc];
       listing.wholesaleComp = product.wholesaleComp;
       listing.stockNo = product.stockNo;
+      listing.costPerSingle = product.costPerBox/product.quantityPerBox;
       this.addVariationsToListing(listing, listing.packInfo)
     }
   }
