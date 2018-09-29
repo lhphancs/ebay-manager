@@ -11,7 +11,7 @@ import { openSnackbar } from '../../snackbar';
 })
 export class EbayUpdateKeyComponent implements OnInit {
   userId;
-  ebayKey;
+  ebayAppId;
 
   constructor(private ebayComponent: EbayComponent
     , private databaseUsersService: DatabaseUsersService
@@ -22,7 +22,7 @@ export class EbayUpdateKeyComponent implements OnInit {
   }
 
   onUpdate(){
-    this.databaseUsersService.updateEbayKey(this.userId, this.ebayKey).subscribe(data => {
+    this.databaseUsersService.updateEbayAppId(this.userId, this.ebayAppId).subscribe(data => {
       if(data['success'])
         openSnackbar(this.snackBar, `eBay key update successful!`);
       else

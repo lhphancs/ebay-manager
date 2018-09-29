@@ -1,3 +1,4 @@
+<h1 class="text-center">Page still under construction</h1>
 <div class="d-flex justify-content-between align-items-center mt-3 px-3">
   <div></div>
 
@@ -72,16 +73,18 @@
                     <th scope="col">Ship</th>
                     <th scope="col">Oz</th>
                     <th scope="col">Preparation</th>
-                    <th scope="col">Sale Calc.</th>
+                    <th scope="col">eBay Price</th>
+                    <th scope="col">Desired Price</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr *ngFor="let entry of element.packsInfo">
                     <td>{{entry.ASIN}}</td>
                     <td>{{entry.packAmt}}</td>
-                    <td>{{dictShipIdToName[entry.shipMethodId]}}</td>
+                    <td>{{ebayComponent.dictShipIdToName[entry.shipMethodId]}}</td>
                     <td>{{entry.ozWeight}}</td>
                     <td>{{entry.preparation}}</td>
+                    <td>{{entry.ebayPrice}}</td>
                     <td>{{calculateNeededSale(entry.packAmt
                       , entry.shipMethodId, entry.ozWeight
                       , element.costPerSingle)}}

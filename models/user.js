@@ -15,7 +15,8 @@ const userSchema = Schema({
             }
         , default:{ebayPercentageFromSaleFee:9.15, paypalPercentageFromSaleFee: 2.9,
         paypalFlatFee: 0.30}, required: true},
-    ebayKey: {type: String, default:""}
+    ebayAppId: {type: String, default:""},
+    ebayStoreName: {type: String, default:""}
 });
 
 const User = module.exports = mongoose.model('User', userSchema);
@@ -65,8 +66,8 @@ module.exports.updatePassword = function(userId, oldPassword, newPassword, callb
     });
 };
 
-module.exports.updateEbayKey = function(userId, ebayKey, callback){
-    User.findOneAndUpdate({_id: userId}, {ebayKey:ebayKey}, (err, user) =>{
+module.exports.updateEbayAppId = function(userId, ebayAppId, callback){
+    User.findOneAndUpdate({_id: userId}, {ebayAppId:ebayAppId}, (err, user) =>{
         if(err) callback(err, null);
         else{
             if(user)
@@ -77,7 +78,7 @@ module.exports.updateEbayKey = function(userId, ebayKey, callback){
 };
 
 module.exports.getUser = function(userId, callback){
-    User.findOne({_id: userId}, null, {select:'-password -ebayKey -__v'}, callback);
+    User.findOne({_id: userId}, null, {select:'-password -ebayAppId -__v'}, callback);
 };
 
 module.exports.getUserByEmail  = function(email, callback){
@@ -111,8 +112,8 @@ module.exports.updateFees = function(userId, newFees, callback){
     });
 };
 
-module.exports.getEbayKey = function(userId, callback){
-    User.findOne({_id: userId}, null, {select:'ebayKey -_id'}, (err, user) =>{
-        callback(err, user.ebayKey);
+module.exports.getEbayInfo = function(userId, callback){
+    User.findOne({_id: userId}, null, {select:'ebayAppId ebayStoreName -_id'}, (err, user) =>{
+        callback(err, user);
     });
 };

@@ -23,7 +23,7 @@ export class EbayComponent implements OnInit {
 
   rightSublinks = [
     new Link("Update Fees", "update-fees")
-    , new Link("Update Key", "update-key")
+    , new Link("Update AppId Key", "update-key")
   ];
   
   constructor(private databaseUsersService: DatabaseUsersService

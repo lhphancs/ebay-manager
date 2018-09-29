@@ -24,7 +24,6 @@ export class EbayListingsComponent implements OnInit {
 
   constructor(private ebayComponent:EbayComponent
     , private databaseProductsService: DatabaseProductsService
-    , private databaseShippingsService: DatabaseShippingsService
     , private ebayService: EbayService
     , public snackBar: MatSnackBar) {
       this.listings = [];
@@ -36,7 +35,7 @@ export class EbayListingsComponent implements OnInit {
     let listingDict = {};
     listingDict['upc1'] = new Listing('www1', 'listTitle1', 'upc1');
     listingDict['upc2'] = new Listing('www2', 'listTitle2', 'upc2');
-
+/*
     let upcs = this.getUpcsFromListingDict(listingDict);
 
     this.databaseProductsService.getManyProductsByUpcs(this.ebayComponent.userId
@@ -48,12 +47,12 @@ export class EbayListingsComponent implements OnInit {
     this.addListingsFromDict(listingDict);
     this.dataSource = new MatTableDataSource<Listing>(this.listings);
     this.dataSource.sort = this.sort;
-    
-    /*
+  */  
+
     this.ebayService.getListings(this.ebayComponent.userId).subscribe( (data) => {
       console.log(data)
     });
-    */
+
   }
 
   addListingsFromDict(listingDict){
@@ -68,8 +67,11 @@ export class EbayListingsComponent implements OnInit {
     return upcs;
   }
 
-  addVariationsToListing(listing, packInfo){
-
+  addVariationsToListing(upc, listing, packsInfo){
+    for(let packInfo of packsInfo){
+      delete packInfo._id;
+    }
+    listing.packsInfo = packsInfo;
   }
 
   addProductInfoToListingDict(listingDict, products){
@@ -79,11 +81,37 @@ export class EbayListingsComponent implements OnInit {
       listing.wholesaleComp = product.wholesaleComp;
       listing.stockNo = product.stockNo;
       listing.costPerSingle = product.costPerBox/product.quantityPerBox;
-      this.addVariationsToListing(listing, listing.packInfo)
+      this.addVariationsToListing(upc, listing, product.packsInfo)
     }
   }
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  getErrMsg(totalProfit, totalProductCost, shipCost){
+    let BASE_ERR_MSG = "Err: ";
+    let errMsg = BASE_ERR_MSG;
+    if(!totalProfit) errMsg += "desiredProfit ";
+    if(!totalProductCost) errMsg += "totalProductCost ";
+    if(!shipCost) errMsg += "shipId/oz";
+    return errMsg == BASE_ERR_MSG ? null : errMsg;
+  }
+
+  calculateNeededSale(packAmt, shipId, oz, costPerSingle){
+    let roundedUpOz = oz ? Math.ceil(oz): "";
+    let totalProfit = this.desiredProfitPerSingle * packAmt;
+    let totalProductCost = costPerSingle * packAmt;
+
+    let key = shipId in this.ebayComponent.dictShipIdAndOzToCost ? shipId: shipId + roundedUpOz;
+    let shipCost = this.ebayComponent.dictShipIdAndOzToCost[key];
+    
+    let err = this.getErrMsg(totalProfit, totalProductCost, shipCost);
+    if(err)
+      return err;
+
+    return Math.round((totalProfit+this.ebayComponent.paypalFlatFee
+      + totalProductCost + shipCost)
+      / (1-this.ebayComponent.paypalPercentageFromSaleFee*0.01 - this.ebayComponent.ebayPercentageFromSaleFee*0.01)*100)/100;
   }
 }

@@ -42,9 +42,9 @@ export class DatabaseUsersService {
     , {userId: userId, formValues:formValues}, {headers: this.normalHeader});
   }
 
-  updateEbayKey(userId, ebayKey){
+  updateEbayAppId(userId, ebayAppId){
     return this.httpClient.patch('/api/users/update-ebay-key'
-    , {userId: userId, ebayKey:ebayKey}, {headers: this.normalHeader});
+    , {userId: userId, ebayAppId:ebayAppId}, {headers: this.normalHeader});
   }
 
   loadToken(){

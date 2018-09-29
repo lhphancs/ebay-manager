@@ -9,7 +9,7 @@ function getUserJSON(body){
     return {
         email: body.email,
         password: body.password,
-        ebayKey: body.ebayKey,
+        ebayAppId: body.ebayAppId,
     };
 }
 
@@ -38,8 +38,8 @@ router.patch('/update-password', (req, res, next) => {
 
 router.patch('/update-ebay-key', (req, res, next) => {
     let userId = req.body.userId;
-    let ebayKey = req.body.ebayKey;
-    User.updateEbayKey(userId, ebayKey, (err, user) => {
+    let ebayAppId = req.body.ebayAppId;
+    User.updateEbayAppId(userId, ebayAppId, (err, user) => {
         if(err) res.json({success: false, msg: err.message});
         else res.json({success:true, msg: 'eBay key changed'});
     });
