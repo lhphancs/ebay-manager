@@ -46,7 +46,7 @@ export class EbayCalculatorComponent implements OnInit {
     this.loadAvailableShippings();
   }
   
-  updateFees(){
+  updateEbayFees(){
     this.totalEbayFee= Math.round((this.ebayComponent.ebayPercentageFromSaleFee*0.01
         * this.saleValue)*100)/100;
     this.totalPaypalFee = Math.round((this.ebayComponent.paypalFlatFee
@@ -62,7 +62,7 @@ export class EbayCalculatorComponent implements OnInit {
       this.saleValue = Math.round((this.totalProfit+this.ebayComponent.paypalFlatFee
         + this.productCost + this.miscCost + this.shippingCost)
         / (1-this.ebayComponent.paypalPercentageFromSaleFee*0.01 - this.ebayComponent.ebayPercentageFromSaleFee*0.01)*100)/100;
-      this.updateFees();
+      this.updateEbayFees();
     }
   }
 

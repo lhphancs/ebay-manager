@@ -36,15 +36,6 @@ router.patch('/update-password', (req, res, next) => {
     });
 });
 
-router.patch('/update-ebay-key', (req, res, next) => {
-    let userId = req.body.userId;
-    let ebayAppId = req.body.ebayAppId;
-    User.updateEbayAppId(userId, ebayAppId, (err, user) => {
-        if(err) res.json({success: false, msg: err.message});
-        else res.json({success:true, msg: 'eBay key changed'});
-    });
-});
-
 router.get('/profile', authenticate, (req, res, next) => {
     res.json(req.user);
 });
@@ -91,10 +82,10 @@ router.get('/fees/:userId', (req, res, next) => {
     });
 });
 
-router.put('/fees/update', (req, res, next) => {
-    User.updateFees( req.body.userId, req.body.newFees, (err, fees) => {
+router.put('/ebay-settings/update', (req, res, next) => {
+    User.updateEbaySettings( req.body.userId, req.body.newEbaySettings, (err) => {
         if(err) res.json({success: false, msg: err.message});
-        else res.json({success:true, msg: fees});
+        else res.json({success:true});
     });
 });
 

@@ -17,8 +17,7 @@ import { LoginComponent } from './components/login/login.component';
 import { EbayCalculationsComponent } from './components/ebay/ebay-calculations/ebay-calculations.component';
 import { EbayCalculatorComponent } from './components/ebay/ebay-calculator/ebay-calculator.component';
 import { EbayListingsComponent } from './components/ebay/ebay-listings/ebay-listings.component';
-import { EbayUpdateFeesComponent } from './components/ebay/ebay-update-fees/ebay-update-fees.component';
-import { EbayUpdateKeyComponent } from './components/ebay/ebay-update-key/ebay-update-key.component';
+import { EbayUpdateSettingsComponent } from './components/ebay/ebay-update-settings/ebay-update-settings.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -32,8 +31,7 @@ const routes: Routes = [
       { path: 'calculations', component: EbayCalculationsComponent },
       { path: 'listings', component: EbayListingsComponent },
       { path: 'calculator', component: EbayCalculatorComponent },
-      { path: 'update-fees', component: EbayUpdateFeesComponent },
-      { path: 'update-key', component: EbayUpdateKeyComponent },
+      { path: 'update-ebay-settings', component: EbayUpdateSettingsComponent },
     ]
   },
   { path: 'account', component: AccountComponent, canActivate:[AuthGuard] },

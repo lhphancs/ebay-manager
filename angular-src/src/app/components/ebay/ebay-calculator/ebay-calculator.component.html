@@ -11,7 +11,7 @@
       <label for="saleValue">Sale value</label>
       <input type="number" step="any" class="form-control" id="saleValue"
         [(ngModel)]='saleValue' [disabled]="group.value!='calcProfit'"
-        (input)="updateFees(); updateTotalOrSaleValue()">
+        (input)="updateEbayFees(); updateTotalOrSaleValue()">
     </div>
     <div class="form-group col-md-4 mr-5">
       <mat-icon color="primary" matTooltip="Price that you bought it for"

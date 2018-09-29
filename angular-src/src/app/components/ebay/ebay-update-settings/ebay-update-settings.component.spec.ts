@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EbayUpdateFeesComponent } from './ebay-update-fees.component';
+import { EbayUpdateSettingsComponent } from './ebay-update-settings.component';
 
-describe('EbayUpdateFeesComponent', () => {
-  let component: EbayUpdateFeesComponent;
-  let fixture: ComponentFixture<EbayUpdateFeesComponent>;
+describe('EbayUpdateSettingsComponent', () => {
+  let component: EbayUpdateSettingsComponent;
+  let fixture: ComponentFixture<EbayUpdateSettingsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EbayUpdateFeesComponent ]
+      declarations: [ EbayUpdateSettingsComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EbayUpdateFeesComponent);
+    fixture = TestBed.createComponent(EbayUpdateSettingsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

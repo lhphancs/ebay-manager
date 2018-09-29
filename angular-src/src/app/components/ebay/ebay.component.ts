@@ -12,6 +12,9 @@ export class EbayComponent implements OnInit {
   ebayPercentageFromSaleFee;
   paypalFlatFee;
   paypalPercentageFromSaleFee;
+  ebayAppId;
+  ebayStoreName;
+
   dictShipIdToName = {};
   dictShipIdAndOzToCost = {};
 
@@ -22,8 +25,7 @@ export class EbayComponent implements OnInit {
   ];
 
   rightSublinks = [
-    new Link("Update Fees", "update-fees")
-    , new Link("Update AppId Key", "update-key")
+    new Link("eBay Settings", "update-ebay-settings")
   ];
   
   constructor(private databaseUsersService: DatabaseUsersService
@@ -33,11 +35,12 @@ export class EbayComponent implements OnInit {
     this.databaseUsersService.getProfile().subscribe( (data) =>{
       if(data['_id']){
         this.userId = data['_id'];
-        let fees = data['fees'];
-        this.ebayPercentageFromSaleFee = fees.ebayPercentageFromSaleFee;
-        this.paypalFlatFee = fees.paypalFlatFee;
-        this.paypalPercentageFromSaleFee = fees.paypalPercentageFromSaleFee;
-
+        let ebaySettings = data['ebaySettings'];
+        this.ebayPercentageFromSaleFee = ebaySettings.ebayFees.ebayPercentageFromSaleFee;
+        this.paypalFlatFee = ebaySettings.ebayFees.paypalFlatFee;
+        this.paypalPercentageFromSaleFee = ebaySettings.ebayFees.paypalPercentageFromSaleFee;
+        this.ebayAppId = ebaySettings.ebayAppId;
+        this.ebayStoreName = ebaySettings.ebayStoreName;
         this.initializeShippingMethods();
       }
     });

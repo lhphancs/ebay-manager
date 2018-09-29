@@ -78,8 +78,8 @@ export class DatabaseUsersService {
     , {headers: this.normalHeader});
   }
 
-  updateFees(userId, newFees){
-    return this.httpClient.put('/api/users/fees/update'
-    , {userId: userId, newFees: newFees}, {headers: this.normalHeader});
+  updateEbaySettings(userId, newEbaySettings){
+    return this.httpClient.put('/api/users/ebay-settings/update'
+    , {userId: userId, newEbaySettings: newEbaySettings}, {headers: this.normalHeader});
   }
 }

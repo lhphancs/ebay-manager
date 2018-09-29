@@ -12,8 +12,6 @@ import { AppComponent } from './app.component';
 
 import { EbayComponent } from './components/ebay/ebay.component';
 import { EbayListingsComponent } from './components/ebay/ebay-listings/ebay-listings.component';
-import { EbayUpdateFeesComponent } from './components/ebay/ebay-update-fees/ebay-update-fees.component';
-import { EbayUpdateKeyComponent } from './components/ebay/ebay-update-key/ebay-update-key.component';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -40,6 +38,7 @@ import { TableDynamicInputComponent } from './components/table-dynamic-input/tab
 import { EbayCalculationsComponent } from './components/ebay/ebay-calculations/ebay-calculations.component';
 import { EbayCalculatorComponent } from './components/ebay/ebay-calculator/ebay-calculator.component';
 import { AccountPasswordComponent } from './components/account/account-password/account-password.component';
+import { EbayUpdateSettingsComponent } from './components/ebay/ebay-update-settings/ebay-update-settings.component';
 
 @NgModule({
   declarations: [
@@ -64,8 +63,7 @@ import { AccountPasswordComponent } from './components/account/account-password/
     EbayCalculatorComponent,
     AccountPasswordComponent,
     EbayListingsComponent,
-    EbayUpdateFeesComponent,
-    EbayUpdateKeyComponent
+    EbayUpdateSettingsComponent
   ],
   imports: [
     NgbModule.forRoot(),

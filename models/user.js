@@ -8,15 +8,16 @@ const saltRounds = 10;
 const userSchema = Schema({
     email: {type: String, required: true, unique: true},
     password: {type: String, required: true},
-    fees: { type:{
-             ebayPercentageFromSaleFee:{type: Number, min:0, required:true},
-             paypalPercentageFromSaleFee:{ type: Number, min: 0, required:true},
-             paypalFlatFee:{ type: Number, min: 0, required:true}
-            }
-        , default:{ebayPercentageFromSaleFee:9.15, paypalPercentageFromSaleFee: 2.9,
-        paypalFlatFee: 0.30}, required: true},
-    ebayAppId: {type: String, default:""},
-    ebayStoreName: {type: String, default:""}
+    ebaySettings:{
+        ebayFees: { type:{
+            ebayPercentageFromSaleFee:{type: Number, min:0, required:true},
+            paypalPercentageFromSaleFee:{ type: Number, min: 0, required:true},
+            paypalFlatFee:{ type: Number, min: 0, required:true}
+           }, default:{ebayPercentageFromSaleFee:9.15, paypalPercentageFromSaleFee: 2.9,
+            paypalFlatFee: 0.30}, required: true},
+        ebayAppId: {type: String, default:""},
+        ebayStoreName: {type: String, default:""}
+    }
 });
 
 const User = module.exports = mongoose.model('User', userSchema);
@@ -66,12 +67,12 @@ module.exports.updatePassword = function(userId, oldPassword, newPassword, callb
     });
 };
 
-module.exports.updateEbayAppId = function(userId, ebayAppId, callback){
-    User.findOneAndUpdate({_id: userId}, {ebayAppId:ebayAppId}, (err, user) =>{
+module.exports.updateEbaySettings = function(userId, newEbaySettings, callback){
+    User.findOneAndUpdate({_id: userId}, {ebaySettings:newEbaySettings}, (err, user) =>{
         if(err) callback(err, null);
         else{
             if(user)
-                callback(err,user);
+                callback(err, user);
             else callback(new Error("userId not found"), null);
         }
     });
@@ -93,24 +94,6 @@ module.exports.comparePassword = function(inputPassword, hashPassword, callback)
             callback(null, isMatch);
     });
 }
-
-module.exports.getFees = function(userId, callback){
-    User.findOne({_id: userId}, null, {select:'fees -_id'}, (err, user) =>{
-        callback(err, user.fees);
-    });
-};
-
-
-module.exports.updateFees = function(userId, newFees, callback){
-    User.findOneAndUpdate({_id: userId}, {fees:newFees}
-        , { select:'fees -_id', new: true, runValidators: true }, (err, user) =>{
-            if(err) callback(err,null);
-            else{
-                if(user) callback(err, user);
-                else callback(new Error("userId not found"), null);
-            }
-    });
-};
 
 module.exports.getEbayInfo = function(userId, callback){
     User.findOne({_id: userId}, null, {select:'ebayAppId ebayStoreName -_id'}, (err, user) =>{
