@@ -16,7 +16,8 @@ const userSchema = Schema({
            }, default:{ebayPercentageFromSaleFee:9.15, paypalPercentageFromSaleFee: 2.9,
             paypalFlatFee: 0.30}, required: true},
         ebayAppId: {type: String, default:""},
-        ebayStoreName: {type: String, default:""}
+        ebayKey: {type: String, default:""},
+        ebayUserName: {type: String, default:""}
     }
 });
 
@@ -79,7 +80,14 @@ module.exports.updateEbaySettings = function(userId, newEbaySettings, callback){
 };
 
 module.exports.getUser = function(userId, callback){
-    User.findOne({_id: userId}, null, {select:'-password -ebayAppId -__v'}, callback);
+    User.findOne({_id: userId}, null, {select:'-password -ebaySettings -__v'}, callback);
+};
+
+module.exports.getEbaySettings = function(userId, callback){
+    User.findOne({_id: userId}, null, {select:'ebaySettings -_id'}, (err, user) =>{
+        user.ebaySettings.ebayKey = undefined;
+        callback(err, user);
+    });
 };
 
 module.exports.getUserByEmail  = function(email, callback){
@@ -94,9 +102,3 @@ module.exports.comparePassword = function(inputPassword, hashPassword, callback)
             callback(null, isMatch);
     });
 }
-
-module.exports.getEbayInfo = function(userId, callback){
-    User.findOne({_id: userId}, null, {select:'ebayAppId ebayStoreName -_id'}, (err, user) =>{
-        callback(err, user);
-    });
-};

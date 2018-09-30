@@ -25,18 +25,27 @@
 
   <div class="form-row-container" fxLayoutWrap fxLayoutGap="0.5%">
     <div fxFlex="33%">
-        <mat-form-field fxFlex>
-          <input [(ngModel)]='ebayComponent.ebayAppId' name="ebayAppId"
-            placeholder="eBay AppId Key" matInput>
-        </mat-form-field>
+      <mat-form-field fxFlex>
+        <input [(ngModel)]='ebayComponent.ebayUserName' name="ebayUserName"
+          placeholder="ebay User Name" matInput>
+      </mat-form-field>
     </div>
 
     <div fxFlex="33%">
       <mat-form-field fxFlex>
-        <input [(ngModel)]='ebayComponent.ebayStoreName' name="ebayStoreName"
-          placeholder="ebay Store Name" matInput>
+        <input [(ngModel)]='ebayComponent.ebayAppId' name="ebayAppId"
+          placeholder="ebay AppId" matInput>
       </mat-form-field>
     </div>
+
+    <div fxFlex="33%">
+        <mat-form-field fxFlex>
+          <input [(ngModel)]='ebayComponent.ebayKey' name="ebayKey"
+            placeholder="eBay Key" matInput>
+        </mat-form-field>
+    </div>
+
+    
   </div>
   
   <button mat-raised-button color="primary"

@@ -9,7 +9,7 @@ function getUserJSON(body){
     return {
         email: body.email,
         password: body.password,
-        ebayAppId: body.ebayAppId,
+        ebayKey: body.ebayKey,
     };
 }
 
@@ -75,10 +75,10 @@ router.post('/auth', (req, res, next) =>{
     });
 });
 
-router.get('/fees/:userId', (req, res, next) => {
-    User.getFees( req.params.userId, (err, fees) => {
+router.get('/ebay-settings/:userId', (req, res, next) => {
+    User.getEbaySettings( req.params.userId, (err, user) => {
         if(err) res.json({success: false, msg: `Failed to grab fee: ${err.message}`});
-        else res.json({success:true, fees: fees});
+        else res.json({success:true, ebaySettings: user.ebaySettings});
     });
 });
 

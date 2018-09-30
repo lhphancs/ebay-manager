@@ -42,9 +42,9 @@ export class DatabaseUsersService {
     , {userId: userId, formValues:formValues}, {headers: this.normalHeader});
   }
 
-  updateEbayAppId(userId, ebayAppId){
+  updateebayKey(userId, ebayKey){
     return this.httpClient.patch('/api/users/update-ebay-key'
-    , {userId: userId, ebayAppId:ebayAppId}, {headers: this.normalHeader});
+    , {userId: userId, ebayKey:ebayKey}, {headers: this.normalHeader});
   }
 
   loadToken(){
@@ -73,8 +73,8 @@ export class DatabaseUsersService {
     localStorage.clear();
   }
   
-  getFees(userId){
-    return this.httpClient.get(`/api/users/fees/${userId}`
+  getEbaySettings(userId){
+    return this.httpClient.get(`/api/users/ebay-settings/${userId}`
     , {headers: this.normalHeader});
   }
 

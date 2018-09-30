@@ -33,8 +33,7 @@ export class EbayListingsComponent implements OnInit {
   
   ngOnInit() {
     let listingDict = {};
-    listingDict['upc1'] = new Listing('www1', 'listTitle1', 'upc1');
-    listingDict['upc2'] = new Listing('www2', 'listTitle2', 'upc2');
+
 /*
     let upcs = this.getUpcsFromListingDict(listingDict);
 
@@ -48,9 +47,10 @@ export class EbayListingsComponent implements OnInit {
     this.dataSource = new MatTableDataSource<Listing>(this.listings);
     this.dataSource.sort = this.sort;
   */  
-
     this.ebayService.getListings(this.ebayComponent.userId).subscribe( (data) => {
+      console.log("zzz")
       console.log(data)
+      console.log("zzz")
     });
 
   }

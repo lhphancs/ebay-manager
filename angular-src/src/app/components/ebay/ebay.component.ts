@@ -13,7 +13,8 @@ export class EbayComponent implements OnInit {
   paypalFlatFee;
   paypalPercentageFromSaleFee;
   ebayAppId;
-  ebayStoreName;
+  ebayKey;
+  ebayUserName;
 
   dictShipIdToName = {};
   dictShipIdAndOzToCost = {};
@@ -35,14 +36,21 @@ export class EbayComponent implements OnInit {
     this.databaseUsersService.getProfile().subscribe( (data) =>{
       if(data['_id']){
         this.userId = data['_id'];
-        let ebaySettings = data['ebaySettings'];
-        this.ebayPercentageFromSaleFee = ebaySettings.ebayFees.ebayPercentageFromSaleFee;
-        this.paypalFlatFee = ebaySettings.ebayFees.paypalFlatFee;
-        this.paypalPercentageFromSaleFee = ebaySettings.ebayFees.paypalPercentageFromSaleFee;
-        this.ebayAppId = ebaySettings.ebayAppId;
-        this.ebayStoreName = ebaySettings.ebayStoreName;
+        this.initializeEbaySettings(this.userId);
         this.initializeShippingMethods();
       }
+    });
+  }
+
+  initializeEbaySettings(userId){
+    this.databaseUsersService.getEbaySettings(userId).subscribe( (data) =>{
+      let ebaySettings = data['ebaySettings'];
+      this.ebayPercentageFromSaleFee = ebaySettings.ebayFees.ebayPercentageFromSaleFee;
+      this.paypalFlatFee = ebaySettings.ebayFees.paypalFlatFee;
+      this.paypalPercentageFromSaleFee = ebaySettings.ebayFees.paypalPercentageFromSaleFee;
+      this.ebayAppId = ebaySettings.ebayAppId;
+      this.ebayKey = ebaySettings.ebayKey;
+      this.ebayUserName = ebaySettings.ebayUserName;
     });
   }
 

@@ -28,8 +28,10 @@ export class EbayUpdateSettingsComponent implements OnInit {
         paypalPercentageFromSaleFee: this.ebayComponent.paypalPercentageFromSaleFee
       },
       ebayAppId: this.ebayComponent.ebayAppId,
-      ebayStoreName: this.ebayComponent.ebayStoreName
+      ebayKey: this.ebayComponent.ebayKey,
+      ebayUserName: this.ebayComponent.ebayUserName
     }
+    console.log(values)
     return values;
   }
 
