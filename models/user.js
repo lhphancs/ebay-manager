@@ -15,9 +15,10 @@ const userSchema = Schema({
             paypalFlatFee:{ type: Number, min: 0, required:true}
            }, default:{ebayPercentageFromSaleFee:9.15, paypalPercentageFromSaleFee: 2.9,
             paypalFlatFee: 0.30}, required: true},
+        ebayUserName: {type: String, default:""},
+        ebayStoreName: {type: String, default:""},
         ebayAppId: {type: String, default:""},
-        ebayKey: {type: String, default:""},
-        ebayUserName: {type: String, default:""}
+        ebayKey: {type: String, default:""}
     }
 });
 
@@ -68,8 +69,28 @@ module.exports.updatePassword = function(userId, oldPassword, newPassword, callb
     });
 };
 
-module.exports.updateEbaySettings = function(userId, newEbaySettings, callback){
-    User.findOneAndUpdate({_id: userId}, {ebaySettings:newEbaySettings}, (err, user) =>{
+module.exports.updateEbayFees = function(userId, newEbayFees, callback){
+    User.findOneAndUpdate({_id: userId}
+        , {$set: { "ebaySettings.ebayFees.ebayPercentageFromSaleFee" : newEbayFees.ebayPercentageFromSaleFee
+            , "ebaySettings.ebayFees.paypalPercentageFromSaleFee" : newEbayFees.paypalPercentageFromSaleFee
+            , "ebaySettings.ebayFees.paypalFlatFee" : newEbayFees.paypalFlatFee} }
+        , (err, user) =>{
+        if(err) callback(err, null);
+        else{
+            if(user)
+                callback(err, user);
+            else callback(new Error("userId not found"), null);
+        }
+    });
+};
+
+module.exports.updateEbayAccountSettings = function(userId, newEbayAccountSettings, callback){
+    User.findOneAndUpdate({_id: userId}
+        , {$set: { "ebaySettings.ebayUserName" : newEbayAccountSettings.ebayUserName ? newEbayAccountSettings.ebayUserName : ""
+            , "ebaySettings.ebayStoreName" : newEbayAccountSettings.ebayStoreName ? newEbayAccountSettings.ebayStoreName : ""
+            , "ebaySettings.ebayAppId" : newEbayAccountSettings.ebayAppId ? newEbayAccountSettings.ebayAppId : ""
+            , "ebaySettings.ebayKey" : newEbayAccountSettings.ebayKey ? newEbayAccountSettings.ebayKey : ""} }
+        , (err, user) =>{
         if(err) callback(err, null);
         else{
             if(user)
@@ -83,10 +104,22 @@ module.exports.getUser = function(userId, callback){
     User.findOne({_id: userId}, null, {select:'-password -ebaySettings -__v'}, callback);
 };
 
+module.exports.getEbayKey = function(userId, callback){
+    User.findOne({_id: userId}, (err, user) =>{
+        callback(err, user.ebaySettings.ebayKey);
+    });
+};
+
 module.exports.getEbaySettings = function(userId, callback){
     User.findOne({_id: userId}, null, {select:'ebaySettings -_id'}, (err, user) =>{
         user.ebaySettings.ebayKey = undefined;
-        callback(err, user);
+        callback(err, user.ebaySettings);
+    });
+};
+
+module.exports.getEbayFees = function(userId, callback){
+    User.findOne({_id: userId}, null, {select:'ebaySettings.ebayFees -_id'}, (err, user) =>{
+        callback(err, user.ebaySettings.ebayFees);
     });
 };
 

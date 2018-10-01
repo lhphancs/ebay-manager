@@ -78,8 +78,18 @@ export class DatabaseUsersService {
     , {headers: this.normalHeader});
   }
 
-  updateEbaySettings(userId, newEbaySettings){
-    return this.httpClient.put('/api/users/ebay-settings/update'
-    , {userId: userId, newEbaySettings: newEbaySettings}, {headers: this.normalHeader});
+  getEbayFees(userId){
+    return this.httpClient.get(`/api/users/ebay-fees/${userId}`
+    , {headers: this.normalHeader});
+  }
+
+  updateEbayFees(userId, newEbayFees){
+    return this.httpClient.put('/api/users/ebay-fees/update'
+    , {userId: userId, newEbayFees: newEbayFees}, {headers: this.normalHeader});
+  }
+
+  updateEbayAccountSettings(userId, newEbayAccountSettings){
+    return this.httpClient.put('/api/users/ebay-account-settings/update'
+    , {userId: userId, newEbayAccountSettings: newEbayAccountSettings}, {headers: this.normalHeader});
   }
 }

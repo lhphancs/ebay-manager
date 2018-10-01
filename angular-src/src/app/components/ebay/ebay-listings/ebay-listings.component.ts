@@ -3,10 +3,10 @@ import { Listing } from '../../../classesAndInterfaces/Listing'
 import { EbayService } from '../../../services/ebay.service';
 import { EbayComponent } from '../ebay.component';
 import { DatabaseProductsService } from '../../../services/database-products.service';
-import { DatabaseShippingsService } from '../../../services/database-shippings.service';
 import { MatSnackBar, MatTableDataSource, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Variation } from '../../../classesAndInterfaces/Variation';
+import { DatabaseUsersService } from '../../../services/database-users.service';
 
 @Component({
   selector: 'ebay-listings',
@@ -14,7 +14,13 @@ import { Variation } from '../../../classesAndInterfaces/Variation';
   styleUrls: ['./ebay-listings.component.css']
 })
 export class EbayListingsComponent implements OnInit {
-  loadingMsg = "Loading listings..."
+  isLoading = true;
+  errMsg;
+  loadingMsg = "Loading settings..."
+  
+  ebayPercentageFromSaleFee;
+  paypalFlatFee;
+  paypalPercentageFromSaleFee;
   desiredProfitPerSingle = 1;
 
   listings: Listing[];
@@ -23,6 +29,7 @@ export class EbayListingsComponent implements OnInit {
   selection = new SelectionModel<Listing>(true, []);
 
   constructor(private ebayComponent:EbayComponent
+    , private databaseUsersService: DatabaseUsersService
     , private databaseProductsService: DatabaseProductsService
     , private ebayService: EbayService
     , public snackBar: MatSnackBar) {
@@ -32,27 +39,44 @@ export class EbayListingsComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   
   ngOnInit() {
+    this.databaseUsersService.getEbayFees(this.ebayComponent.userId).subscribe( (data) =>{
+      this.ebayPercentageFromSaleFee = data['ebayFees'].ebayPercentageFromSaleFee;
+      this.paypalFlatFee = data['ebayFees'].paypalFlatFee;
+      this.paypalPercentageFromSaleFee = data['ebayFees'].paypalPercentageFromSaleFee;
+      this.initializeListings();
+    });
+  }
+
+  initializeListings(){
+    this.loadingMsg = 'Loading listings...'
     let listingDict = {};
 
-/*
-    let upcs = this.getUpcsFromListingDict(listingDict);
-
-    this.databaseProductsService.getManyProductsByUpcs(this.ebayComponent.userId
-      , upcs).subscribe((data) =>{
-        if(data['success'])
-          this.addProductInfoToListingDict(listingDict, data['products']);
-    });
-    
-    this.addListingsFromDict(listingDict);
-    this.dataSource = new MatTableDataSource<Listing>(this.listings);
-    this.dataSource.sort = this.sort;
-  */  
+    /*
+      let upcs = this.getUpcsFromListingDict(listingDict);
+  
+      this.databaseProductsService.getManyProductsByUpcs(this.ebayComponent.userId
+        , upcs).subscribe((data) =>{
+          if(data['success'])
+            this.addProductInfoToListingDict(listingDict, data['products']);
+      });
+      
+      this.addListingsFromDict(listingDict);
+      this.dataSource = new MatTableDataSource<Listing>(this.listings);
+      this.dataSource.sort = this.sort;
+    */  
     this.ebayService.getListings(this.ebayComponent.userId).subscribe( (data) => {
       console.log("zzz")
       console.log(data)
       console.log("zzz")
-    });
+      
+      if(data['success']){
 
+      }
+      else
+        this.errMsg = data['msg'];
+  
+      this.isLoading = false;
+    });
   }
 
   addListingsFromDict(listingDict){
@@ -110,8 +134,8 @@ export class EbayListingsComponent implements OnInit {
     if(err)
       return err;
 
-    return Math.round((totalProfit+this.ebayComponent.paypalFlatFee
+    return Math.round((totalProfit + this.paypalFlatFee
       + totalProductCost + shipCost)
-      / (1-this.ebayComponent.paypalPercentageFromSaleFee*0.01 - this.ebayComponent.ebayPercentageFromSaleFee*0.01)*100)/100;
+      / (1-this.paypalPercentageFromSaleFee*0.01 - this.ebayPercentageFromSaleFee*0.01)*100)/100;
   }
 }

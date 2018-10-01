@@ -6,6 +6,7 @@ import { EbayComponent } from '../ebay.component';
 import { DatabaseProductsService } from '../../../services/database-products.service';
 import { DatabaseShippingsService } from '../../../services/database-shippings.service';
 import { openSnackbar } from '../../snackbar';
+import { DatabaseUsersService } from '../../../services/database-users.service';
 
 @Component({
   selector: 'ebay-calculations',
@@ -14,6 +15,9 @@ import { openSnackbar } from '../../snackbar';
 })
 export class EbayCalculationsComponent implements OnInit {
   loadingMsg = "Loading products..."
+  ebayPercentageFromSaleFee;
+  paypalFlatFee;
+  paypalPercentageFromSaleFee;
 
   desiredProfitPerSingle = 1;
   
@@ -24,6 +28,7 @@ export class EbayCalculationsComponent implements OnInit {
 
   constructor(
     private ebayComponent:EbayComponent
+    , private databaseUsersService: DatabaseUsersService
     , private databaseProductsService: DatabaseProductsService
     , public snackBar: MatSnackBar){
   }
@@ -31,6 +36,15 @@ export class EbayCalculationsComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   
   ngOnInit() {
+    this.databaseUsersService.getEbayFees(this.ebayComponent.userId).subscribe( (data) =>{
+      this.ebayPercentageFromSaleFee = data['ebayFees'].ebayPercentageFromSaleFee;
+      this.paypalFlatFee = data['ebayFees'].paypalFlatFee;
+      this.paypalPercentageFromSaleFee = data['ebayFees'].paypalPercentageFromSaleFee;
+      this.initializeProducts();
+    });
+  }
+
+  initializeProducts(){
     this.databaseProductsService.getProducts(this.ebayComponent.userId).subscribe( (data) => {
       if(data['success']){
         this.products = data['products'];
@@ -43,6 +57,7 @@ export class EbayCalculationsComponent implements OnInit {
         openSnackbar(this.snackBar, data['msg']);
     });
   }
+
 
   addCostPerSingleToProducts(products){
     for(let product of products){
@@ -83,9 +98,9 @@ export class EbayCalculationsComponent implements OnInit {
     if(err)
       return err;
 
-    return Math.round((totalProfit+this.ebayComponent.paypalFlatFee
+    return Math.round((totalProfit+this.paypalFlatFee
       + totalProductCost + shipCost)
-      / (1-this.ebayComponent.paypalPercentageFromSaleFee*0.01 - this.ebayComponent.ebayPercentageFromSaleFee*0.01)*100)/100;
+      / (1-this.paypalPercentageFromSaleFee*0.01 - this.ebayPercentageFromSaleFee*0.01)*100)/100;
   }
 }
 

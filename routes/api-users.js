@@ -75,15 +75,30 @@ router.post('/auth', (req, res, next) =>{
     });
 });
 
+//Returns all ebay settings, except key
 router.get('/ebay-settings/:userId', (req, res, next) => {
-    User.getEbaySettings( req.params.userId, (err, user) => {
+    User.getEbaySettings( req.params.userId, (err, ebaySettings) => {
         if(err) res.json({success: false, msg: `Failed to grab fee: ${err.message}`});
-        else res.json({success:true, ebaySettings: user.ebaySettings});
+        else res.json({success:true, ebaySettings: ebaySettings});
     });
 });
 
-router.put('/ebay-settings/update', (req, res, next) => {
-    User.updateEbaySettings( req.body.userId, req.body.newEbaySettings, (err) => {
+router.get('/ebay-fees/:userId', (req, res, next) => {
+    User.getEbayFees( req.params.userId, (err, ebayFees) => {
+        if(err) res.json({success: false, msg: `Failed to grab fee: ${err.message}`});
+        else res.json({success:true, ebayFees: ebayFees});
+    });
+});
+
+router.put('/ebay-fees/update', (req, res, next) => {
+    User.updateEbayFees( req.body.userId, req.body.newEbayFees, (err) => {
+        if(err) res.json({success: false, msg: err.message});
+        else res.json({success:true});
+    });
+});
+
+router.put('/ebay-account-settings/update', (req, res, next) => {
+    User.updateEbayAccountSettings( req.body.userId, req.body.newEbayAccountSettings, (err) => {
         if(err) res.json({success: false, msg: err.message});
         else res.json({success:true});
     });
