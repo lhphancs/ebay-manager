@@ -49,7 +49,7 @@ export class EbayListingsComponent implements OnInit {
 
   initializeListings(){
     this.loadingMsg = 'Loading listings...'
-    let listingDict = {};
+    let listingDict;
 
     /*
       let upcs = this.getUpcsFromListingDict(listingDict);
@@ -70,7 +70,7 @@ export class EbayListingsComponent implements OnInit {
       console.log("zzz")
       
       if(data['success']){
-
+        listingDict = data['listingDict'];
       }
       else
         this.errMsg = data['msg'];
