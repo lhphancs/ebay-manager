@@ -25,7 +25,7 @@ router.get('/info/:userId/:UPC', (req, res, next) => {
 
 router.get('/:userId/:offset?/:limit?', (req, res, next) => {
     let DEFAULT_OFFSET = 0;
-    let DEFAULT_LIMIT = 100;
+    let DEFAULT_LIMIT = 10000;
 
     let userId = req.params.userId;
     let strOffset = req.params.offset;

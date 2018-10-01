@@ -73,7 +73,7 @@ function handleValidJsonOfListings(res, sellerListResponse){
             if(item.Variations){
                 let imgUrl = item.PictureDetails[0].GalleryURL[0];
                 let variations = item.Variations[0].Variation;
-                console.log(variations)
+
                 for(let variation of variations){
                     let ebayQuantityLeft = variation.Quantity[0];
                     let upc = variation.VariationProductListingDetails[0].UPC[0];
@@ -90,11 +90,12 @@ function handleValidJsonOfListings(res, sellerListResponse){
                             variation:[newVariation]
                         }
                     }
-                        
+                    /*
                     console.log("=====================")
                     console.log('ebayQuantityLeft: ' + ebayQuantityLeft)
                     console.log('upc: ' + upc);
                     console.log('packAmt: ' + packAmt);
+                    */
                 }
             }
         }

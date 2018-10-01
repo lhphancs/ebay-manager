@@ -78,7 +78,7 @@ def getDictMongoHeaderToCellVal(row:list, headersToMongoNameDict:dict
     return retDict
 
 def placeProductToInsert(dictOfProdsToInsert:dict, productToInsert:dict, packInfoToInsert:dict, baseFileName:str):
-    if len(productToInsert) > 0:
+    if 'UPC' in productToInsert:
         upc = productToInsert['UPC']
         if upc not in dictOfProdsToInsert:
             productToInsert['userId'] = ObjectId(userId)
@@ -87,6 +87,8 @@ def placeProductToInsert(dictOfProdsToInsert:dict, productToInsert:dict, packInf
             productToInsert['brand'] = 'tempBrand' ################
             dictOfProdsToInsert[upc] = productToInsert
         dictOfProdsToInsert[upc]['packsInfo'].append(packInfoToInsert)
+    elif len(productToInsert) > 0:
+        print(str.format('UPC not found in: {}', productToInsert) )
 
 def insertAllValidRowsToMongoDb(userId:str, collection, csvReader
     , baseFileName:str, mainHeadersToMongoNameDict:dict, colNumToHeaderNameDict:dict
@@ -95,15 +97,19 @@ def insertAllValidRowsToMongoDb(userId:str, collection, csvReader
     for row in csvReader:
         productToInsert = getDictMongoHeaderToCellVal(row, mainHeadersToMongoNameDict
                                              , colNumToHeaderNameDict)
+
         packInfoToInsert = getDictMongoHeaderToCellVal(row, packInfoHeadersToMongoNameDict
                                              , packInfoColNumToHeaderNameDict)
-        try:
-            placeProductToInsert(dictOfProdsToInsert, productToInsert, packInfoToInsert, baseFileName)
-        except pymongo.errors.DuplicateKeyError as e:
-            print(e)
+
+        placeProductToInsert(dictOfProdsToInsert, productToInsert, packInfoToInsert, baseFileName)
+        
     if len(dictOfProdsToInsert) > 0:
-        collection.insert_many( dictOfProdsToInsert.values() )
-            
+        for prodToInsert in dictOfProdsToInsert.values():
+            try:
+                collection.insert_one(prodToInsert)
+            except pymongo.errors.DuplicateKeyError as e:
+                print(e)
+        
 def processFile(userId:str, collection, filePath:str, headerRow:int
 , mainHeadersToMongoNameDict:dict, packInfoHeadersToMongoNameDict:dict):
     head, tail = os.path.split(filePath)
