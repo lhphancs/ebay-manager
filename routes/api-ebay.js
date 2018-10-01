@@ -32,9 +32,10 @@ function getXmlRequestBody(ebayUserName){
         <UserID>${ebayUserName}</UserID>
         <IncludeVariations>true</IncludeVariations>
         <Pagination>
-            <EntriesPerPage>3</EntriesPerPage>
+            <EntriesPerPage>100</EntriesPerPage>
         </Pagination>
-        <OutputSelector>ItemID,Title,PictureDetails,Variations</OutputSelector>
+        
+        <OutputSelector>ItemID,Title,PictureDetails,Variations,SellingStatus</OutputSelector>
     </GetSellerListRequest>`;
 }
 
@@ -44,31 +45,18 @@ function handleSellerListResponseErrMsg(res, sellerListResponse){
     res.json({success: false, msg: msg});
 }
 
-function handleFindItemsInStoresResponseErrMsg(res, jsonResp){
-    let err = jsonResp.errorMessage[0];
-    let msg = 'FindItemsInStoresResponse: ' + err.error[0].message[0];
-    res.json({success: false, msg: msg});
-}
-
-function handleValidJsonOfListings(res, activeItemIds, sellerListResponse){
-    console.log(activeItemIds)
-    console.log("iiiiiiiiiiiiiiiiiiiiiiii")
+function handleValidJsonOfListings(res, sellerListResponse){
     let itemArray = sellerListResponse.ItemArray[0].Item;
     for(let item of itemArray){
-        console.log(item)
-        console.log('.............................')
-        if(item.ItemID[0] in activeItemIds){
-            console.log("MSDLFLKSJDF");
+        if(item.SellingStatus[0].ListingStatus[0] == 'Active'){
             if(item.Variations){
                 let variations = item.Variations[0].Variation;
-                
-                
             }
         }
     }
 }
     
-function handleJsonOfListings(res, activeItemIds, ebayKey, ebaySettings){
+function handleJsonOfListings(res, ebayKey, ebaySettings){
     let body = getXmlRequestBody(ebaySettings.ebayUserName);
     request({
         url: "https://api.ebay.com/ws/api.dll",
@@ -80,6 +68,7 @@ function handleJsonOfListings(res, activeItemIds, ebayKey, ebaySettings){
             body: body
         }, 
         function (err, response, body){
+            console.log(body)
             if(err) res.json({success: false, msg: err.message});
             else{
                 parseString(body, function (err, result) {
@@ -88,58 +77,13 @@ function handleJsonOfListings(res, activeItemIds, ebayKey, ebaySettings){
                     else{
                         let ack = sellerListResponse.Ack[0];
                         if(ack === 'Success')
-                            handleValidJsonOfListings(res, activeItemIds, sellerListResponse);
+                            handleValidJsonOfListings(res, sellerListResponse);
                         else 
                             handleSellerListResponseErrMsg(res, sellerListResponse);
                     }
                 });
             }
         });
-}
-
-function getUrlToFindActiveListings(ebaySettings, pageNumber){
-    return `https://svcs.ebay.com/services/search/FindingService`
-    + `/v1?OPERATION-NAME=findItemsIneBayStores`
-    + `&SECURITY-APPNAME=${ebaySettings.ebayAppId}`
-    + `&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD`
-    + `&OutputSelector=ItemID`
-    + `&storeName=${ebaySettings.ebayStoreName}`
-    + `&paginationInput.pageNumber=${pageNumber}`
-}
-
-function filterItemIds(jsonResp){
-    let itemIds = [];
-    let searchResults = jsonResp.searchResult[0];
-    let items = searchResults.item;
-    for(item of items)
-        itemIds.push(item.itemId[0]);
-    return itemIds;
-}
-
-function handleGetItemIdsFromEbayStoreAndListings(res, itemIds, ebayKey, jsonResp, ebaySettings){
-    if(jsonResp.ack[0] == 'Success'){
-        let activeItemIds = filterItemIds(jsonResp);
-        handleJsonOfListings(res, itemIds, ebayKey, ebaySettings);
-    }
-    else
-        handleErrMsg(res, sellerListResponse);
-}
-
-function addItemIdsAndHandleListing(res, itemIds, pageNumber){
-    let url = getUrlToFindActiveListings(ebaySettings, 1);
-    request(url, (err, requestRes, body) => {
-        if (err) res.json({success: false, msg: err.message});
-        else{
-            let jsonResp = JSON.parse(body).findItemsIneBayStoresResponse[0];
-
-            console.log(jsonResp.paginationOutput[0].totalPages[0]);
-            console.log('####### Count: ' + jsonResp.searchResult[0].item.length)
-            if(jsonResp.ack[0] == 'Success')
-                handleGetItemIdsFromEbayStoreAndListings(res, itemIds, ebayKey, jsonResp, ebaySettings);
-            else
-                handleFindItemsInStoresResponseErrMsg(res, jsonResp);
-        }
-    });
 }
 
 router.post('/listings', (req, res, next) => {
@@ -150,8 +94,7 @@ router.post('/listings', (req, res, next) => {
             User.getEbaySettings(userId, (err, ebaySettings) => {
                 if(err) res.json({success: false, msg: err.message});
                 else{
-                    let itemIds = [];
-                    addItemIdsAndHandleListing(res, itemIds, 0);
+                    handleJsonOfListings(res, ebayKey, ebaySettings);
                 }
             })
         }
