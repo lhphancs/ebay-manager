@@ -1,0 +1,45 @@
+<progress-spinner *ngIf="!(ebayUpdateSettingsComponent.ebayUserName
+  || ebayUpdateSettingsComponent.ebayUserName == '')"
+  [msg]="loadingMsg">
+</progress-spinner>
+<form *ngIf="ebayUpdateSettingsComponent.ebayUserName
+  || ebayUpdateSettingsComponent.ebayUserName == ''"
+  class="entire-form m-4" ngNativeValidate
+  (ngSubmit)="onUpdateAccountSettings()">
+  <h5 class="text-center">Update eBay account settings</h5>
+
+  <div class="form-row-container mt-4" fxLayoutWrap fxLayoutGap="0.5%">
+    <div fxFlex="33%">
+      <mat-form-field fxFlex>
+        <input [(ngModel)]='ebayUpdateSettingsComponent.ebayUserName'
+          name="ebayUserName" placeholder="eBay User Name" matInput>
+      </mat-form-field>
+    </div>
+    <div fxFlex="33%">
+      <mat-form-field fxFlex>
+        <input [(ngModel)]='ebayUpdateSettingsComponent.ebayStoreName'
+          name="ebayStoreName" placeholder="eBay Store Name" matInput>
+      </mat-form-field>
+    </div> 
+
+    <div fxFlex="33%">
+      <mat-form-field fxFlex>
+        <input [(ngModel)]='ebayUpdateSettingsComponent.ebayAppId'
+          name="ebayAppId" placeholder="eBay AppId" matInput>
+      </mat-form-field>
+    </div> 
+  </div>
+
+  <div class="form-row-container" fxLayoutWrap fxLayoutGap="0.5%">
+    <div fxFlex="100%">
+      <mat-form-field fxFlex>
+        <textarea [(ngModel)]='ebayUpdateSettingsComponent.ebayKey'
+          name="ebayKey" placeholder="eBay Key" matInput></textarea>
+      </mat-form-field>
+    </div>   
+  </div>
+
+  <button mat-raised-button color="primary"
+    type="submit" class="btn-block btn-submit">Update
+  </button>
+</form>

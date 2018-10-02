@@ -4,6 +4,7 @@ const User = require('../models/user');
 const request = require('request');
 
 const parseString = require('xml2js').parseString;
+const ENTRIES_PER_PAGE = 200;
 
 function getXmlHeader(ebayKey){
     let xmlHeaders = {
@@ -14,25 +15,19 @@ function getXmlHeader(ebayKey){
     }
     return xmlHeaders;
 }
-function getXmlRequestBody(ebayUserName){
-    let curDate = new Date();
-    let pastDate = new Date();
-    pastDate.setDate(curDate.getDate()-120);
-
-    let curDateStr = curDate.toISOString();
-    let pastDateStr = pastDate.toISOString();
-
+function getXmlRequestBody(ebayUserName, curDateStr, futureDateStr, pageNum){
     return `<?xml version="1.0" encoding="utf-8"?>
     <GetSellerListRequest xmlns="urn:ebay:apis:eBLBaseComponents">    
         <ErrorLanguage>en_US</ErrorLanguage>
         <WarningLevel>High</WarningLevel>
         <GranularityLevel>Coarse</GranularityLevel>
-        <StartTimeFrom>${pastDateStr}</StartTimeFrom>
-        <StartTimeTo>${curDateStr}</StartTimeTo>
+        <EndTimeFrom>${curDateStr}</EndTimeFrom>
+        <EndTimeTo>${futureDateStr}</EndTimeTo>
         <UserID>${ebayUserName}</UserID>
         <IncludeVariations>true</IncludeVariations>
         <Pagination>
-            <EntriesPerPage>20</EntriesPerPage>
+            <PageNumber>${pageNum}</PageNumber>
+            <EntriesPerPage>${ENTRIES_PER_PAGE}</EntriesPerPage>
         </Pagination>
         
         <OutputSelector>ItemID,Title,PictureDetails,Variations,SellingStatus,ViewItemURL</OutputSelector>
@@ -65,8 +60,8 @@ function getPackAmt(variation){
     return undefined;
 }
 
-function handleValidJsonOfListings(res, sellerListResponse){
-    let listingDict = {};
+function handleValidJsonOfListings(res, ebayKey, ebaySettings, listingDict
+                                    , pageNum, sellerListResponse){
     let itemArray = sellerListResponse.ItemArray[0].Item;
     for(let item of itemArray){
         if(item.SellingStatus[0].ListingStatus[0] == 'Active'){
@@ -97,11 +92,14 @@ function handleValidJsonOfListings(res, sellerListResponse){
             }
         }
     }
-    res.json({success: true, listingDict: listingDict});
+    if(itemArray.length == ENTRIES_PER_PAGE)
+        handleJsonOfListings(res, curDateStr, futureDateStr, ebayKey, ebaySettings, listingDict, pageNum+1)
+    else
+        res.json({success: true, listingDict: listingDict});
 }
 
-function handleJsonOfListings(res, ebayKey, ebaySettings){
-    let body = getXmlRequestBody(ebaySettings.ebayUserName);
+function handleJsonOfListings(res, curDateStr, futureDateStr, ebayKey, ebaySettings, listingDict, pageNum){
+    let body = getXmlRequestBody(ebaySettings.ebayUserName, curDateStr, futureDateStr, pageNum);
     request({
         url: "https://api.ebay.com/ws/api.dll",
         method: "POST",
@@ -120,13 +118,22 @@ function handleJsonOfListings(res, ebayKey, ebaySettings){
                     else{
                         let ack = sellerListResponse.Ack[0];
                         if(ack === 'Success')
-                            handleValidJsonOfListings(res, sellerListResponse);
+                            handleValidJsonOfListings(res, ebayKey, ebaySettings, listingDict
+                                , pageNum, sellerListResponse);
                         else 
                             handleSellerListResponseErrMsg(res, sellerListResponse);
                     }
                 });
             }
         });
+}
+
+function getStrDateNowAndDate30DaysInFuture(){
+    let curDate = new Date();
+    let futureDate = new Date();
+    futureDate.setDate(curDate.getDate()+30);
+
+    return {curDateStr:curDate.toISOString(), futureDateStr:futureDate.toISOString()};
 }
 
 router.post('/listings', (req, res, next) => {
@@ -137,7 +144,10 @@ router.post('/listings', (req, res, next) => {
             User.getEbaySettings(userId, (err, ebaySettings) => {
                 if(err) res.json({success: false, msg: err.message});
                 else{
-                    handleJsonOfListings(res, ebayKey, ebaySettings);
+                    let listingDict = {};
+                    let strDates = getStrDateNowAndDate30DaysInFuture();
+                    handleJsonOfListings(res, strDates.curDateStr, strDates.futureDateStr
+                        , ebayKey, ebaySettings, listingDict, 1);
                 }
             })
         }

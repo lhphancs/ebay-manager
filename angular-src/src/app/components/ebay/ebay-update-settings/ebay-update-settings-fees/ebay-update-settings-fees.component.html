@@ -1,0 +1,35 @@
+<progress-spinner *ngIf="!ebayUpdateSettingsComponent.ebayPercentageFromSaleFee" [msg]="loadingMsg"></progress-spinner>
+<form *ngIf="ebayUpdateSettingsComponent.ebayPercentageFromSaleFee" class="entire-form m-4" ngNativeValidate (ngSubmit)="onUpdateFees()">
+  <h5 class="text-center">Update eBay fees</h5>
+
+  <div class="form-row-container mt-4" fxLayoutWrap fxLayoutGap="0.5%">
+    <div fxFlex="33%">
+        <mat-form-field fxFlex>
+          <input [(ngModel)]='ebayUpdateSettingsComponent.ebayPercentageFromSaleFee'
+            name="ebayPercentageFromSaleFee" placeholder="eBay Fee Percentage"
+            matInput type="number" step="any" min="0" required>
+        </mat-form-field>
+    </div>
+
+    <div fxFlex="33%">
+      <mat-form-field fxFlex>
+        <input [(ngModel)]='ebayUpdateSettingsComponent.paypalPercentageFromSaleFee'
+          name="paypalPercentageFromSaleFee" placeholder="Paypal Fee Percentage"
+          matInput type="number" step="any" min="0" required>
+      </mat-form-field>
+    </div>
+
+    <div fxFlex="33%">
+      <mat-form-field fxFlex>
+        <input [(ngModel)]='ebayUpdateSettingsComponent.paypalFlatFee'
+          name="paypalFlatFee" matInput placeholder="Paypal Flat Fee"
+          type="number" step="any" min="0" required>
+        <span matPrefix>&nbsp;</span>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <button mat-raised-button color="primary"
+    type="submit" class="btn-block btn-submit">Update
+  </button>
+</form>

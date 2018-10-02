@@ -39,6 +39,8 @@ import { EbayCalculationsComponent } from './components/ebay/ebay-calculations/e
 import { EbayCalculatorComponent } from './components/ebay/ebay-calculator/ebay-calculator.component';
 import { AccountPasswordComponent } from './components/account/account-password/account-password.component';
 import { EbayUpdateSettingsComponent } from './components/ebay/ebay-update-settings/ebay-update-settings.component';
+import { EbayUpdateSettingsFeesComponent } from './components/ebay/ebay-update-settings/ebay-update-settings-fees/ebay-update-settings-fees.component';
+import { EbayUpdateSettingsAccountComponent } from './components/ebay/ebay-update-settings/ebay-update-settings-account/ebay-update-settings-account.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +65,9 @@ import { EbayUpdateSettingsComponent } from './components/ebay/ebay-update-setti
     EbayCalculatorComponent,
     AccountPasswordComponent,
     EbayListingsComponent,
-    EbayUpdateSettingsComponent
+    EbayUpdateSettingsComponent,
+    EbayUpdateSettingsFeesComponent,
+    EbayUpdateSettingsAccountComponent
   ],
   imports: [
     NgbModule.forRoot(),
