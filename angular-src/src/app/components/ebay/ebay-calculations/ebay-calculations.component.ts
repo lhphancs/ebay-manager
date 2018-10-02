@@ -87,7 +87,7 @@ export class EbayCalculationsComponent implements OnInit {
     return errMsg == BASE_ERR_MSG ? null : errMsg;
   }
 
-  calculateNeededSale(packAmt, shipId, oz, costPerSingle){
+  calculateDesiredPrice(packAmt, shipId, oz, costPerSingle){
     let roundedUpOz = oz ? Math.ceil(oz): "";
     let totalProfit = this.desiredProfitPerSingle * packAmt;
     let totalProductCost = costPerSingle * packAmt;

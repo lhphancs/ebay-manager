@@ -35,7 +35,7 @@ function getXmlRequestBody(ebayUserName){
             <EntriesPerPage>20</EntriesPerPage>
         </Pagination>
         
-        <OutputSelector>ItemID,Title,PictureDetails,Variations,SellingStatus</OutputSelector>
+        <OutputSelector>ItemID,Title,PictureDetails,Variations,SellingStatus,ViewItemURL</OutputSelector>
     </GetSellerListRequest>`;
 }
 
@@ -71,31 +71,28 @@ function handleValidJsonOfListings(res, sellerListResponse){
     for(let item of itemArray){
         if(item.SellingStatus[0].ListingStatus[0] == 'Active'){
             if(item.Variations){
+                let listUrl = item.ListingDetails[0].ViewItemURL[0];
+                let listTitle = item.Title[0]
                 let imgUrl = item.PictureDetails[0].GalleryURL[0];
                 let variations = item.Variations[0].Variation;
 
                 for(let variation of variations){
+                    let ebaySellPrice = Number(variation.StartPrice[0]._);
                     let ebayQuantityLeft = variation.Quantity[0];
                     let upc = variation.VariationProductListingDetails[0].UPC[0];
                     let packAmt = getPackAmt(variation);
 
-                    let newVariation = {ebayQuantityLeft:ebayQuantityLeft, packAmt:packAmt};
-
-                    if(upc in listingDict)
-                        listingDict[upc].variation.push(newVariation);
-                        
-                    else{
+                    if(!(upc in listingDict)){
                         listingDict[upc] = {
+                            UPC: upc,
+                            listUrl: listUrl,
+                            listTitle: listTitle,
                             imgUrl:imgUrl,
-                            variation:[newVariation]
+                            variation:{}
                         }
                     }
-                    /*
-                    console.log("=====================")
-                    console.log('ebayQuantityLeft: ' + ebayQuantityLeft)
-                    console.log('upc: ' + upc);
-                    console.log('packAmt: ' + packAmt);
-                    */
+                    listingDict[upc].variation[packAmt] = {packAmt: packAmt, ebayQuantityLeft:ebayQuantityLeft
+                                                            , ebaySellPrice: ebaySellPrice};
                 }
             }
         }

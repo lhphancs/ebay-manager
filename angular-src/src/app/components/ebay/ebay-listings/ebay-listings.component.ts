@@ -51,51 +51,54 @@ export class EbayListingsComponent implements OnInit {
     this.loadingMsg = 'Loading listings...'
     let listingDict;
 
-    /*
-      let upcs = this.getUpcsFromListingDict(listingDict);
-  
-      this.databaseProductsService.getManyProductsByUpcs(this.ebayComponent.userId
-        , upcs).subscribe((data) =>{
-          if(data['success'])
-            this.addProductInfoToListingDict(listingDict, data['products']);
-      });
-      
-      this.addListingsFromDict(listingDict);
-      this.dataSource = new MatTableDataSource<Listing>(this.listings);
-      this.dataSource.sort = this.sort;
-    */  
     this.ebayService.getListings(this.ebayComponent.userId).subscribe( (data) => {
-      console.log("zzz")
-      console.log(data)
-      console.log("zzz")
-      
       if(data['success']){
         listingDict = data['listingDict'];
+        let upcs = Object.keys(listingDict);
+
+        this.databaseProductsService.getManyProductsByUpcs(this.ebayComponent.userId
+          , upcs).subscribe((data) =>{
+            if(data['success']){
+              this.addProductInfoToListingDict(listingDict, data['products']);
+              this.addListingsFromDict(listingDict);
+              this.dataSource = new MatTableDataSource<Listing>(this.listings);
+              this.dataSource.sort = this.sort;
+            }
+            else
+              this.errMsg = data['msg'];
+            this.isLoading = false;
+        });
       }
-      else
+      else{
         this.errMsg = data['msg'];
-  
-      this.isLoading = false;
+        this.isLoading = false;
+      }
     });
   }
 
   addListingsFromDict(listingDict){
-    for(let key in listingDict)
+    for(let key in listingDict){
+      listingDict[key].variation = Object.values(listingDict[key].variation);
       this.listings.push(listingDict[key]);
-  }
-
-  getUpcsFromListingDict(listingDict){
-    let upcs = [];
-    for(let key in listingDict)
-      upcs.push(listingDict[key].UPC);
-    return upcs;
-  }
-
-  addVariationsToListing(upc, listing, packsInfo){
-    for(let packInfo of packsInfo){
-      delete packInfo._id;
     }
-    listing.packsInfo = packsInfo;
+      
+  }
+
+  addVariationsToListing(listing, packsInfo){
+    listing.hasUndesiredPrice = false;
+    for(let packInfo of packsInfo){
+      if(packInfo.packAmt in listing.variation){
+        let variationToEdit = listing.variation[packInfo.packAmt];
+        variationToEdit.ozWeight = packInfo.ozWeight;
+        variationToEdit.shipMethodId = packInfo.shipMethodId;
+        variationToEdit.preparation = packInfo.preparation;
+        variationToEdit.desiredPrice = this.calculateDesiredPrice(packInfo.packAmt
+                                      , packInfo.shipMethodId, packInfo.ozWeight
+                                      , listing.costPerSingle);
+        if(variationToEdit.ebaySellPrice < variationToEdit.desiredPrice)
+          listing.hasUndesiredPrice = true;
+      }
+    }
   }
 
   addProductInfoToListingDict(listingDict, products){
@@ -105,7 +108,8 @@ export class EbayListingsComponent implements OnInit {
       listing.wholesaleComp = product.wholesaleComp;
       listing.stockNo = product.stockNo;
       listing.costPerSingle = product.costPerBox/product.quantityPerBox;
-      this.addVariationsToListing(upc, listing, product.packsInfo)
+      this.addVariationsToListing(listing, product.packsInfo)
+
     }
   }
 
@@ -122,7 +126,7 @@ export class EbayListingsComponent implements OnInit {
     return errMsg == BASE_ERR_MSG ? null : errMsg;
   }
 
-  calculateNeededSale(packAmt, shipId, oz, costPerSingle){
+  calculateDesiredPrice(packAmt, shipId, oz, costPerSingle){
     let roundedUpOz = oz ? Math.ceil(oz): "";
     let totalProfit = this.desiredProfitPerSingle * packAmt;
     let totalProductCost = costPerSingle * packAmt;

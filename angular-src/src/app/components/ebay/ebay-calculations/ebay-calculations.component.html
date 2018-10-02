@@ -82,7 +82,7 @@
                     <td>{{ebayComponent.dictShipIdToName[entry.shipMethodId]}}</td>
                     <td>{{entry.ozWeight}}</td>
                     <td>{{entry.preparation}}</td>
-                    <td>{{calculateNeededSale(entry.packAmt
+                    <td>{{calculateDesiredPrice(entry.packAmt
                       , entry.shipMethodId, entry.ozWeight
                       , element.costPerSingle)}}
                     </td>
@@ -92,7 +92,7 @@
           </ng-template>
             
           <button class="btn btn-secondary btn-sm" type="button" [autoClose]="true"
-            popoverTitle="{{element.brand + ': ' + element.name}}" [ngbPopover]="popContent" popoverClass="packinfo"
+            popoverTitle={{element.name}} [ngbPopover]="popContent" popoverClass="packinfo"
             placement="left">Calculations</button>
       </td>
     </ng-container>
