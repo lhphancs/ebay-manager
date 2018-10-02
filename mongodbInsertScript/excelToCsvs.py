@@ -21,6 +21,9 @@ if __name__ == '__main__':
     rootFolderName = Path( os.getcwd() )
     outputFolderName = 'outputCsvs'
     outputFolderPath = rootFolderName/outputFolderName
+    if not os.path.exists(outputFolderPath):
+        os.makedirs(outputFolderPath)
     fileName = input("Enter excel filename w/ extension. ex) 'Wholesale.xlsx': ")
     wb = openpyxl.load_workbook(fileName)
     convertAllSheetsToCsv(wb, outputFolderPath)
+    print('Program done...')
