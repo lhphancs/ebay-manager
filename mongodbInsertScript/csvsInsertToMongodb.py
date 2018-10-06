@@ -132,7 +132,7 @@ if __name__ == '__main__':
     packInfoHeadersToMongoNameDict = {'pack':'packAmt', 'ASIN':'ASIN', 'Prep':'preparation'}
     rootFolderName = Path( os.getcwd() )
     csvsFolderName = 'outputCsvs'
-    folderToReadFromPath = rootFolderName/csvsFolderName
+    folderToReadFromPath = os.path.join(rootFolderName, csvsFolderName)
     userId = input('Enter userId: ')
     headerRow = int(input('With row number starting with 0, enter header row number: '))
     try: 
@@ -141,7 +141,7 @@ if __name__ == '__main__':
         collection = db['products']
         print("Connected to mongodb successfully!")
         for file in os.listdir(folderToReadFromPath):
-            filePath  = folderToReadFromPath/file
+            filePath  = os.path.join(folderToReadFromPath, file)
             if file.endswith('csv'):
                 processFile(userId, collection, filePath, headerRow, mainHeadersToMongoNameDict, packInfoHeadersToMongoNameDict)
     except pymongo.errors.ConnectionFailure as e:

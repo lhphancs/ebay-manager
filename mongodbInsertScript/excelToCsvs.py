@@ -11,19 +11,33 @@ from pathlib import Path
 def convertAllSheetsToCsv(wb, outputFolderPath):
     for sheet in wb:
         fileName = sheet.title + '.csv'
-        finalpath = outputFolderPath/fileName
+        finalpath = os.path.join(outputFolderPath, fileName)
         with open(finalpath, 'w', newline='') as file:
             writer = csv.writer(file)
             for row in sheet.rows:
                 writer.writerow([cell.value for cell in row])
 
+def getExcelPath(rootFolderName, excelDirName):
+    excelDirPath = os.path.join(rootFolderName, excelDirName)
+    excelPath = None
+    for file in os.listdir(excelDirPath):
+        if file.endswith('xlsx'):
+            filePath  = os.path.join(excelDirPath, file)
+            excelPath = filePath
+            break
+    return excelPath
+
 if __name__ == '__main__':
     rootFolderName = Path( os.getcwd() )
     outputFolderName = 'outputCsvs'
-    outputFolderPath = rootFolderName/outputFolderName
+    outputFolderPath = os.path.join(rootFolderName, outputFolderName)
     if not os.path.exists(outputFolderPath):
         os.makedirs(outputFolderPath)
-    fileName = input("Enter excel filename w/ extension. ex) 'Wholesale.xlsx': ")
-    wb = openpyxl.load_workbook(fileName)
-    convertAllSheetsToCsv(wb, outputFolderPath)
-    print('Program done...')
+    excelPath = getExcelPath(rootFolderName, 'placeSingleExcelFileHere')
+    if excelPath == None:
+        print('Excel file was not found...')
+    else:
+        print( str.format('Reading {}', excelPath) )
+        wb = openpyxl.load_workbook(excelPath)
+        convertAllSheetsToCsv(wb, outputFolderPath)
+    print('Program terminated...')
