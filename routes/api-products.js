@@ -4,7 +4,6 @@ const Product = require('../models/product');
 
 function getFilteredProductJson(newProductJson){
     return {
-        brand: newProductJson.brand,
         name: newProductJson.name,
         costPerBox: newProductJson.costPerBox,
         quantityPerBox: newProductJson.quantityPerBox,

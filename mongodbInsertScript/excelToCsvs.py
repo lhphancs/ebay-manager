@@ -27,7 +27,7 @@ def getExcelPath(rootFolderName, excelDirName):
     return excelPath
 
 if __name__ == '__main__':
-    rootFolderName = Path( os.getcwd() )
+    rootFolderName = os.path.dirname(os.path.abspath(__file__))
     outputFolderName = 'outputCsvs'
     outputFolderPath = os.path.join(rootFolderName, outputFolderName)
     if not os.path.exists(outputFolderPath):

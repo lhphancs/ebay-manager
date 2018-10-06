@@ -31,12 +31,6 @@
       </td>
     </ng-container>
   
-    <!-- brand column -->
-    <ng-container matColumnDef="brand">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Brand</th>
-      <td mat-cell *matCellDef="let element">{{element.brand}}</td>
-    </ng-container>
-  
     <!-- name column -->
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
@@ -113,7 +107,7 @@
           </ng-template>
             
           <button class="btn btn-secondary btn-sm" type="button" [autoClose]="true"
-            popoverTitle="{{element.brand + ': ' + element.name}}" [ngbPopover]="popContent" popoverClass="packinfo"
+            popoverTitle="{{element.name}}" [ngbPopover]="popContent" popoverClass="packinfo"
             placement="left">Pack Info</button>
       </td>
     </ng-container>

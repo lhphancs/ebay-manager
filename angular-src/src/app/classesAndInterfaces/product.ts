@@ -1,7 +1,6 @@
 import { PackInfo } from './PackInfo';
 
 export class Product {
-    brand: string;
     name: string;
     UPC: string;
     costPerBox: number;
@@ -10,8 +9,7 @@ export class Product {
     stockNo: string;
     packsInfo: PackInfo[];
 
-    constructor(brand, name, UPC, costPerBox, quantityPerBox, wholesaleComp, stockNo, packsInfo){
-        this.brand = brand;
+    constructor(name, UPC, costPerBox, quantityPerBox, wholesaleComp, stockNo, packsInfo){
         this.name = name;
         this.UPC = UPC;
         this.costPerBox = costPerBox;

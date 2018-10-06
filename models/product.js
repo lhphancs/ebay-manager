@@ -4,7 +4,6 @@ const ObjectId = Schema.ObjectId;
 
 const productSchema = Schema({
     userId: {type: ObjectId, required: true},
-    brand: {type: String, required: true},
     name: {type: String, required: true},
     UPC: {type: String, required: true},
     costPerBox: {type: Number, required: true, min: 0},

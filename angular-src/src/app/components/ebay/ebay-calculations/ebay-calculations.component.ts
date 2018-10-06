@@ -22,7 +22,7 @@ export class EbayCalculationsComponent implements OnInit {
   desiredProfitPerSingle = 1;
   
   products: Product[];
-  displayedColumns: string[] = ['brand', 'name', 'stockNo', 'costPerSingle', 'ASINS', 'UPC', 'wholesaleComp', 'packsInfo'];
+  displayedColumns: string[] = ['name', 'stockNo', 'costPerSingle', 'ASINS', 'UPC', 'wholesaleComp', 'packsInfo'];
   dataSource: MatTableDataSource<Product>;
   selection = new SelectionModel<Product>(true, []);
 

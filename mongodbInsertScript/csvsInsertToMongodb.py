@@ -84,7 +84,6 @@ def placeProductToInsert(dictOfProdsToInsert:dict, productToInsert:dict, packInf
             productToInsert['userId'] = ObjectId(userId)
             productToInsert['wholesaleComp'] = baseFileName
             productToInsert['packsInfo'] = []
-            productToInsert['brand'] = 'tempBrand' ################
             dictOfProdsToInsert[upc] = productToInsert
         dictOfProdsToInsert[upc]['packsInfo'].append(packInfoToInsert)
     elif len(productToInsert) > 0:
@@ -130,7 +129,7 @@ if __name__ == '__main__':
     mainHeadersToMongoNameDict = {'UPC':'UPC', 'product name':'name', 'stock no':'stockNo'
                                    , 'total cost':'costPerBox', 'box amount':'quantityPerBox'}
     packInfoHeadersToMongoNameDict = {'pack':'packAmt', 'ASIN':'ASIN', 'Prep':'preparation'}
-    rootFolderName = Path( os.getcwd() )
+    rootFolderName = os.path.dirname(os.path.abspath(__file__))
     csvsFolderName = 'outputCsvs'
     folderToReadFromPath = os.path.join(rootFolderName, csvsFolderName)
     userId = input('Enter userId: ')

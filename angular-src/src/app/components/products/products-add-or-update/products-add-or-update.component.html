@@ -7,12 +7,6 @@
 <form *ngIf="entries" #productForm="ngForm" class="entire-form m-4" ngNativeValidate (ngSubmit)="onSubmit(productForm)">
   <div class="form-row-container"fxLayoutWrap fxLayoutGap="0.5%">
     <div fxFlex="33%">
-        <mat-form-field fxFlex>
-          <input [(ngModel)]='inputBrand' name="brand" matInput placeholder="Brand" required>
-        </mat-form-field>
-    </div>
-
-    <div fxFlex="33%">
       <mat-form-field fxFlex>
         <input [(ngModel)]='inputName' name="name" matInput placeholder="Product name" required>
       </mat-form-field>

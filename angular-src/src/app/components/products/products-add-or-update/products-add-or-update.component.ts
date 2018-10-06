@@ -29,7 +29,6 @@ export class ProductsAddOrUpdateComponent implements OnInit {
   userId;
   displayRdy = false;
 
-  inputBrand;
   inputName;
   inputUPC;
   inputwholesaleComp;
@@ -85,7 +84,6 @@ export class ProductsAddOrUpdateComponent implements OnInit {
   }
 
   fillInForm(product){
-    this.inputBrand = product.brand;
     this.inputName = product.name;
     this.inputUPC = product.UPC;
     this.inputwholesaleComp = product.wholesaleComp;
@@ -144,7 +142,7 @@ export class ProductsAddOrUpdateComponent implements OnInit {
   }
   
   getNewProductObject(processedEntries){
-    return new Product(this.inputBrand, this.inputName, this.inputUPC
+    return new Product(this.inputName, this.inputUPC
       , this.inputCostPerBox, this.inputQuantityPerBox
         , this.inputwholesaleComp, this.inputStockNo
         , processedEntries);
