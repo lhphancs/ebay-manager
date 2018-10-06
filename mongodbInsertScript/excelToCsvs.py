@@ -22,8 +22,7 @@ def getExcelPath(rootFolderName, excelDirName):
     excelPath = None
     for file in os.listdir(excelDirPath):
         if file.endswith('xlsx'):
-            filePath  = os.path.join(excelDirPath, file)
-            excelPath = filePath
+            excelPath = os.path.join(excelDirPath, file)
             break
     return excelPath
 
