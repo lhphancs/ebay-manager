@@ -61,9 +61,10 @@
             <table class="table table-striped table-dark">
                 <thead>
                   <tr>
-                    <th scope="col">ASIN</th>
+                    <th scope="col">UPC</th>
+                    <th scope="col">Name</th>
                     <th scope="col">Pack Amt</th>
-                    <th scope="col">Ship</th>
+                    <th scope="col">Ship Type</th>
                     <th scope="col">Oz</th>
                     <th scope="col">Preparation</th>
                     <th scope="col">Sale Calc.</th>
@@ -71,7 +72,8 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let entry of element.packsInfo">
-                    <td>{{entry.ASIN}}</td>
+                    <td>{{element.UPC}}</td>
+                    <td>{{element.name}}</td>
                     <td>{{entry.packAmt}}</td>
                     <td>{{ebayComponent.dictShipIdToName[entry.shipMethodId]}}</td>
                     <td>{{entry.ozWeight}}</td>
@@ -85,7 +87,7 @@
               </table>
           </ng-template>
             
-          <button class="btn btn-secondary btn-sm" type="button" [autoClose]="true"
+          <button class="btn btn-secondary btn-sm" type="button" [autoClose]="false"
             popoverTitle={{element.name}} [ngbPopover]="popContent" popoverClass="packinfo"
             placement="left">Calculations</button>
       </td>
