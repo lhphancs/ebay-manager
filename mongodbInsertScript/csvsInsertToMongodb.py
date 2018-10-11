@@ -2,8 +2,10 @@ import re
 import csv
 import os
 import pymongo
+import openpyxl
 from pathlib import Path
 from bson import ObjectId
+import copy
 
 '''
 Prog will iterate through all csv in the same dir.
@@ -77,19 +79,44 @@ def getDictMongoHeaderToCellVal(row:list, headersToMongoNameDict:dict
             retDict[mongoDbName] = cellVal
     return retDict
 
-def placeProductToInsert(dictOfProdsToInsert:dict, productToInsert:dict, packInfoToInsert:dict, baseFileName:str):
+def getShippingInfo(upcToShippingInfoDict, upc):
+    if upc in upcToShippingInfoDict:
+        terminateIndex = 0
+        shippingInfos = upcToShippingInfoDict[upc]
+        for key in sorted(shippingInfos.keys()):
+            for i in range(key-1, terminateIndex, -1):
+                shippingInfos[i] = copy.deepcopy( shippingInfos[key] )
+                shippingInfos[i].pop('ASIN', None)
+            terminateIndex = key
+        return shippingInfos
+    return {}
+
+def addOrModifyPackInfo(packsInfo, packInfoToInsert):
+    packAmt = int(packInfoToInsert['packAmt'])
+
+    if packAmt not in packsInfo:
+        packsInfo[packAmt] = {}
+
+    if 'ASIN' in packInfoToInsert:
+        packsInfo[packAmt]['ASIN'] = packInfoToInsert['ASIN']
+    if 'preparation' in packInfoToInsert:
+        packsInfo[packAmt]['preparation'] = packInfoToInsert['preparation']
+
+def placeProductToInsert(upcToShippingInfoDict:dict, dictOfProdsToInsert:dict, productToInsert:dict, packInfoToInsert:dict, baseFileName:str):
+    if 'packAmt' not in packInfoToInsert:
+        return
     if 'UPC' in productToInsert:
         upc = productToInsert['UPC']
         if upc not in dictOfProdsToInsert:
             productToInsert['userId'] = ObjectId(userId)
             productToInsert['wholesaleComp'] = baseFileName
-            productToInsert['packsInfo'] = []
+            productToInsert['packsInfo'] = getShippingInfo(upcToShippingInfoDict, upc)
             dictOfProdsToInsert[upc] = productToInsert
-        dictOfProdsToInsert[upc]['packsInfo'].append(packInfoToInsert)
+        addOrModifyPackInfo(dictOfProdsToInsert[upc]['packsInfo'], packInfoToInsert)
     elif len(productToInsert) > 0:
         print(str.format('UPC not found in: {}', productToInsert) )
 
-def insertAllValidRowsToMongoDb(userId:str, collection, csvReader
+def insertAllValidRowsToMongoDb(userId:str, upcToShippingInfoDict:dict, collection, csvReader
     , baseFileName:str, mainHeadersToMongoNameDict:dict, colNumToHeaderNameDict:dict
     , packInfoHeadersToMongoNameDict, packInfoColNumToHeaderNameDict)->None:
     dictOfProdsToInsert = {}
@@ -100,16 +127,23 @@ def insertAllValidRowsToMongoDb(userId:str, collection, csvReader
         packInfoToInsert = getDictMongoHeaderToCellVal(row, packInfoHeadersToMongoNameDict
                                              , packInfoColNumToHeaderNameDict)
 
-        placeProductToInsert(dictOfProdsToInsert, productToInsert, packInfoToInsert, baseFileName)
+        placeProductToInsert(upcToShippingInfoDict, dictOfProdsToInsert, productToInsert, packInfoToInsert, baseFileName)
         
     if len(dictOfProdsToInsert) > 0:
         for prodToInsert in dictOfProdsToInsert.values():
+            packInfoAsList = []
+            packsInfo = prodToInsert['packsInfo']
+            for key in sorted(packsInfo.keys()):
+                packInfo = packsInfo[key]
+                packInfo['packAmt'] = key
+                packInfoAsList.append(packInfo)
+            prodToInsert['packsInfo'] = packInfoAsList
             try:
                 collection.insert_one(prodToInsert)
             except pymongo.errors.DuplicateKeyError as e:
                 print(e)
         
-def processFile(userId:str, collection, filePath:str, headerRow:int
+def processFile(userId:str, prodCollection, filePath:str, upcToShippingInfoDict:dict, headerRow:int
 , mainHeadersToMongoNameDict:dict, packInfoHeadersToMongoNameDict:dict):
     head, tail = os.path.split(filePath)
     baseFileName = os.path.splitext(tail)[0]
@@ -120,29 +154,73 @@ def processFile(userId:str, collection, filePath:str, headerRow:int
         csvReader = csv.reader(csvFile, delimiter=',', skipinitialspace=True)
         mainColNumToHeaderNameDict = getcolNumToHeaderNameDict(csvFile, csvReader, headerRow, mainHeadersToMongoNameDict)
         packInfoColNumToHeaderNameDict = getcolNumToHeaderNameDict(csvFile, csvReader, headerRow, packInfoHeadersToMongoNameDict)
-        
-        insertAllValidRowsToMongoDb(userId, collection, csvReader, baseFileName
+        insertAllValidRowsToMongoDb(userId, upcToShippingInfoDict, prodCollection, csvReader, baseFileName
         , mainHeadersToMongoNameDict, mainColNumToHeaderNameDict
         , packInfoHeadersToMongoNameDict, packInfoColNumToHeaderNameDict)
+
+def getShipMethodExcelPath(shipMethodFolderPath):
+    for file in os.listdir(shipMethodFolderPath):
+        if file.endswith('xlsx'):
+            return os.path.join(shipMethodFolderPath, file)
+    return None
+
+def getNameToIdDict(db, userId):
+    shipCollection = db['shippings']
+    shipNameToIdDict = {}   
+
+    for shipMethod in shipCollection.find({'userId': ObjectId(userId)},{ '_id': 1, 'shipCompanyName':1, 'shipMethodName':1}):
+        key = str.format('{} - {}', shipMethod['shipCompanyName'], shipMethod['shipMethodName'])
+        shipNameToIdDict[key] = shipMethod['_id']
+    return shipNameToIdDict
+
+def addToUpcToShippingInfoDict(upcToShippingInfoDict, shipNameToIdDict, row):
+    upc = row[0].value
+    if upc != None:
+        packAmt = int(row[2].value)
+        shipType = row[3].value
+        oz = row[4].value
+        if upc not in upcToShippingInfoDict:
+            upcToShippingInfoDict[upc] = {}
+        upcToShippingInfoDict[upc][packAmt] = {'shipMethodId':shipNameToIdDict[shipType], 'oz':oz}
+
+def getUpcToShippingInfoDict(shipMethodFolderPath, db):
+    upcToShippingInfoDict = {}
+    shipNameToIdDict = getNameToIdDict(db, userId)
+    shipMethodExcelPath = getShipMethodExcelPath(shipMethodFolderPath)
+    
+    if shipMethodExcelPath == None:
+        return upcToShippingInfoDict
+    wb = openpyxl.load_workbook(shipMethodExcelPath)
+    for sheet in wb:
+        for row in sheet.iter_rows(row_offset=1):
+            addToUpcToShippingInfoDict(upcToShippingInfoDict, shipNameToIdDict, row)
+
+    return upcToShippingInfoDict
+
         
 if __name__ == '__main__':
     mainHeadersToMongoNameDict = {'UPC':'UPC', 'product name':'name', 'stock no':'stockNo'
                                    , 'total cost':'costPerBox', 'box amount':'quantityPerBox'}
     packInfoHeadersToMongoNameDict = {'pack':'packAmt', 'ASIN':'ASIN', 'Prep':'preparation'}
     rootFolderName = os.path.dirname(os.path.abspath(__file__))
-    csvsFolderName = 'outputCsvs'
-    folderToReadFromPath = os.path.join(rootFolderName, csvsFolderName)
+    wholesaleCsvsFolderName = 'outputCsvs'
+    shipMethodFolderName = 'placeShipMethodExcelFileHere'
+
+    shipMethodFolderPath = os.path.join(rootFolderName, shipMethodFolderName)
+    wholesaleCsvsFolderToReadFromPath = os.path.join(rootFolderName, wholesaleCsvsFolderName)
     userId = input('Enter userId: ')
     headerRow = int(input('With row number starting with 0, enter header row number: '))
     try: 
         client = pymongo.MongoClient() #This connects to 'localhost', port# 27017 by default
         db = client['inventory-manager']
-        collection = db['products']
+
+        upcToShippingInfoDict = getUpcToShippingInfoDict(shipMethodFolderPath, db)
+        
         print("Connected to mongodb successfully!")
-        for file in os.listdir(folderToReadFromPath):
-            filePath  = os.path.join(folderToReadFromPath, file)
+        for file in os.listdir(wholesaleCsvsFolderToReadFromPath):
+            filePath  = os.path.join(wholesaleCsvsFolderToReadFromPath, file)
             if file.endswith('csv'):
-                processFile(userId, collection, filePath, headerRow, mainHeadersToMongoNameDict, packInfoHeadersToMongoNameDict)
+                processFile(userId, db['products'], filePath, upcToShippingInfoDict, headerRow, mainHeadersToMongoNameDict, packInfoHeadersToMongoNameDict)
     except pymongo.errors.ConnectionFailure as e:
         print(e)
     print('\n Program done...')

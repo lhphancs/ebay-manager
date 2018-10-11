@@ -32,7 +32,7 @@ if __name__ == '__main__':
     outputFolderPath = os.path.join(rootFolderName, outputFolderName)
     if not os.path.exists(outputFolderPath):
         os.makedirs(outputFolderPath)
-    excelPath = getExcelPath(rootFolderName, 'placeSingleExcelFileHere')
+    excelPath = getExcelPath(rootFolderName, 'placeWholesaleExcelFileHere')
     if excelPath == None:
         print('Excel file was not found...')
     else:

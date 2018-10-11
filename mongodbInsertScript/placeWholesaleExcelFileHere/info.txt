@@ -1,0 +1,1 @@
+Place a single wholesale excel file to be read in this 'placeWholesaleExcelFileHere' folder. The program will read the first excel file that is in this folder.

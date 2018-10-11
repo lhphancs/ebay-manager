@@ -1,6 +1,8 @@
 node_modules
 angular-src/node_modules
 .vscode
-mongodbInsertScript/placeSingleExcelFileHere/*
-!mongodbInsertScript/placeSingleExcelFileHere/info.txt
+mongodbInsertScript/placeWholesaleExcelFileHere/*
+!mongodbInsertScript/placeWholesaleExcelFileHere/info.txt
+mongodbInsertScript/placeShipMethodExcelFileHere/*
+!mongodbInsertScript/placeShipMethodExcelFileHere/info.txt
 mongodbInsertScript/outputCsvs
