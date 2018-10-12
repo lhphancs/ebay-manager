@@ -1,5 +1,4 @@
 import re
-import csv
 import os
 import pymongo
 import openpyxl
@@ -8,7 +7,7 @@ from bson import ObjectId
 import copy
 
 '''
-Prog will iterate through all csv in the same dir.
+Prog will iterate through all sheet in excel file that is placed in 'placeWholesaleExcelFileHere'.
 It will parse through the table and insert the desired cols into mongodb.
 
 Desired header names names will be transformed to lowercased alphanumeric value.
@@ -17,11 +16,8 @@ Desired transformed header names must be equal across all csv's.
     ie) The following is fine because they are transformed to the same thing
         File1: Product No.  -> productno
         File2: product no   -> productno
-The column order of the header names for a csv file do not matter.
+The column order of the header names for a excel file do not matter.
 '''
-
-class InvalidColNum(Exception):
-   pass
 
 def getLoweredAlphaNumericStr(string:str)->str:
     string = re.sub('[^A-Za-z0-9]+', '', string)
@@ -29,31 +25,23 @@ def getLoweredAlphaNumericStr(string:str)->str:
     return string
 
 #Will remove any non-alphaNumeric character in search
-def getColForHeaderName(csvReader, headerName:str)->int:
+def getColForHeaderName(sheet, headerRow:int, headerName:str)->int:
+    max_column = sheet.max_column
     headerNameOfOnlyLetterAndNum = getLoweredAlphaNumericStr(headerName)
-    headerRowInCsv = next(csvReader)
-    i = -1
-    for headerCellValue in headerRowInCsv:
-        i = i+1
-        if(headerCellValue == None):
+    for i in range(1, max_column+1):
+        cellVal = sheet.cell(row=headerRow, column=i).value
+        if(cellVal == None):
             continue
-        headerCellValueOfOnlyLetterAndNum = getLoweredAlphaNumericStr(headerCellValue)
+        headerCellValueOfOnlyLetterAndNum = getLoweredAlphaNumericStr(cellVal)
         if(headerNameOfOnlyLetterAndNum in headerCellValueOfOnlyLetterAndNum):
             return i
-    raise InvalidColNum( str.format('{} not found in header', headerName) )
-
-def getcolNumToHeaderNameDict(csvFile, csvReader
-                            , headerRow:int, headersToMongoNameDict:dict)->dict:
+    
+def getColNumToHeaderNameDict(sheet, headerRow:int, headersToMongoNameDict:dict)->dict:
     colNumToHeaderNameDict = {}
     for headerName in headersToMongoNameDict:
-        try:
-            csvFile.seek(0)
-            for i in range(headerRow):
-                next(csvReader)
-            headerCol = getColForHeaderName(csvReader, headerName)
-            colNumToHeaderNameDict[headerCol] = headerName
-        except InvalidColNum as e:
-            print(e)
+        headerCol = getColForHeaderName(sheet, headerRow, headerName)
+        colNumToHeaderNameDict[headerCol] = headerName
+    
     return colNumToHeaderNameDict
 
 '''
@@ -67,16 +55,18 @@ def isMoneyCellVal(val:str)->bool:
 def getDictMongoHeaderToCellVal(row:list, headersToMongoNameDict:dict
                           , colNumToHeaderNameDict:dict) ->dict:
     retDict = {}
-    i = -1
-    for cellVal in row:
-        i = i+1
+
+    i = 1
+    for cell in row:
+        cellVal = cell.value
         if i in colNumToHeaderNameDict and cellVal != '':
-            if isMoneyCellVal(cellVal):
+            if isinstance(cellVal, str) and isMoneyCellVal(cellVal):
                 cellVal = cellVal[1:] #Trims the '$' in front
 
             csvHeaderName = colNumToHeaderNameDict[i]
             mongoDbName = headersToMongoNameDict[csvHeaderName]
             retDict[mongoDbName] = cellVal
+        i = i+1
     return retDict
 
 def getShippingInfo(upcToShippingInfoDict, upc):
@@ -92,7 +82,10 @@ def getShippingInfo(upcToShippingInfoDict, upc):
     return {}
 
 def addOrModifyPackInfo(packsInfo, packInfoToInsert):
-    packAmt = int(packInfoToInsert['packAmt'])
+    packAmt = packInfoToInsert['packAmt']
+    if packAmt == None:
+        return
+    packAmt = int(packAmt)
 
     if packAmt not in packsInfo:
         packsInfo[packAmt] = {}
@@ -102,32 +95,35 @@ def addOrModifyPackInfo(packsInfo, packInfoToInsert):
     if 'preparation' in packInfoToInsert:
         packsInfo[packAmt]['preparation'] = packInfoToInsert['preparation']
 
-def placeProductToInsert(upcToShippingInfoDict:dict, dictOfProdsToInsert:dict, productToInsert:dict, packInfoToInsert:dict, baseFileName:str):
+def placeProductToInsert(userId:ObjectId, upcToShippingInfoDict:dict, dictOfProdsToInsert:dict, productToInsert:dict, packInfoToInsert:dict, sheetTitle:str):
     if 'packAmt' not in packInfoToInsert:
         return
     if 'UPC' in productToInsert:
         upc = productToInsert['UPC']
         if upc not in dictOfProdsToInsert:
-            productToInsert['userId'] = ObjectId(userId)
-            productToInsert['wholesaleComp'] = baseFileName
+            productToInsert['userId'] = userId
+            productToInsert['wholesaleComp'] = sheetTitle
             productToInsert['packsInfo'] = getShippingInfo(upcToShippingInfoDict, upc)
             dictOfProdsToInsert[upc] = productToInsert
         addOrModifyPackInfo(dictOfProdsToInsert[upc]['packsInfo'], packInfoToInsert)
     elif len(productToInsert) > 0:
         print(str.format('UPC not found in: {}', productToInsert) )
 
-def insertAllValidRowsToMongoDb(userId:str, upcToShippingInfoDict:dict, collection, csvReader
-    , baseFileName:str, mainHeadersToMongoNameDict:dict, colNumToHeaderNameDict:dict
+def insertAllValidRowsToMongoDb(userId:ObjectId, upcToShippingInfoDict:dict, collection, sheet, headerRow
+    , mainHeadersToMongoNameDict:dict, colNumToHeaderNameDict:dict
     , packInfoHeadersToMongoNameDict, packInfoColNumToHeaderNameDict)->None:
     dictOfProdsToInsert = {}
-    for row in csvReader:
+
+    for row in sheet.iter_rows(row_offset=headerRow):
         productToInsert = getDictMongoHeaderToCellVal(row, mainHeadersToMongoNameDict
                                              , colNumToHeaderNameDict)
-
+        if productToInsert['UPC'] == None:
+            continue
+        
         packInfoToInsert = getDictMongoHeaderToCellVal(row, packInfoHeadersToMongoNameDict
                                              , packInfoColNumToHeaderNameDict)
-
-        placeProductToInsert(upcToShippingInfoDict, dictOfProdsToInsert, productToInsert, packInfoToInsert, baseFileName)
+        
+        placeProductToInsert(userId, upcToShippingInfoDict, dictOfProdsToInsert, productToInsert, packInfoToInsert, sheet.title)
         
     if len(dictOfProdsToInsert) > 0:
         for prodToInsert in dictOfProdsToInsert.values():
@@ -143,26 +139,23 @@ def insertAllValidRowsToMongoDb(userId:str, upcToShippingInfoDict:dict, collecti
             except pymongo.errors.DuplicateKeyError as e:
                 print(e)
         
-def processFile(userId:str, prodCollection, filePath:str, upcToShippingInfoDict:dict, headerRow:int
+def processSheet(userId:ObjectId, prodCollection, sheet, upcToShippingInfoDict:dict, headerRow:int
 , mainHeadersToMongoNameDict:dict, packInfoHeadersToMongoNameDict:dict):
-    head, tail = os.path.split(filePath)
-    baseFileName = os.path.splitext(tail)[0]
-    print('')
-    print( str.format('========== Working on: {} ... ==========', tail) )
+    print( str.format('==================== Working on: {} ====================', sheet.title) )
     
-    with open(filePath, "r",) as csvFile:
-        csvReader = csv.reader(csvFile, delimiter=',', skipinitialspace=True)
-        mainColNumToHeaderNameDict = getcolNumToHeaderNameDict(csvFile, csvReader, headerRow, mainHeadersToMongoNameDict)
-        packInfoColNumToHeaderNameDict = getcolNumToHeaderNameDict(csvFile, csvReader, headerRow, packInfoHeadersToMongoNameDict)
-        insertAllValidRowsToMongoDb(userId, upcToShippingInfoDict, prodCollection, csvReader, baseFileName
-        , mainHeadersToMongoNameDict, mainColNumToHeaderNameDict
-        , packInfoHeadersToMongoNameDict, packInfoColNumToHeaderNameDict)
+    mainColNumToHeaderNameDict = getColNumToHeaderNameDict(sheet, headerRow, mainHeadersToMongoNameDict)
+    packInfoColNumToHeaderNameDict = getColNumToHeaderNameDict(sheet, headerRow, packInfoHeadersToMongoNameDict)
+    insertAllValidRowsToMongoDb(userId, upcToShippingInfoDict, prodCollection, sheet, headerRow
+    , mainHeadersToMongoNameDict, mainColNumToHeaderNameDict
+    , packInfoHeadersToMongoNameDict, packInfoColNumToHeaderNameDict)
 
-def getShipMethodExcelPath(shipMethodFolderPath):
-    for file in os.listdir(shipMethodFolderPath):
+def getFirstExcelPathFromFolder(folderPath):
+    for file in os.listdir(folderPath):
         if file.endswith('xlsx'):
-            return os.path.join(shipMethodFolderPath, file)
+            return os.path.join(folderPath, file)
     return None
+
+
 
 def getNameToIdDict(db, userId):
     shipCollection = db['shippings']
@@ -183,11 +176,10 @@ def addToUpcToShippingInfoDict(upcToShippingInfoDict, shipNameToIdDict, row):
             upcToShippingInfoDict[upc] = {}
         upcToShippingInfoDict[upc][packAmt] = {'shipMethodId':shipNameToIdDict[shipType], 'oz':oz}
 
-def getUpcToShippingInfoDict(shipMethodFolderPath, db):
+def getUpcToShippingInfoDict(shipMethodExcelPath, db, userId):
     upcToShippingInfoDict = {}
     shipNameToIdDict = getNameToIdDict(db, userId)
-    shipMethodExcelPath = getShipMethodExcelPath(shipMethodFolderPath)
-    
+
     if shipMethodExcelPath == None:
         return upcToShippingInfoDict
     wb = openpyxl.load_workbook(shipMethodExcelPath)
@@ -197,30 +189,48 @@ def getUpcToShippingInfoDict(shipMethodFolderPath, db):
 
     return upcToShippingInfoDict
 
-        
-if __name__ == '__main__':
+def getWholesaleExcelPath(rootFolderName, wholesaleFolderName):
+    wholesaleFolderPath = os.path.join(rootFolderName, wholesaleFolderName)
+    return getFirstExcelPathFromFolder(wholesaleFolderPath)
+
+def getShipMethodExcelPath(rootFolderName, shipMethodFolderName):
+    shipMethodFolderPath = os.path.join(rootFolderName, shipMethodFolderName)
+    return getFirstExcelPathFromFolder(shipMethodFolderPath)
+
+def promptUserIdAndIntegrateFiles(wholesaleExcelPath, shipMethodExcelPath):
     mainHeadersToMongoNameDict = {'UPC':'UPC', 'product name':'name', 'stock no':'stockNo'
                                    , 'total cost':'costPerBox', 'box amount':'quantityPerBox'}
     packInfoHeadersToMongoNameDict = {'pack':'packAmt', 'ASIN':'ASIN', 'Prep':'preparation'}
+    while True:
+        userId = input('Enter userId: ')
+        if ObjectId.is_valid(userId):
+            userId = ObjectId(userId)
+            try: 
+                client = pymongo.MongoClient() #This connects to 'localhost', port# 27017 by default
+                db = client['inventory-manager']
+                print("Connected to mongodb successfully!")
+                upcToShippingInfoDict = getUpcToShippingInfoDict(shipMethodExcelPath, db, userId)
+                
+                wb = openpyxl.load_workbook(wholesaleExcelPath)
+                headerRow = 2
+                for sheet in wb:
+                    processSheet(userId, db['products'], sheet, upcToShippingInfoDict, headerRow, mainHeadersToMongoNameDict, packInfoHeadersToMongoNameDict)
+            
+            except pymongo.errors.ConnectionFailure as e:
+                print(e)
+            break
+        else:
+            print('Invalid userId...Try again')
+
+if __name__ == '__main__':
+    
     rootFolderName = os.path.dirname(os.path.abspath(__file__))
-    wholesaleCsvsFolderName = 'outputCsvs'
-    shipMethodFolderName = 'placeShipMethodExcelFileHere'
-
-    shipMethodFolderPath = os.path.join(rootFolderName, shipMethodFolderName)
-    wholesaleCsvsFolderToReadFromPath = os.path.join(rootFolderName, wholesaleCsvsFolderName)
-    userId = input('Enter userId: ')
-    headerRow = int(input('With row number starting with 0, enter header row number: '))
-    try: 
-        client = pymongo.MongoClient() #This connects to 'localhost', port# 27017 by default
-        db = client['inventory-manager']
-
-        upcToShippingInfoDict = getUpcToShippingInfoDict(shipMethodFolderPath, db)
-        
-        print("Connected to mongodb successfully!")
-        for file in os.listdir(wholesaleCsvsFolderToReadFromPath):
-            filePath  = os.path.join(wholesaleCsvsFolderToReadFromPath, file)
-            if file.endswith('csv'):
-                processFile(userId, db['products'], filePath, upcToShippingInfoDict, headerRow, mainHeadersToMongoNameDict, packInfoHeadersToMongoNameDict)
-    except pymongo.errors.ConnectionFailure as e:
-        print(e)
-    print('\n Program done...')
+    wholesaleFolderName = 'placeWholesaleExcelFileHere'
+    wholesaleExcelPath = getWholesaleExcelPath(rootFolderName, wholesaleFolderName)
+    shipMethodExcelPath = getShipMethodExcelPath(rootFolderName, 'placeShipMethodExcelFileHere')
+    if wholesaleExcelPath == None:
+        print( str.format('Error: Excel file not found in: {}', wholesaleFolderName) )
+    else:
+        promptUserIdAndIntegrateFiles(wholesaleExcelPath, shipMethodExcelPath)
+    
+    print('\nProgram terminated...')
