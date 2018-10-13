@@ -171,10 +171,10 @@ def addToUpcToShippingInfoDict(upcToShippingInfoDict, shipNameToIdDict, row):
     if upc != None:
         packAmt = int(row[2].value)
         shipType = row[3].value
-        oz = row[4].value
+        ozWeight = row[4].value
         if upc not in upcToShippingInfoDict:
             upcToShippingInfoDict[upc] = {}
-        upcToShippingInfoDict[upc][packAmt] = {'shipMethodId':shipNameToIdDict[shipType], 'oz':oz}
+        upcToShippingInfoDict[upc][packAmt] = {'shipMethodId':shipNameToIdDict[shipType], 'ozWeight':ozWeight}
 
 def getUpcToShippingInfoDict(shipMethodExcelPath, db, userId):
     upcToShippingInfoDict = {}

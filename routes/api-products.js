@@ -9,7 +9,6 @@ function getFilteredProductJson(newProductJson){
         quantityPerBox: newProductJson.quantityPerBox,
         wholesaleComp: newProductJson.wholesaleComp,
         stockNo: newProductJson.stockNo,
-        oz: newProductJson.oz,
         UPC: newProductJson.UPC,
         packsInfo: newProductJson.packsInfo
     };
