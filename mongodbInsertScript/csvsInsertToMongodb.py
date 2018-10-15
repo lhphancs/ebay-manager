@@ -20,6 +20,8 @@ The column order of the header names for a excel file do not matter.
 '''
 
 def getLoweredAlphaNumericStr(string:str)->str:
+    if type(string) is not str:
+        return None
     string = re.sub('[^A-Za-z0-9]+', '', string)
     string = str.lower(string)
     return string
@@ -28,11 +30,14 @@ def getLoweredAlphaNumericStr(string:str)->str:
 def getColForHeaderName(sheet, headerRow:int, headerName:str)->int:
     max_column = sheet.max_column
     headerNameOfOnlyLetterAndNum = getLoweredAlphaNumericStr(headerName)
+
     for i in range(1, max_column+1):
         cellVal = sheet.cell(row=headerRow, column=i).value
         if(cellVal == None):
             continue
         headerCellValueOfOnlyLetterAndNum = getLoweredAlphaNumericStr(cellVal)
+        if headerCellValueOfOnlyLetterAndNum == None:
+            return -1
         if(headerNameOfOnlyLetterAndNum in headerCellValueOfOnlyLetterAndNum):
             return i
     
@@ -40,6 +45,8 @@ def getColNumToHeaderNameDict(sheet, headerRow:int, headersToMongoNameDict:dict)
     colNumToHeaderNameDict = {}
     for headerName in headersToMongoNameDict:
         headerCol = getColForHeaderName(sheet, headerRow, headerName)
+        if headerCol == -1:
+            continue
         colNumToHeaderNameDict[headerCol] = headerName
     
     return colNumToHeaderNameDict
@@ -117,9 +124,8 @@ def insertAllValidRowsToMongoDb(userId:ObjectId, upcToShippingInfoDict:dict, col
     for row in sheet.iter_rows(row_offset=headerRow):
         productToInsert = getDictMongoHeaderToCellVal(row, mainHeadersToMongoNameDict
                                              , colNumToHeaderNameDict)
-        if productToInsert['UPC'] == None:
+        if 'UPC' not in productToInsert or productToInsert['UPC'] == None:
             continue
-        
         packInfoToInsert = getDictMongoHeaderToCellVal(row, packInfoHeadersToMongoNameDict
                                              , packInfoColNumToHeaderNameDict)
         
