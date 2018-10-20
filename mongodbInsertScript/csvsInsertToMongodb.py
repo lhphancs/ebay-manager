@@ -161,8 +161,6 @@ def getFirstExcelPathFromFolder(folderPath):
             return os.path.join(folderPath, file)
     return None
 
-
-
 def getNameToIdDict(db, userId):
     shipCollection = db['shippings']
     shipNameToIdDict = {}   
@@ -203,33 +201,28 @@ def getShipMethodExcelPath(rootFolderName, shipMethodFolderName):
     shipMethodFolderPath = os.path.join(rootFolderName, shipMethodFolderName)
     return getFirstExcelPathFromFolder(shipMethodFolderPath)
 
-def promptUserIdAndIntegrateFiles(wholesaleExcelPath, shipMethodExcelPath):
+def getUserId(db):
+    userCollection = db['users']
+    while True:
+        userEmail = input('Enter existing email: ')
+        queryDoc = userCollection.find_one( {'email': userEmail} )
+        if queryDoc != None:
+            return ObjectId( queryDoc['_id'] )
+        print('Invalid userId...Try again...')
+
+def promptUserEmailAndIntegrateFiles(db, wholesaleExcelPath, shipMethodExcelPath):
     mainHeadersToMongoNameDict = {'UPC':'UPC', 'product name':'name', 'stock no':'stockNo'
                                    , 'total cost':'costPerBox', 'box amount':'quantityPerBox'}
-    packInfoHeadersToMongoNameDict = {'pack':'packAmt', 'ASIN':'ASIN', 'Prep':'preparation'}
-    while True:
-        userId = input('Enter userId: ')
-        if ObjectId.is_valid(userId):
-            userId = ObjectId(userId)
-            try: 
-                client = pymongo.MongoClient() #This connects to 'localhost', port# 27017 by default
-                db = client['inventory-manager']
-                print("Connected to mongodb successfully!")
-                upcToShippingInfoDict = getUpcToShippingInfoDict(shipMethodExcelPath, db, userId)
-                
-                wb = openpyxl.load_workbook(wholesaleExcelPath)
-                headerRow = 2
-                for sheet in wb:
-                    processSheet(userId, db['products'], sheet, upcToShippingInfoDict, headerRow, mainHeadersToMongoNameDict, packInfoHeadersToMongoNameDict)
-            
-            except pymongo.errors.ConnectionFailure as e:
-                print(e)
-            break
-        else:
-            print('Invalid userId...Try again')
-
-if __name__ == '__main__':
+    packInfoHeadersToMongoNameDict = {'pack':'packAmt', 'ASIN':'ASIN', 'Prep':'preparation'}   
+    userId = getUserId(db)
+    upcToShippingInfoDict = getUpcToShippingInfoDict(shipMethodExcelPath, db, userId)
+        
+    wb = openpyxl.load_workbook(wholesaleExcelPath)
+    headerRow = 2
+    for sheet in wb:
+        processSheet(userId, db['products'], sheet, upcToShippingInfoDict, headerRow, mainHeadersToMongoNameDict, packInfoHeadersToMongoNameDict)
     
+if __name__ == '__main__':
     rootFolderName = os.path.dirname(os.path.abspath(__file__))
     wholesaleFolderName = 'placeWholesaleExcelFileHere'
     wholesaleExcelPath = getWholesaleExcelPath(rootFolderName, wholesaleFolderName)
@@ -237,6 +230,11 @@ if __name__ == '__main__':
     if wholesaleExcelPath == None:
         print( str.format('Error: Excel file not found in: {}', wholesaleFolderName) )
     else:
-        promptUserIdAndIntegrateFiles(wholesaleExcelPath, shipMethodExcelPath)
-    
+        try: 
+            client = pymongo.MongoClient() #This connects to 'localhost', port# 27017 by default
+            db = client['inventory-manager']
+            print("Connected to mongodb successfully!")
+            promptUserEmailAndIntegrateFiles(db, wholesaleExcelPath, shipMethodExcelPath)
+        except pymongo.errors.ConnectionFailure as e:
+            print(e)
     print('\nProgram terminated...')
