@@ -33,7 +33,7 @@ These two excel files should be deleted and replaced. The program may not work c
 
 The data in 'placeShipMethodExcelFileHere' is the maximum amount of a product that will fit into a ship method.
 
-ex) 
+#### Example 
 
 |  UPC |  Name  | Quant |         Ship type         | oz |
 |:----:|:------:|:-----:|:-------------------------:|:--:|
