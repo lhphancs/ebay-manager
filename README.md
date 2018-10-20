@@ -3,26 +3,23 @@ Inventory manager to store details of products and calculate profits from eBay a
 
 IMPORTANT: At the moment, project should only be used locally due to security reasons.
 
-## A) Main running instructions:
+## Main running instructions:
     1. Open command prompt
     2. cd into inventory-manager
     3. Run the following commands
-    ```
-npm install
-node ./
+    ```npm install
+    node ./
     ```
     4. cd into angular-src
     5. Run the following command:
         npm install
         npm start
 
-## B) (Optional) Running product insert script instructions:
+## (Optional) Running product insert script instructions:
     1. Open command prompt
     2. cd into mongodbInsertScript
     3. Run the following command:
-    ```
-        py csvsInsertToMongodb.py
-    ```
+    ```py csvsInsertToMongodb.py```
     
     Notes: sample files have been provided inside the two directories:
         1. placeShipMethodExcelFileHere
