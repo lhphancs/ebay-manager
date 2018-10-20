@@ -3,7 +3,7 @@ Inventory manager to store details of products and calculate profits from eBay a
 
 IMPORTANT: At the moment, project should only be used locally due to security reasons.
 
-## Main running instructions:
+## Main running instructions
     1. Open command prompt
     2. cd into inventory-manager
     3. Run the following commands
@@ -15,7 +15,7 @@ IMPORTANT: At the moment, project should only be used locally due to security re
         npm install
         npm start
 
-## (Optional) Running product insert script instructions:
+## (Optional) Running product insert script instructions
     1. Open command prompt
     2. cd into mongodbInsertScript
     3. Run the following command:
