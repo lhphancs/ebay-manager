@@ -14,8 +14,8 @@ node ./
 4. cd into angular-src
 5. Run the following command:
 ```
-    npm install
-    npm start
+npm install
+npm start
 ```
 
 ## (Optional) Running product insert script instructions
