@@ -6,16 +6,16 @@ IMPORTANT: At the moment, project should only be used locally due to security re
 ### Main running instructions
 1. Open command prompt
 2. cd into inventory-manager
-3. Run the following commands
+3. Run the following commands:
 ```
-npm install
-node ./
+    npm install
+    node ./
 ```
 4. cd into angular-src
 5. Run the following command:
 ```
-npm install
-npm start
+    npm install
+    npm start
 ```
 
 ### (Optional) Running product insert script instructions
