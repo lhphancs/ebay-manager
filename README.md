@@ -34,7 +34,8 @@ These two excel files should be deleted and replaced. The program may not work c
 The data in 'placeShipMethodExcelFileHere' is the maximum amount of a product that will fit into a ship method.
 
 ex) 
-UPC     \tName      \tQuant     \tShip type     \toz
-0002    \taProd2	\t5	        \tUSPS - Flat rate envelope
+| UPC   | Name      | Quant | Ship type                 | oz |
+| :---: | :---:     | :---: | :---:                     |
+| 0002  | aProd2    | 5     | USPS - Flat rate envelope |
 
 This means that a maximum of 5 "aProd2" can fit into "USPS - Flat rate envelope". The oz is not required because it is "Flat rate".
