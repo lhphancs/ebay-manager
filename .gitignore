@@ -3,7 +3,7 @@ angular-src/node_modules
 .vscode
 mongodbInsertScript/placeShipMethodExcelFileHere/*
 !mongodbInsertScript/placeShipMethodExcelFileHere/info.txt
-!mongodbInsertScript/placeShipMethodExcelFileHere/sampleShipMethod.xlsx
+!mongodbInsertScript/placeShipMethodExcelFileHere/z_sampleShipMethod.xlsx
 mongodbInsertScript/placeWholesaleExcelFileHere/*
 !mongodbInsertScript/placeWholesaleExcelFileHere/info.txt
-!mongodbInsertScript/placeWholesaleExcelFileHere/sampleExcelForScript.xlsx
+!mongodbInsertScript/placeWholesaleExcelFileHere/z_sampleExcelForScript.xlsx
