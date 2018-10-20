@@ -24,6 +24,8 @@ B) (Optional) Running product insert script instructions:
     Notes: sample files have been provided inside the two directories:
         1) placeShipMethodExcelFileHere
         2) placeWholesaleExcelFileHere
+    These two excel files should be deleted and replaced. The program may not work correctly if two excel files are in a single directory.
+
     The data in 'placeShipMethodExcelFileHere' is the maximum amount of a product that will fit into a ship method.
     
     ex) 
