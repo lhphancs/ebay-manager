@@ -208,7 +208,7 @@ def getUserId(db):
         queryDoc = userCollection.find_one( {'email': userEmail} )
         if queryDoc != None:
             return ObjectId( queryDoc['_id'] )
-        print('Invalid userId...Try again...')
+        print('Invalid email...Try again...')
 
 def promptUserEmailAndIntegrateFiles(db, wholesaleExcelPath, shipMethodExcelPath):
     mainHeadersToMongoNameDict = {'UPC':'UPC', 'product name':'name', 'stock no':'stockNo'
