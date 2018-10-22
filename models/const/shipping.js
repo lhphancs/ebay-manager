@@ -9,28 +9,78 @@ const DEFAULT_USPS_FIRST_CLASS_OZ_PRICE = [
 ]
 
 const noBulgeString = "Package cannot be bulging when shipped."
+const lengthAndGirthDescriptionString = `Length = The longest side of the parcel.
+    Girth = Measurement around the thickest part.`
 const DEFAULT_USPS_SHIP_METHOD_LIST = [
     { shipMethodName:"First class"
-        , description: 'Ship with own envelope/box. Must be 16oz or less. Maximum combined length and girth is 108 inches.'
+        , description: `Package: Your own envelope/box.
+
+        Info: Can't use USPS priority box.
+
+        Weight: 16oz or less.
+
+        Size: Maximum combined length and girth is 108 inches.
+        
+        ${lengthAndGirthDescriptionString}
+        `
         , flatRatePrice: null, ozPrice: DEFAULT_USPS_FIRST_CLASS_OZ_PRICE},
+
+
     { shipMethodName:"Flat rate envelope"
-        , description: 'Labled "Flat rate envelope". Not the same as "legal flat rate envelope" or "padded envelope".'
+        , description: `Package: "Flat rate envelope."
+
+        Info: Not the same as "legal flat rate envelope" or "padded envelope".`
         , flatRatePrice: 6.35, ozPrice: null },
+
+
     { shipMethodName:"Flat rate legal envelope"
-        , description: 'Labled "Flat rate envelope" with "legal flat rate enevelope" written in small prints. Does not come with padding. Not the same as "flat rate envelope" or "padded envelope".'
+        , description: `Package: "Flat rate envelope" with "legal flat rate enevelope" written in small prints.
+        
+        Info: Does not come with padding. Not the same as "flat rate envelope" or "padded envelope".`
         , flatRatePrice: 6.65, ozPrice: null },
+
+
     { shipMethodName:"Flat rate padded envelope"
-        , description: 'Labeled "Flat rate envelope" and envelope comes with bubble padding inside. Not the same as "flat rate envelope" or "legal flat rate envelope".'
+        , description: `Package: "Flat rate envelope" with bubble padding applied inside.
+        
+        Info: Not the same as "flat rate envelope" or "legal flat rate envelope".`
         , flatRatePrice: 6.90, ozPrice: null },
+
+
     { shipMethodName:"Flat rate small box"
-        , description: 'Labeled "Small flat rate box". ' + noBulgeString
+        , description: `Package: "Small flat rate box".
+        
+        Info: ${noBulgeString}`
         , flatRatePrice: 6.85, ozPrice: null },
+
+
     { shipMethodName:"Flat rate medium box"
-        , description: 'Labled "Medium flat rate box". ' + noBulgeString
+        , description: `Package: "Medium flat rate box".
+        
+        Info: ${noBulgeString}`
         , flatRatePrice: 12.45, ozPrice: null },
+
+
     { shipMethodName:"Flat rate large box"
-        , description: 'Labled "Large flat rate box". ' + noBulgeString
-        , flatRatePrice: 17.10, ozPrice: null }
+        , description: `Package: "Large flat rate box".
+        
+        Info: ${noBulgeString}`
+        , flatRatePrice: 17.10, ozPrice: null },
+
+
+    { shipMethodName:'2Lb Priority mail with size/volume restrictions'
+        , description: `Package: Your own envelope/box or any "Priority Mail" box.
+        
+        Info: Cost varies by location. A flat rate is assumed by choosing the MAX shipping cost. It also assumes destination is USA only. "Added cost" is applied if package exceeds size conditions. To avoid "added cost", meet the conditions listed below.
+        
+        Weight: Below or exactly 2Lb, and above 1Lb
+
+        Size: Length + girth < 84 inches
+        Volume: Less than or equal to 1ft*1ft*1ft (1 cubic ft)
+
+        ${lengthAndGirthDescriptionString}
+        `
+    , flatRatePrice: 10.80, ozPrice: null }
 ];
 
 const DEFAULT_FEDEX_SHIP_METHOD_LIST = [
