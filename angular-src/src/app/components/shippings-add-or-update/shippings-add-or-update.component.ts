@@ -26,6 +26,7 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
   shipCompanyName:string;
   shipMethodName:string;
   description:string;
+  imgUrl;
   entries:object[];
   headers: object[] = [
     {data:"input", name:'oz', type:"number", min:0, step:"any"}
@@ -78,6 +79,7 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
         this.shipCompanyName = shipMethod.shipCompanyName;
         this.shipMethodName = shipMethod.shipMethodName;
         this.description = shipMethod['description'];
+        this.imgUrl = shipMethod['imgUrl'];
         
         this.loadShipMethod(shipMethod);
       }
@@ -116,6 +118,7 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
     obj['shipCompanyName'] = this.shipCompanyName;
     obj['shipMethodName'] = this.shipMethodName;
     obj['description'] = this.description;
+    obj['imgUrl'] = this.imgUrl;
     if(flatRatePrice){
       obj['flatRatePrice'] = flatRatePrice;
       obj['ozPrice'] = null;

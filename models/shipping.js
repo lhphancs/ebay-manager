@@ -8,6 +8,7 @@ const shippingSchema = Schema({
         shipCompanyName: {type: String, required: true},
         shipMethodName: {type: String, required: true},
         description:{type: String},
+        imgUrl:{type:String},
         flatRatePrice:{type: Number},
         ozPrice: {type:[{
             oz: { type: Number, required: true, min: 0},

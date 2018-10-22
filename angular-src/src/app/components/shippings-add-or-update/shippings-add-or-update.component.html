@@ -42,6 +42,13 @@
           </mat-form-field>
         </div>
       </div>
+      <div class="form-row-container"fxLayoutWrap fxLayoutGap="0.5%">
+        <div fxFlex="33%">
+            <mat-form-field fxFlex>
+              <input [(ngModel)]='imgUrl' name="shipImgUrl" matInput placeholder="Image URL address">
+            </mat-form-field>
+        </div>
+      </div>
     
       <div>
         <mat-checkbox [(ngModel)]="flatRatePrice"

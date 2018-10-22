@@ -13,6 +13,7 @@ const lengthAndGirthDescriptionString = `Length = The longest side of the parcel
     Girth = Measurement around the thickest part.`
 const DEFAULT_USPS_SHIP_METHOD_LIST = [
     { shipMethodName:"First class"
+        , imgUrl: '../../../assets/imgs/USPS/usps_logo.png'
         , description: `Package: Your own envelope/box.
 
         Info: Can't use USPS priority box.
@@ -27,6 +28,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
 
 
     { shipMethodName:"Flat rate envelope"
+        , imgUrl: '../../../assets/imgs/USPS/usps_logo.png'
         , description: `Package: "Flat rate envelope."
 
         Info: Not the same as "legal flat rate envelope" or "padded envelope".`
@@ -34,6 +36,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
 
 
     { shipMethodName:"Flat rate legal envelope"
+        , imgUrl: '../../../assets/imgs/USPS/usps_logo.png'
         , description: `Package: "Flat rate envelope" with "legal flat rate enevelope" written in small prints.
         
         Info: Does not come with padding. Not the same as "flat rate envelope" or "padded envelope".`
@@ -41,6 +44,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
 
 
     { shipMethodName:"Flat rate padded envelope"
+        , imgUrl: '../../../assets/imgs/USPS/usps_logo.png'
         , description: `Package: "Flat rate envelope" with bubble padding applied inside.
         
         Info: Not the same as "flat rate envelope" or "legal flat rate envelope".`
@@ -48,6 +52,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
 
 
     { shipMethodName:"Flat rate small box"
+        , imgUrl: '../../../assets/imgs/USPS/usps_logo.png'
         , description: `Package: "Small flat rate box".
         
         Info: ${noBulgeString}`
@@ -55,6 +60,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
 
 
     { shipMethodName:"Flat rate medium box"
+        , imgUrl: '../../../assets/imgs/USPS/usps_logo.png'
         , description: `Package: "Medium flat rate box".
         
         Info: ${noBulgeString}`
@@ -62,6 +68,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
 
 
     { shipMethodName:"Flat rate large box"
+        , imgUrl: '../../../assets/imgs/USPS/usps_logo.png'
         , description: `Package: "Large flat rate box".
         
         Info: ${noBulgeString}`
@@ -69,6 +76,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
 
 
     { shipMethodName:'2Lb Priority mail with size/volume restrictions'
+        , imgUrl: '../../../assets/imgs/USPS/usps_logo.png'
         , description: `Package: Your own envelope/box or any "Priority Mail" box.
         
         Info: Cost varies by location. A flat rate is assumed by choosing the MAX shipping cost. It also assumes destination is USA only. "Added cost" is applied if package exceeds size conditions. To avoid "added cost", meet the conditions listed below.
@@ -93,7 +101,7 @@ module.exports.getDefaultShipMethods = function getDefaultShipMethods(userId){
     let shipMethods = [];
     for(let obj of DEFAULT_USPS_SHIP_METHOD_LIST){
         method = {userId: userId, shipCompanyName: "USPS", shipMethodName: obj.shipMethodName
-        , description: obj.description};
+        , imgUrl: obj.imgUrl, description: obj.description};
         if(obj.flatRatePrice)
             method.flatRatePrice = obj.flatRatePrice;
         else
@@ -102,7 +110,7 @@ module.exports.getDefaultShipMethods = function getDefaultShipMethods(userId){
     }
     for(let obj of DEFAULT_FEDEX_SHIP_METHOD_LIST){
         method = {userId: userId, shipCompanyName: "FEDEX", shipMethodName: obj.shipMethodName
-        , description: obj.description};
+        , imgUrl: obj.imgUrl, description: obj.description};
         if(obj.flatRatePrice)
             method.flatRatePrice = obj.flatRatePrice;
         else

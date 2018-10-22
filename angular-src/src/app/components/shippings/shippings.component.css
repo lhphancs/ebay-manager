@@ -5,6 +5,7 @@
 .oz-price-tbl-row{
     line-height: 0px
 }
+
 .price{
     font-size: 0.8em;
     background-color:white;
@@ -34,4 +35,13 @@
 .edit-icon{
     color:white;
     margin-right: 5px;
+}
+
+.ship-img-container{
+    width: 200px;
+}
+
+.ship-img{
+    max-width:190px;
+    max-height:90px;
 }
