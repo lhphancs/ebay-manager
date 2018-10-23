@@ -10,7 +10,8 @@
           <mat-icon color="primary">add_circle</mat-icon>
         </button>
         <div class="row-container p-3" *ngFor="let shipMethodObj of companyObj.shipMethods; let shipMethodIndex=index">
-          <div class="ship-img-container d-flex justify-content-end p-1">
+          <div class="ship-img-container d-flex justify-content-center p-1"
+          (click)="toggleZoomClass(shipMethodObj)" [class.zoom]="shipMethodObj.active">
             <img class="ship-img" src={{shipMethodObj.imgUrl}}>
           </div>
           

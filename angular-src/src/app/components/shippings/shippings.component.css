@@ -38,7 +38,25 @@
 }
 
 .ship-img-container{
+    border: 1px solid grey;
     width: 200px;
+    background-color: white;
+}
+
+.ship-img-container{
+    cursor: zoom-in;
+}
+
+.zoom{
+    transform: scale(5);
+    position: absolute;
+    left: 50%;
+    margin-left: -100px;
+    z-index:1;
+}
+
+.zoom:hover{
+    cursor: zoom-out;
 }
 
 .ship-img{

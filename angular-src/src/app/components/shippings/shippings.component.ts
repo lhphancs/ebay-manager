@@ -23,8 +23,6 @@ export class ShippingsComponent implements OnInit {
     , public snackBar: MatSnackBar
     , private router: Router) { }
 
-  
-
   ngOnInit() {
     this.databaseUsersService.getProfile().subscribe( (data) =>{
       if(data['_id']){
@@ -70,5 +68,9 @@ export class ShippingsComponent implements OnInit {
 
   addNewShipCompanyResponse(){
     this.router.navigate(['/shippings/new-ship-company']);
+  }
+
+  toggleZoomClass(shipMethodObj){
+    shipMethodObj.active = !shipMethodObj.active;
   }
 }
