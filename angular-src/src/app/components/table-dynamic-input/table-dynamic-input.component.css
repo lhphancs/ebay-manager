@@ -9,10 +9,15 @@ th.mat-sort-header-sorted {
 .asin-table{
   border: 3px solid black;
 }
-.filter{
-  width:50%;
-}
 
 .header-row{
   background-color: #d9e5ff;
+}
+
+.input-number{
+  width: 7em;
+}
+
+select{
+  width: 15em;
 }

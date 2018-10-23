@@ -100,8 +100,7 @@
 }
 
 .mat-header-cell, .mat-cell{
-    padding-left: 10px !important;
-    padding-right: 10px !important;
+    padding-left: 5px !important;
 }
 
 .hover-highlight:hover{

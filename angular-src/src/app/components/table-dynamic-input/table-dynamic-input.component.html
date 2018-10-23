@@ -25,7 +25,8 @@
       ngModel [ngModelOptions]="{standalone: true}"
       (ngModelChange)="addBlankEntryIfNeeded()"
         [type]="column.type" [min]="column.min"
-        [step]="column.step">
+        [step]="column.step"
+        [class.input-number]="column.type == 'number'">
 
       <ng-template #optionTemplate>
         <select [(ngModel)]="element[column.name]" (ngModelChange)="addBlankEntryIfNeeded()">

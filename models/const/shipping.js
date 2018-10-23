@@ -75,7 +75,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
         , flatRatePrice: 17.10, ozPrice: null },
 
 
-    { shipMethodName:'2Lb Priority mail with size/volume restrictions'
+    { shipMethodName:'2Lb Priority mail with restrictions'
         , imgUrl: '../../../assets/imgs/USPS/usps_logo.png'
         , description: `Package: Your own envelope/box or any "Priority Mail" box.
         
