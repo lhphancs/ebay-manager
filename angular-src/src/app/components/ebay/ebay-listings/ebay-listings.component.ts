@@ -81,7 +81,6 @@ export class EbayListingsComponent implements OnInit {
       listingDict[key].variation = Object.values(listingDict[key].variation);
       this.listings.push(listingDict[key]);
     }
-      
   }
 
   addVariationsToListing(listing, packsInfo){
@@ -91,6 +90,7 @@ export class EbayListingsComponent implements OnInit {
         let variationToEdit = listing.variation[packInfo.packAmt];
         variationToEdit.ozWeight = packInfo.ozWeight;
         variationToEdit.shipMethodId = packInfo.shipMethodId;
+        variationToEdit.packaging = packInfo.packaging;
         variationToEdit.preparation = packInfo.preparation;
         variationToEdit.desiredPrice = this.calculateDesiredPrice(packInfo.packAmt
                                       , packInfo.shipMethodId, packInfo.ozWeight
@@ -141,5 +141,21 @@ export class EbayListingsComponent implements OnInit {
     return Math.round((totalProfit + this.paypalFlatFee
       + totalProductCost + shipCost)
       / (1-this.paypalPercentageFromSaleFee*0.01 - this.ebayPercentageFromSaleFee*0.01)*100)/100;
+  }
+
+  onDesiredProfitChange(){
+    for(let listing of this.listings){
+      let hasUndesiredPrice = false;
+      for(let variation of listing['variation']){
+        let packAmt = variation['packAmt'];
+        let shipId = variation['shipMethodId'];
+        let oz = variation['ozWeight'];
+        let costPerSingle = listing['costPerSingle'];
+        variation['desiredPrice'] = this.calculateDesiredPrice(packAmt, shipId, oz, costPerSingle); 
+        if(variation['ebaySellPrice'] < variation['desiredPrice'])
+          hasUndesiredPrice = true;
+      }
+      listing['hasUndesiredPrice'] = hasUndesiredPrice;
+    }
   }
 }

@@ -44,7 +44,7 @@ export class ProductsAddOrUpdateComponent implements OnInit {
     , {data:"input", name:'packAmt', type:"number", min:1, step:"1"}
     , {data:"select", arrayOfKeyVal:[], name:'shipMethodId'}
     , {data:"input", name:'ozWeight', type:"number", min:0, step:"any"}
-    , {data:"input", name:'package', type:"string", min:0, step:"any"}
+    , {data:"input", name:'packaging', type:"string", min:0, step:"any"}
     , {data:"input", name:'preparation', type:"string"}
   ];
   headerNames:string[];

@@ -3,6 +3,6 @@ export interface PackInfo {
   packAmt: number;
   shipMethodId: string;
   ozWeight: number;
-  package: string;
+  packaging: string;
   preparation: string;
 }

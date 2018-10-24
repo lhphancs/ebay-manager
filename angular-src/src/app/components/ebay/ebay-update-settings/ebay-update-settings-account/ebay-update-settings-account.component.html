@@ -10,20 +10,26 @@
 
   <div class="form-row-container mt-4" fxLayoutWrap fxLayoutGap="0.5%">
     <div fxFlex="33%">
-      <mat-form-field fxFlex>
+      <mat-icon color="primary" matTooltip="This is not your email address. This is the name that appears when you message someone."
+        matTooltipClass="tooltip-background" class="center-vertically">info</mat-icon>
+      <mat-form-field fxFlex class="ml-1">
         <input [(ngModel)]='ebayUpdateSettingsComponent.ebayUserName'
           name="ebayUserName" placeholder="eBay User Name" matInput>
       </mat-form-field>
     </div>
     <div fxFlex="33%">
-      <mat-form-field fxFlex>
+      <mat-icon color="primary" matTooltip="Capitalization matters for this one. This can be found by visiting your eBay store."
+        matTooltipClass="tooltip-background" class="center-vertically">info</mat-icon>
+      <mat-form-field fxFlex class="ml-1">
         <input [(ngModel)]='ebayUpdateSettingsComponent.ebayStoreName'
           name="ebayStoreName" placeholder="eBay Store Name" matInput>
       </mat-form-field>
     </div> 
 
     <div fxFlex="33%">
-      <mat-form-field fxFlex>
+      <mat-icon color="primary" matTooltip="This is developer's appId"
+        matTooltipClass="tooltip-background" class="center-vertically">info</mat-icon>
+      <mat-form-field fxFlex class="ml-1">
         <input [(ngModel)]='ebayUpdateSettingsComponent.ebayAppId'
           name="ebayAppId" placeholder="eBay AppId" matInput>
       </mat-form-field>
@@ -32,10 +38,13 @@
 
   <div class="form-row-container" fxLayoutWrap fxLayoutGap="0.5%">
     <div fxFlex="100%">
-      <mat-form-field fxFlex>
+      <mat-icon color="primary" matTooltip="This is key generated to give account access to developer. The user must grant permission to the developer once. Then the developer can generate a OAuth key, which expires within short amount of time."
+        matTooltipClass="tooltip-background" class="center-vertically">info</mat-icon>
+      <mat-form-field fxFlex class="ml-1">
         <textarea [(ngModel)]='ebayUpdateSettingsComponent.ebayKey'
           name="ebayKey" placeholder="eBay Key" matInput></textarea>
       </mat-form-field>
+      
     </div>   
   </div>
 

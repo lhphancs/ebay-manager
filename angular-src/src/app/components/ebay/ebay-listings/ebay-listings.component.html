@@ -15,7 +15,7 @@
         
         <form class="entire-form mb-2 p-1" ngNativeValidate>
           <mat-form-field>
-            <input class="" [(ngModel)]='desiredProfitPerSingle' matInput
+            <input class="" [(ngModel)]='desiredProfitPerSingle' (ngModelChange)="onDesiredProfitChange()" matInput
               placeholder="Desired profit/pack" [ngModelOptions]="{standalone: true}"
               type="number" min="0" step="any" required>
             <span matPrefix>$&nbsp;</span>
