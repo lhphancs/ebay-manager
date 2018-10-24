@@ -17,6 +17,9 @@ Desired transformed header names must be equal across all csv's.
         File1: Product No.  -> productno
         File2: product no   -> productno
 The column order of the header names for a excel file do not matter.
+
+Coder Note:
+    At the moment, ship method excel must have columns in certain order. Ie) UPC first col...
 '''
 
 def getLoweredAlphaNumericStr(string:str)->str:
@@ -99,8 +102,6 @@ def addOrModifyPackInfo(packsInfo, packInfoToInsert):
 
     if 'ASIN' in packInfoToInsert:
         packsInfo[packAmt]['ASIN'] = packInfoToInsert['ASIN']
-    if 'preparation' in packInfoToInsert:
-        packsInfo[packAmt]['preparation'] = packInfoToInsert['preparation']
 
 def placeProductToInsert(userId:ObjectId, upcToShippingInfoDict:dict, dictOfProdsToInsert:dict, productToInsert:dict, packInfoToInsert:dict, sheetTitle:str):
     if 'packAmt' not in packInfoToInsert:
@@ -176,9 +177,12 @@ def addToUpcToShippingInfoDict(upcToShippingInfoDict, shipNameToIdDict, row):
         packAmt = int(row[2].value)
         shipType = row[3].value
         ozWeight = row[4].value
+        package = row[5].value
+        preparation = row[6].value
         if upc not in upcToShippingInfoDict:
             upcToShippingInfoDict[upc] = {}
-        upcToShippingInfoDict[upc][packAmt] = {'shipMethodId':shipNameToIdDict[shipType], 'ozWeight':ozWeight}
+        upcToShippingInfoDict[upc][packAmt] = {'shipMethodId':shipNameToIdDict[shipType]
+                                                , 'ozWeight':ozWeight, 'package':package, 'preparation':preparation}
 
 def getUpcToShippingInfoDict(shipMethodExcelPath, db, userId):
     upcToShippingInfoDict = {}
@@ -213,7 +217,7 @@ def getUserId(db):
 def promptUserEmailAndIntegrateFiles(db, wholesaleExcelPath, shipMethodExcelPath):
     mainHeadersToMongoNameDict = {'UPC':'UPC', 'product name':'name', 'stock no':'stockNo'
                                    , 'total cost':'costPerBox', 'box amount':'quantityPerBox'}
-    packInfoHeadersToMongoNameDict = {'pack':'packAmt', 'ASIN':'ASIN', 'Prep':'preparation'}   
+    packInfoHeadersToMongoNameDict = {'pack':'packAmt', 'ASIN':'ASIN'}   
     userId = getUserId(db)
     upcToShippingInfoDict = getUpcToShippingInfoDict(shipMethodExcelPath, db, userId)
         

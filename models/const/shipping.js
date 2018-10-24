@@ -72,23 +72,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
         , description: `Package: "Large flat rate box".
         
         Info: ${noBulgeString}`
-        , flatRatePrice: 17.10, ozPrice: null },
-
-
-    { shipMethodName:'2Lb Priority mail with restrictions'
-        , imgUrl: '../../../assets/imgs/USPS/priority_box_large.jpg'
-        , description: `Package: Your own envelope/box or any "Priority Mail" box.
-        
-        Info: Cost varies by location. A flat rate is assumed by choosing the MAX shipping cost. It also assumes destination is USA only. "Added cost" is applied if package exceeds size conditions. To avoid "added cost", meet the conditions listed below.
-        
-        Weight: Below or exactly 2Lb, and above 1Lb
-
-        Size: Length + girth < 84 inches
-        Volume: Less than or equal to 1ft*1ft*1ft (1 cubic ft)
-
-        ${lengthAndGirthDescriptionString}
-        `
-    , flatRatePrice: 10.80, ozPrice: null }
+        , flatRatePrice: 17.10, ozPrice: null }
 ];
 
 const DEFAULT_FEDEX_SHIP_METHOD_LIST = [
