@@ -21,8 +21,15 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
         Weight: 16oz or less.
 
         Size: Maximum combined length and girth is 108 inches.
-        
+
         ${lengthAndGirthDescriptionString}
+
+        Price comparison with 'priority mail':
+        'Priority mail' cost depends on location. If package exceeds certain size criteria, there is added cost. If it is shipping to worst location and there are no added costs due to size of package, the following comparisons can be made:
+        2x 16oz 'First class' packages are cheaper than the max cost of '2Lb priority mail'.
+        3x 16oz 'First class' packages are cheaper than the max cost of '3Lb priority mail'.
+
+        However, priority may be cheaper if it is a good location.
         `
         , flatRatePrice: null, ozPrice: DEFAULT_USPS_FIRST_CLASS_OZ_PRICE},
 
