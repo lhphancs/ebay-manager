@@ -131,18 +131,18 @@
     margin-right: auto;
 }
 
-.row-red{
+.bg-red{
     background-color: #ff9191;
 }
 
-.row-green{
+.bg-green{
     background-color: #99ff99;
 }
 
-.row-yellow{
+.bg-yellow{
     background-color: #feff99;
 }
 
-.row-purple{
+.bg-purple{
     background-color: #b399ff;
 }
