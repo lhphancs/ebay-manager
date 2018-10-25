@@ -211,20 +211,37 @@ def getUserId(db):
         userEmail = input('Enter existing email: ')
         queryDoc = userCollection.find_one( {'email': userEmail} )
         if queryDoc != None:
-            return ObjectId( queryDoc['_id'] )
-        print('Invalid email...Try again...')
+            return (userEmail, ObjectId(queryDoc['_id']) )
+        print('Invalid email... Try again...')
+
+def getConfirmation(userEmail):
+    while True:
+        confirm = input( str.format("Proceeding will delete all products of {}. Proceed? (Y)es or (N)o: ", userEmail) )
+        confirm = confirm.strip().upper()
+        if confirm == 'Y' or confirm == 'N':
+            return confirm
+        print('Invalid response... Try again...')
 
 def promptUserEmailAndIntegrateFiles(db, wholesaleExcelPath, shipMethodExcelPath):
     mainHeadersToMongoNameDict = {'UPC':'UPC', 'product name':'name', 'stock no':'stockNo'
                                    , 'total cost':'costPerBox', 'box amount':'quantityPerBox'}
     packInfoHeadersToMongoNameDict = {'pack':'packAmt', 'ASIN':'ASIN'}   
-    userId = getUserId(db)
+    email, userId = getUserId(db)
+    confirmation = getConfirmation(email)
+    if confirmation == 'N':
+        return
+    print( str.format("Deleting all products for {}...", email) )
+    prodCollection = db['products']
+    prodCollection.delete_many({'userId': userId})
+
+    print("Reading excel files...")
     upcToShippingInfoDict = getUpcToShippingInfoDict(shipMethodExcelPath, db, userId)
         
     wb = openpyxl.load_workbook(wholesaleExcelPath)
     headerRow = 2
+    print("Adding to database...")
     for sheet in wb:
-        processSheet(userId, db['products'], sheet, upcToShippingInfoDict, headerRow, mainHeadersToMongoNameDict, packInfoHeadersToMongoNameDict)
+        processSheet(userId, prodCollection, sheet, upcToShippingInfoDict, headerRow, mainHeadersToMongoNameDict, packInfoHeadersToMongoNameDict)
     
 if __name__ == '__main__':
     rootFolderName = os.path.dirname(os.path.abspath(__file__))

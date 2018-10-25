@@ -64,7 +64,7 @@ function getNonVariationXmlRequests(ebayKey, itemId){
 }
 
 function getNonVariationDataFromXml(xml){
-    let data = {};
+    let data = {nonVariation: true};
     let getItemResponse = xml.GetItemResponse;
     let item = getItemResponse.Item[0];
     data.listTitle = item.Title[0];
@@ -81,14 +81,14 @@ function getNonVariationDataFromXml(xml){
 
     let shippingDetails = item.ShippingDetails[0];
     let shippingServiceOptions = shippingDetails.ShippingServiceOptions[0];
-    data.freeShipping = shippingServiceOptions.FreeShipping[0];
+    data.freeShipping = shippingServiceOptions.hasOwnProperty('FreeShipping');
 
     let listingDetails = item.ListingDetails[0];
     data.listUrl = listingDetails.ViewItemURL[0];
 
     let quantityLeft = item.Quantity[0];
-    let packAmt = 1;
-    data.variation[packAmt] = {packAmt: 1, ebayQuantityLeft:quantityLeft
+    data.variation = {};
+    data.variation[1] = {packAmt: 1, ebayQuantityLeft:quantityLeft
         , ebaySellPrice: currentPrice};
     return data;
 }
@@ -162,7 +162,6 @@ function addNonVariationToListingDict(datas, listingDict){
     for(let data of datas){
         let upc = data.UPC;
         listingDict[upc] = data;
-        delete listingDict[upc].UPC;
     }
 }
 
@@ -183,8 +182,7 @@ function handleValidJsonOfListings(res, ebayKey, ebaySettings, listingDict
     if(itemArray.length == ENTRIES_PER_PAGE)
         handleJsonOfListings(res, curDateStr, futureDateStr, ebayKey, ebaySettings, listingDict, nonVariationXmlRequests, pageNum+1)
     else{
-        let sub = [nonVariationXmlRequests[0], nonVariationXmlRequests[1]]
-        async.map(sub, getItemRequest, function(err, r){
+        async.map(nonVariationXmlRequests, getItemRequest, function(err, r){
             if (err)
                 return console.log(err);
             else{
@@ -250,7 +248,7 @@ router.post('/listings', (req, res, next) => {
                     handleJsonOfListings(res, strDates.curDateStr, strDates.futureDateStr
                         , ebayKey, ebaySettings, listingDict, nonVariationXmlRequests, 1);
                 }
-            })
+            });
         }
     });
 })
