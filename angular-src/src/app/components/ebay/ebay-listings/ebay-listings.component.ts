@@ -131,7 +131,9 @@ export class EbayListingsComponent implements OnInit {
         let ebaySellPrice = variation.ebaySellPrice;
         let packAmt = variation.packAmt;
         let shipId = variation.shipMethodId;
-        let shipCost = this.ebayComponent.dictShipIdAndOzToCost[shipId];
+        let oz = variation.ozWeight;
+        let key = shipId in this.ebayComponent.dictShipIdAndOzToCost ? shipId: shipId + oz;
+        let shipCost = this.ebayComponent.dictShipIdAndOzToCost[key];
 
         let totalEbayFee = calculateTotalEbayFee(ebaySellPrice, this.ebayPercentageFromSaleFee);
         let totalPaypalFee = calculateTotalPaypalFee(ebaySellPrice, this.paypalPercentageFromSaleFee, this.paypalFlatFee);
@@ -149,15 +151,16 @@ export class EbayListingsComponent implements OnInit {
       let packAmt = packInfo.packAmt;
       if(packAmt in listing.variation){
         let variationToEdit = listing.variation[packAmt];
-        variationToEdit.ozWeight = packInfo.ozWeight;
+        variationToEdit.ozWeight = Math.ceil(packInfo.ozWeight);
         variationToEdit.shipMethodId = packInfo.shipMethodId;
         variationToEdit.packaging = packInfo.packaging;
         variationToEdit.preparation = packInfo.preparation;
 
         let shipId = packInfo.shipMethodId;
         let key = shipId in this.ebayComponent.dictShipIdAndOzToCost ? shipId: shipId + variationToEdit.ozWeight;
-        let shipCost = this.ebayComponent.dictShipIdAndOzToCost[key];
         
+        let shipCost = this.ebayComponent.dictShipIdAndOzToCost[key];
+
         variationToEdit.desiredPrice = calculateDesiredProfit(this.desiredProfitPerSingle
           , packAmt, listing.costPerSingle, shipCost, 0, this.ebayPercentageFromSaleFee
           , this.paypalPercentageFromSaleFee, this.paypalFlatFee)
@@ -194,13 +197,12 @@ export class EbayListingsComponent implements OnInit {
       for(let variation of listing['variation']){
         let packAmt = variation['packAmt'];
         let shipId = variation['shipMethodId'];
-        let oz = variation['ozWeight'];
+        let oz = variation.ozWeight;
         let key = shipId in this.ebayComponent.dictShipIdAndOzToCost ? shipId: shipId + oz;
         let shipCost = this.ebayComponent.dictShipIdAndOzToCost[key];
-        let costPerSingle = listing['costPerSingle'];
 
         variation['desiredPrice'] = calculateDesiredProfit(this.desiredProfitPerSingle
-          , packAmt, costPerSingle, shipCost, 0, this.ebayPercentageFromSaleFee
+          , packAmt, listing.costPerSingle, shipCost, 0, this.ebayPercentageFromSaleFee
           , this.paypalPercentageFromSaleFee, this.paypalFlatFee)
       }
       this.updateListingProfitStatus(listing);
