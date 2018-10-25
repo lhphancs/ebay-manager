@@ -12,7 +12,7 @@ import { calculateProfit } from '../calculations';
 import { calculateDesiredProfit } from '../calculations';
 
 var ProfitStatus = {
-  uncalculatable: 1,
+  incalculable: 1,
   aboveDesiredPrice: 2,
   aboveDesiredProfitPerSingle: 3,
   belowDesiredProfitPerSingle: 4
@@ -105,7 +105,7 @@ export class EbayListingsComponent implements OnInit {
       variation.profitStatus = ProfitStatus.aboveDesiredProfitPerSingle;
     
     switch(listingProfitStatus){
-      case ProfitStatus.uncalculatable:               return ProfitStatus.uncalculatable;
+      case ProfitStatus.incalculable:                 return ProfitStatus.incalculable;
       case ProfitStatus.belowDesiredProfitPerSingle:  return ProfitStatus.belowDesiredProfitPerSingle;
       case ProfitStatus.aboveDesiredPrice:            return variation.profitStatus;
       case ProfitStatus.aboveDesiredProfitPerSingle:
@@ -124,8 +124,8 @@ export class EbayListingsComponent implements OnInit {
       let variation = variations[key];
       let desiredPrice = variation.desiredPrice;
       if( typeof(desiredPrice) != 'number' ){
-        listingProfitStatus = ProfitStatus.uncalculatable;
-        variation.profitStatus = ProfitStatus.uncalculatable;
+        listingProfitStatus = ProfitStatus.incalculable;
+        variation.profitStatus = ProfitStatus.incalculable;
       }
       else{
         let ebaySellPrice = variation.ebaySellPrice;

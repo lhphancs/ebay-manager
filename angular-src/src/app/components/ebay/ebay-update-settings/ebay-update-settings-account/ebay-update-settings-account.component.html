@@ -38,7 +38,9 @@
 
   <div class="form-row-container" fxLayoutWrap fxLayoutGap="0.5%">
     <div fxFlex="100%">
-      <mat-icon color="primary" matTooltip="This is key generated to give account access to developer. The user must grant permission to the developer once. Then the developer can generate a OAuth key, which expires within short amount of time."
+      <mat-icon color="primary" matTooltip="This is key generated to give account access to developer. The user must grant permission to the developer once. Then the developer can generate a OAuth key, which expires within short amount of time.
+      One place to obtain key is in following link:
+      https://developer.ebay.com/DevZone/build-test/test-tool"
         matTooltipClass="tooltip-background" class="center-vertically">info</mat-icon>
       <mat-form-field fxFlex class="ml-1">
         <textarea [(ngModel)]='ebayUpdateSettingsComponent.ebayKey'
