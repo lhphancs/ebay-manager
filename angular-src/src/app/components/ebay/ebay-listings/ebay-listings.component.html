@@ -87,13 +87,13 @@
                           <td>{{ebayComponent.dictShipIdToName[entry.shipMethodId]}}</td>
                           <td>{{entry.ozWeight}}</td>
                           <td>{{entry.preparation}}</td>
-                          <td>{{entry.desiredPrice | number : '1.2-2'}}</td>
-                          <td >{{entry.ebaySellPrice | number : '1.2-2'}}</td>
+                          <td>{{entry.desiredPrice}}</td>
+                          <td >{{entry.ebaySellPrice}}</td>
                           <td [ngClass]="entry.profitStatus == 1 ? 'bg-purple'
                             : entry.profitStatus == 2 ? 'bg-success'
                             : entry.profitStatus == 3 ? 'bg-warning'
                             : 'bg-danger'">
-                            {{entry.profit | number : '1.2-2'}}
+                            {{entry.profit}}
                           </td>
                         </tr>
                       </tbody>
