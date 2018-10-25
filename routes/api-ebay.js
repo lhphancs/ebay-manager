@@ -60,6 +60,7 @@ function getPackAmt(variation){
     return undefined;
 }
 
+///////////// break this up into variation vs non variation //////////
 function handleValidJsonOfListings(res, ebayKey, ebaySettings, listingDict
                                     , pageNum, sellerListResponse){
     let itemArray = sellerListResponse.ItemArray[0].Item;
@@ -89,6 +90,9 @@ function handleValidJsonOfListings(res, ebayKey, ebaySettings, listingDict
                     listingDict[upc].variation[packAmt] = {packAmt: packAmt, ebayQuantityLeft:ebayQuantityLeft
                                                             , ebaySellPrice: ebaySellPrice};
                 }
+            }
+            else{
+                //complete here;
             }
         }
     }

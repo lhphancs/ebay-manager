@@ -10,12 +10,13 @@
           <mat-icon color="primary">add_circle</mat-icon>
         </button>
         <div class="row-container p-3" *ngFor="let shipMethodObj of companyObj.shipMethods; let shipMethodIndex=index">
-          <div class="ship-img-container d-flex justify-content-center p-1"
+          <div class="ship-img-container d-flex justify-content-center border border-secondary p-1"
           (click)="toggleZoomClass(shipMethodObj)" [class.zoom]="shipMethodObj.active">
             <img class="ship-img" src={{shipMethodObj.imgUrl}}>
           </div>
           
-          <a routerLink="/shippings/update/{{shipMethodObj.shipMethodId}}" class="ml-2 main-btn ship-method-container d-flex align-items-center">
+          <a routerLink="/shippings/update/{{shipMethodObj.shipMethodId}}"
+          class="ml-2 main-btn ship-method-container d-flex align-items-center border border-secondary">
             <mat-icon class="edit-icon">edit</mat-icon>
             {{shipMethodObj.shipMethodName}}
           </a>
@@ -26,7 +27,7 @@
               ${{shipMethodObj.flatRatePrice}}
           </div>
           <ng-template #ozPriceTable>
-            <table class="table price price-tbl table-striped table-light">
+            <table class="table price price-tbl table-striped table-light border border-secondary">
               <tbody>
                 <tr class="oz-price-tbl-row" *ngFor="let ozPrice of shipMethodObj.ozPrice">
                   <td>{{ozPrice.oz}}oz</td>

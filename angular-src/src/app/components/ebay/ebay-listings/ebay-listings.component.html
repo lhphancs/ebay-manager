@@ -1,4 +1,8 @@
 
+<!-- Note: profitStatus uses const value 1-4:
+  uncalculatable: 1,                aboveDesiredPrice: 2,
+  aboveDesiredProfitPerSingle: 3,   belowDesiredProfitPerSingle: 4
+-->
 <progress-spinner *ngIf="!dataSource && isLoading" [msg]="loadingMsg"></progress-spinner>
 
 <div *ngIf="!isLoading">
@@ -28,7 +32,7 @@
           <!-- imgUrl column -->
           <ng-container matColumnDef="imgUrl">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Img</th>
-            <td mat-cell *matCellDef="let element"><a href={{element.listUrl}} target="_blank"><img class="img-in-tbl text-center" src="{{element.imgUrl}}"></a></td>
+            <td mat-cell *matCellDef="let element"><a href={{element.listUrl}} target="_blank"><img class="img-in-tbl text-center border border-secondary" src="{{element.imgUrl}}"></a></td>
           </ng-container>
       
           <!-- listTitle column -->
@@ -74,6 +78,7 @@
                           <th scope="col">Preparation</th>
                           <th scope="col">Desired Price</th>
                           <th scope="col">eBay Sell Price</th>
+                          <th scope="col">Profit</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -82,10 +87,13 @@
                           <td>{{ebayComponent.dictShipIdToName[entry.shipMethodId]}}</td>
                           <td>{{entry.ozWeight}}</td>
                           <td>{{entry.preparation}}</td>
-                          <td>{{entry.desiredPrice}}</td>
-                          <td [ngClass]="{'bg-danger': entry.ebaySellPrice < entry.desiredPrice,
-                            'bg-success' : entry.ebaySellPrice >= entry.desiredPrice}">
-                            {{entry.ebaySellPrice}}
+                          <td>{{entry.desiredPrice | number : '1.2-2'}}</td>
+                          <td >{{entry.ebaySellPrice | number : '1.2-2'}}</td>
+                          <td [ngClass]="entry.profitStatus == 1 ? 'bg-purple'
+                            : entry.profitStatus == 2 ? 'bg-success'
+                            : entry.profitStatus == 3 ? 'bg-warning'
+                            : 'bg-danger'">
+                            {{entry.profit | number : '1.2-2'}}
                           </td>
                         </tr>
                       </tbody>
@@ -100,7 +108,10 @@
           </ng-container>
         
           <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header-row"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;" [class.row-red]="row.hasUndesiredPrice"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          [ngClass]="row.profitStatus == 1 ? 'row-purple':
+                      row.profitStatus == 2 ? 'row-green':
+                      row.profitStatus ==  3 ? 'row-yellow' : 'row-red'"></tr>
         </table>
       </div>
   </div>

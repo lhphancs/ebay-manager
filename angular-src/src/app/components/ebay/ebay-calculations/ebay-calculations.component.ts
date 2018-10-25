@@ -4,9 +4,9 @@ import { MatTableDataSource, MatSort, MatSnackBar } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { EbayComponent } from '../ebay.component';
 import { DatabaseProductsService } from '../../../services/database-products.service';
-import { DatabaseShippingsService } from '../../../services/database-shippings.service';
 import { openSnackbar } from '../../snackbar';
 import { DatabaseUsersService } from '../../../services/database-users.service';
+import { calculateDesiredProfit } from '../calculations';
 
 @Component({
   selector: 'ebay-calculations',
@@ -78,29 +78,13 @@ export class EbayCalculationsComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  getErrMsg(totalProfit, totalProductCost, shipCost){
-    let BASE_ERR_MSG = "Err: ";
-    let errMsg = BASE_ERR_MSG;
-    if(!totalProfit) errMsg += "desiredProfit ";
-    if(!totalProductCost) errMsg += "totalProductCost ";
-    if(!shipCost) errMsg += "shipId/oz";
-    return errMsg == BASE_ERR_MSG ? null : errMsg;
-  }
-
   calculateDesiredPrice(packAmt, shipId, oz, costPerSingle){
     let roundedUpOz = oz ? Math.ceil(oz): "";
-    let totalProfit = this.desiredProfitPerSingle * packAmt;
-    let totalProductCost = costPerSingle * packAmt;
     let key = shipId in this.ebayComponent.dictShipIdAndOzToCost ? shipId: shipId + roundedUpOz;
     let shipCost = this.ebayComponent.dictShipIdAndOzToCost[key];
     
-    let err = this.getErrMsg(totalProfit, totalProductCost, shipCost);
-    if(err)
-      return err;
-
-    return Math.round((totalProfit+this.paypalFlatFee
-      + totalProductCost + shipCost)
-      / (1-this.paypalPercentageFromSaleFee*0.01 - this.ebayPercentageFromSaleFee*0.01)*100)/100;
+    return calculateDesiredProfit(this.desiredProfitPerSingle, packAmt, costPerSingle, shipCost
+      , 0, this.ebayPercentageFromSaleFee, this.paypalPercentageFromSaleFee, this.paypalFlatFee);
   }
 }
 

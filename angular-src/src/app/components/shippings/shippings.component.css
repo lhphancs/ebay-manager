@@ -10,7 +10,6 @@
     font-size: 0.8em;
     background-color:white;
     width:120px;
-    border: 1px solid grey;
     display:inline-block;
     max-height:100px;
     margin-bottom: 0px;
@@ -38,12 +37,8 @@
 }
 
 .ship-img-container{
-    border: 1px solid grey;
     width: 200px;
     background-color: white;
-}
-
-.ship-img-container{
     cursor: zoom-in;
 }
 

@@ -5,8 +5,18 @@ import { EbayComponent } from '../ebay.component';
 import { DatabaseProductsService } from '../../../services/database-products.service';
 import { MatSnackBar, MatTableDataSource, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Variation } from '../../../classesAndInterfaces/Variation';
 import { DatabaseUsersService } from '../../../services/database-users.service';
+import { calculateTotalEbayFee } from '../calculations';
+import { calculateTotalPaypalFee } from '../calculations';
+import { calculateProfit } from '../calculations';
+import { calculateDesiredProfit } from '../calculations';
+
+var ProfitStatus = {
+  uncalculatable: 1,
+  aboveDesiredPrice: 2,
+  aboveDesiredProfitPerSingle: 3,
+  belowDesiredProfitPerSingle: 4
+};
 
 @Component({
   selector: 'ebay-listings',
@@ -78,25 +88,79 @@ export class EbayListingsComponent implements OnInit {
 
   addListingsFromDict(listingDict){
     for(let key in listingDict){
-      listingDict[key].variation = Object.values(listingDict[key].variation);
+      let listing = listingDict[key];
+
+      listing.variation = Object.values(listing.variation);
+      this.updateListingProfitStatus(listing);
       this.listings.push(listingDict[key]);
     }
   }
 
+  handleVariationProfitStatus(variation, desiredPrice, listingProfitStatus){
+    if(variation['ebaySellPrice'] >= desiredPrice)
+      variation.profitStatus = ProfitStatus.aboveDesiredPrice;
+    else if( variation.profit < this.desiredProfitPerSingle)
+      variation.profitStatus = ProfitStatus.belowDesiredProfitPerSingle;
+    else
+      variation.profitStatus = ProfitStatus.aboveDesiredProfitPerSingle;
+    
+    switch(listingProfitStatus){
+      case ProfitStatus.uncalculatable:               return ProfitStatus.uncalculatable;
+      case ProfitStatus.belowDesiredProfitPerSingle:  return ProfitStatus.belowDesiredProfitPerSingle;
+      case ProfitStatus.aboveDesiredPrice:            return variation.profitStatus;
+      case ProfitStatus.aboveDesiredProfitPerSingle:
+        return variation.profitStatus == ProfitStatus.belowDesiredProfitPerSingle 
+          ? ProfitStatus.belowDesiredProfitPerSingle : ProfitStatus.aboveDesiredProfitPerSingle
+    }
+  }
+  
+
+  updateListingProfitStatus(listing){
+    let costPerSingle = listing.costPerSingle;
+    let listingProfitStatus = ProfitStatus.aboveDesiredPrice;
+
+    let variations = listing.variation;
+    for(let key in variations){
+      let variation = variations[key];
+      let desiredPrice = variation.desiredPrice;
+      if( typeof(desiredPrice) != 'number' ){
+        listingProfitStatus = ProfitStatus.uncalculatable;
+        variation.profitStatus = ProfitStatus.uncalculatable;
+      }
+      else{
+        let ebaySellPrice = variation.ebaySellPrice;
+        let packAmt = variation.packAmt;
+        let shipId = variation.shipMethodId;
+        let shipCost = this.ebayComponent.dictShipIdAndOzToCost[shipId];
+
+        let totalEbayFee = calculateTotalEbayFee(ebaySellPrice, this.ebayPercentageFromSaleFee);
+        let totalPaypalFee = calculateTotalPaypalFee(ebaySellPrice, this.paypalPercentageFromSaleFee, this.paypalFlatFee);
+        variation.profit = calculateProfit(ebaySellPrice, packAmt, costPerSingle, shipCost
+          , totalEbayFee, totalPaypalFee, 0);
+
+        listingProfitStatus = this.handleVariationProfitStatus(variation, desiredPrice, listingProfitStatus);
+      }
+    }
+    listing.profitStatus = listingProfitStatus;
+  }
+
   addVariationsToListing(listing, packsInfo){
-    listing.hasUndesiredPrice = false;
     for(let packInfo of packsInfo){
-      if(packInfo.packAmt in listing.variation){
-        let variationToEdit = listing.variation[packInfo.packAmt];
+      let packAmt = packInfo.packAmt;
+      if(packAmt in listing.variation){
+        let variationToEdit = listing.variation[packAmt];
         variationToEdit.ozWeight = packInfo.ozWeight;
         variationToEdit.shipMethodId = packInfo.shipMethodId;
         variationToEdit.packaging = packInfo.packaging;
         variationToEdit.preparation = packInfo.preparation;
-        variationToEdit.desiredPrice = this.calculateDesiredPrice(packInfo.packAmt
-                                      , packInfo.shipMethodId, packInfo.ozWeight
-                                      , listing.costPerSingle);
-        if(variationToEdit.ebaySellPrice < variationToEdit.desiredPrice)
-          listing.hasUndesiredPrice = true;
+
+        let shipId = packInfo.shipMethodId;
+        let key = shipId in this.ebayComponent.dictShipIdAndOzToCost ? shipId: shipId + variationToEdit.ozWeight;
+        let shipCost = this.ebayComponent.dictShipIdAndOzToCost[key];
+        
+        variationToEdit.desiredPrice = calculateDesiredProfit(this.desiredProfitPerSingle
+          , packAmt, listing.costPerSingle, shipCost, 0, this.ebayPercentageFromSaleFee
+          , this.paypalPercentageFromSaleFee, this.paypalFlatFee)
       }
     }
   }
@@ -109,7 +173,6 @@ export class EbayListingsComponent implements OnInit {
       listing.stockNo = product.stockNo;
       listing.costPerSingle = product.costPerBox/product.quantityPerBox;
       this.addVariationsToListing(listing, product.packsInfo)
-
     }
   }
 
@@ -126,36 +189,21 @@ export class EbayListingsComponent implements OnInit {
     return errMsg == BASE_ERR_MSG ? null : errMsg;
   }
 
-  calculateDesiredPrice(packAmt, shipId, oz, costPerSingle){
-    let roundedUpOz = oz ? Math.ceil(oz): "";
-    let totalProfit = this.desiredProfitPerSingle * packAmt;
-    let totalProductCost = costPerSingle * packAmt;
-
-    let key = shipId in this.ebayComponent.dictShipIdAndOzToCost ? shipId: shipId + roundedUpOz;
-    let shipCost = this.ebayComponent.dictShipIdAndOzToCost[key];
-    
-    let err = this.getErrMsg(totalProfit, totalProductCost, shipCost);
-    if(err)
-      return err;
-
-    return Math.round((totalProfit + this.paypalFlatFee
-      + totalProductCost + shipCost)
-      / (1-this.paypalPercentageFromSaleFee*0.01 - this.ebayPercentageFromSaleFee*0.01)*100)/100;
-  }
-
   onDesiredProfitChange(){
     for(let listing of this.listings){
-      let hasUndesiredPrice = false;
       for(let variation of listing['variation']){
         let packAmt = variation['packAmt'];
         let shipId = variation['shipMethodId'];
         let oz = variation['ozWeight'];
+        let key = shipId in this.ebayComponent.dictShipIdAndOzToCost ? shipId: shipId + oz;
+        let shipCost = this.ebayComponent.dictShipIdAndOzToCost[key];
         let costPerSingle = listing['costPerSingle'];
-        variation['desiredPrice'] = this.calculateDesiredPrice(packAmt, shipId, oz, costPerSingle); 
-        if(variation['ebaySellPrice'] < variation['desiredPrice'])
-          hasUndesiredPrice = true;
+
+        variation['desiredPrice'] = calculateDesiredProfit(this.desiredProfitPerSingle
+          , packAmt, costPerSingle, shipCost, 0, this.ebayPercentageFromSaleFee
+          , this.paypalPercentageFromSaleFee, this.paypalFlatFee)
       }
-      listing['hasUndesiredPrice'] = hasUndesiredPrice;
+      this.updateListingProfitStatus(listing);
     }
   }
 }

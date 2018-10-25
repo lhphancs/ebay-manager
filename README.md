@@ -1,7 +1,8 @@
 # inventory-manager
+
 ## Purpose: Inventory manager to store details of products and calculate profits from eBay and amazon
 
-IMPORTANT: At the moment, project should only be used locally due to security reasons.
+### IMPORTANT: At the moment, project should only be used locally due to security reasons.
 
 ### Main running instructions
 1. Open command prompt
