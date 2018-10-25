@@ -36,7 +36,7 @@ function getItemXmlRequestBody(itemId){
             <!--Enter an ItemID-->
             <ItemID>${itemId}</ItemID>
             <DetailLevel>ItemReturnAttributes</DetailLevel>
-            <OutputSelector>ProductListingDetails,SellingStatus,ShippingDetails</OutputSelector>
+            <OutputSelector>Title,Quantity,ProductListingDetails,SellingStatus,ShippingDetails,PictureDetails,ListingDetails</OutputSelector>
         </GetItemRequest>`;
 }
 
@@ -63,18 +63,43 @@ function getNonVariationXmlRequests(ebayKey, itemId){
     }
 }
 
+function getNonVariationDataFromXml(xml){
+    let data = {};
+    let getItemResponse = xml.GetItemResponse;
+    let item = getItemResponse.Item[0];
+    data.listTitle = item.Title[0];
+    
+
+    let sellingStatus = item.SellingStatus[0];
+    let currentPrice = sellingStatus.CurrentPrice[0]._;
+
+    let productListingDetails = item.ProductListingDetails[0];
+    data.UPC = productListingDetails.UPC[0];
+
+    let pictureDetails = item.PictureDetails[0];
+    data.imgUrl = pictureDetails.GalleryURL[0];
+
+    let shippingDetails = item.ShippingDetails[0];
+    let shippingServiceOptions = shippingDetails.ShippingServiceOptions[0];
+    data.freeShipping = shippingServiceOptions.FreeShipping[0];
+
+    let listingDetails = item.ListingDetails[0];
+    data.listUrl = listingDetails.ViewItemURL[0];
+
+    let quantityLeft = item.Quantity[0];
+    let packAmt = 1;
+    data.variation[packAmt] = {packAmt: 1, ebayQuantityLeft:quantityLeft
+        , ebaySellPrice: currentPrice};
+    return data;
+}
+
 function getItemRequest(nonVariationXmlRequest, callback) {
     request(nonVariationXmlRequest, function (err, response, body){
         parseString(body, function (e, result) {
             if(e) callback(e, result);
             else{
-                let data = {};
-                let getItemResponse = result.GetItemResponse;
-                let item = getItemResponse.Item[0];
-                let sellingStatus = item.SellingStatus[0];
-                console.log(item)
-                console.log(sellingStatus);
-                callback(e, result);
+                let data = getNonVariationDataFromXml(result);
+                callback(e, data);
             }
         });
     });
@@ -133,6 +158,14 @@ function addToListingDictForVariationListing(item, listingDict){
     }
 }
 
+function addNonVariationToListingDict(datas, listingDict){
+    for(let data of datas){
+        let upc = data.UPC;
+        listingDict[upc] = data;
+        delete listingDict[upc].UPC;
+    }
+}
+
 function handleValidJsonOfListings(res, ebayKey, ebaySettings, listingDict
 , nonVariationXmlRequests, pageNum, sellerListResponse){
     let itemArray = sellerListResponse.ItemArray[0].Item;
@@ -152,12 +185,14 @@ function handleValidJsonOfListings(res, ebayKey, ebaySettings, listingDict
     else{
         let sub = [nonVariationXmlRequests[0], nonVariationXmlRequests[1]]
         async.map(sub, getItemRequest, function(err, r){
-            if (err) return console.log(err);
-            res.json({success: true, listingDict: listingDict});
+            if (err)
+                return console.log(err);
+            else{
+                addNonVariationToListingDict(r, listingDict);
+                res.json({success: true, listingDict: listingDict});
+            }
         });
-        
-    }
-        
+    }  
 }
 
 function handleJsonOfListings(res, curDateStr, futureDateStr, ebayKey
