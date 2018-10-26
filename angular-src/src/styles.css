@@ -146,3 +146,8 @@
 .bg-purple{
     background-color: #b399ff;
 }
+
+.popTable{
+    max-height: 400px !important;
+    overflow: scroll;
+}

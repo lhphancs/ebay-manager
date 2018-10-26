@@ -58,7 +58,8 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Calculations</th>
       <td mat-cell *matCellDef="let element">
           <ng-template #popContent>
-            <table class="table table-striped table-primary">
+            <div class="popTable">
+              <table class="table table-striped table-primary">
                 <thead>
                   <tr>
                     <th scope="col">UPC</th>
@@ -87,6 +88,8 @@
                   </tr>
                 </tbody>
               </table>
+            </div>
+            
           </ng-template>
             
           <button class="btn btn-secondary btn-sm" type="button" [autoClose]="'outside'"
