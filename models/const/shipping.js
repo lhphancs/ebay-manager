@@ -12,6 +12,23 @@ const noBulgeString = "Package cannot be bulging when shipped."
 const lengthAndGirthDescriptionString = `Length = The longest side of the parcel.
 Girth = Measurement around the thickest part.`
 
+function getPriorityShippingObj(weightLb, maxCost){
+    return { shipMethodName:`${weightLb}Lb Priority mail with size/volume restrictions`
+        , imgUrl: '../../../assets/imgs/others/own_all_and_priority_box.jpg'
+        , description: `Package: Your own envelope/box or any "Priority Mail" box.
+        
+        Info: Cost varies by location. A flat rate is assumed by choosing the MAX shipping cost. It also assumes destination is USA only. "Added cost" is applied if package exceeds size conditions. To avoid "added cost", meet the conditions listed below.
+        It may be cheaper to create ${weightLb} 'First class packages' instead. This is used for packages that are large and cannot fit in the flat rate envelope/box.
+        
+        Weight: Below or exactly ${weightLb}Lb, and above ${weightLb-1}Lb
+        Size: Length + girth < 84 inches
+        Volume: Less than or equal to 1ft*1ft*1ft (1 cubic ft)
+        ${lengthAndGirthDescriptionString}
+        `
+        , flatRatePrice: maxCost, ozPrice: null
+    }
+}
+
 const DEFAULT_USPS_SHIP_METHOD_LIST = [
     { shipMethodName:"First class"
         , imgUrl: '../../../assets/imgs/others/own_all.jpg'
@@ -79,7 +96,10 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
         , description: `Package: "Large flat rate box".
         
         Info: ${noBulgeString}`
-        , flatRatePrice: 17.10, ozPrice: null }
+        , flatRatePrice: 17.10, ozPrice: null },
+
+    getPriorityShippingObj(2, 10.80),
+    getPriorityShippingObj(3, 15.34)
 ];
 
 const DEFAULT_FEDEX_SHIP_METHOD_LIST = [

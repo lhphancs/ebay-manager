@@ -144,6 +144,9 @@ export class EbayListingsComponent implements OnInit {
       }
     }
     listing.profitStatus = listingProfitStatus;
+    if( listing.hasOwnProperty('noFreeShipping') )
+      listing.profitStatus = ProfitStatus.incalculable;
+      
   }
 
   addVariationsToListing(listing, packsInfo){

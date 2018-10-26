@@ -81,7 +81,8 @@ function getNonVariationDataFromXml(xml){
 
     let shippingDetails = item.ShippingDetails[0];
     let shippingServiceOptions = shippingDetails.ShippingServiceOptions[0];
-    data.freeShipping = shippingServiceOptions.hasOwnProperty('FreeShipping');
+    if( !shippingServiceOptions.hasOwnProperty('FreeShipping') )
+        data.noFreeShipping = true;
 
     let listingDetails = item.ListingDetails[0];
     data.listUrl = listingDetails.ViewItemURL[0];
