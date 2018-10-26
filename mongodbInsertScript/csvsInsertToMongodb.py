@@ -113,10 +113,12 @@ def updateCheaperProductInfoIfNeeded(curProductInfo, oldProductInfo):
         curCostPerBox = curProductInfo['costPerBox']/curProductInfo['quantityPerBox']
         oldCostPerBox = oldProductInfo['costPerBox']/oldProductInfo['quantityPerBox']
         # Update existing info if cheaper. Carefully write over oldProductInfo to avoid overwritting past data
-        if curCostPerBox < oldCostPerBox:
-            print(  str.format("Replacing with cheaper price:\nOld: {}\nNew: {}\n"
+        if curCostPerBox != oldCostPerBox:
+            print(  str.format("Price change detected:\nOld: {}\nNew: {}\n"
             , str(oldProductInfo), str(curProductInfo) )  )
-            updateProductInfo(curProductInfo, oldProductInfo)
+            if curCostPerBox < oldCostPerBox:
+                print("Old product info was replaced due to cheaper price.")
+                updateProductInfo(curProductInfo, oldProductInfo)
     except TypeError:
         pass
 
@@ -160,7 +162,7 @@ def insertAllValidRowsToProductDict(userId:ObjectId, upcToShippingInfoDict:dict,
         
 def processSheet(userId:ObjectId, sheet, upcToShippingInfoDict:dict, headerRow:int
 , mainHeadersToMongoNameDict:dict, packInfoHeadersToMongoNameDict:dict, dictOfProdsToInsert:dict):
-    print( str.format('==================== Working on: {} ====================', sheet.title) )
+    print( str.format('==================== Reading: {} ====================', sheet.title) )
     
     mainColNumToHeaderNameDict = getColNumToHeaderNameDict(sheet, headerRow, mainHeadersToMongoNameDict)
     packInfoColNumToHeaderNameDict = getColNumToHeaderNameDict(sheet, headerRow, packInfoHeadersToMongoNameDict)
@@ -235,7 +237,9 @@ def getConfirmation(userEmail):
         print('Invalid response... Try again...')
 
 def insertToMongoDb(prodCollection, dictOfProdsToInsert):
+    print("Inserting to database...")
     if len(dictOfProdsToInsert) > 0:
+        listToInsert = []
         for prodToInsert in dictOfProdsToInsert.values():
             packInfoAsList = []
             packsInfo = prodToInsert['packsInfo']
@@ -244,10 +248,9 @@ def insertToMongoDb(prodCollection, dictOfProdsToInsert):
                 packInfo['packAmt'] = key
                 packInfoAsList.append(packInfo)
             prodToInsert['packsInfo'] = packInfoAsList
-            try:
-                prodCollection.insert_one(prodToInsert)
-            except pymongo.errors.DuplicateKeyError as e:
-                print(e)
+            listToInsert.append(prodToInsert)
+
+        prodCollection.insert_many(listToInsert)
 
 def promptUserEmailAndIntegrateFiles(db, wholesaleExcelPath, shipMethodExcelPath):
     mainHeadersToMongoNameDict = {'UPC':'UPC', 'product name':'name', 'stock no':'stockNo'
@@ -266,7 +269,7 @@ def promptUserEmailAndIntegrateFiles(db, wholesaleExcelPath, shipMethodExcelPath
         
     wb = openpyxl.load_workbook(wholesaleExcelPath)
     headerRow = 2
-    print("Adding to database...")
+
     dictOfProdsToInsert = {}
     for sheet in wb:
         processSheet(userId, sheet, upcToShippingInfoDict, headerRow, mainHeadersToMongoNameDict, packInfoHeadersToMongoNameDict, dictOfProdsToInsert)
