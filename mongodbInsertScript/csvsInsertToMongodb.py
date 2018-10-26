@@ -103,16 +103,37 @@ def addOrModifyPackInfo(packsInfo, packInfoToInsert):
     if 'ASIN' in packInfoToInsert:
         packsInfo[packAmt]['ASIN'] = packInfoToInsert['ASIN']
 
+def updateProductInfo(curProductInfo, oldProductInfo):
+    oldProductInfo['stockNo'] = curProductInfo['stockNo']
+    oldProductInfo['costPerBox'] = curProductInfo['costPerBox']
+    oldProductInfo['quantityPerBox'] = curProductInfo['quantityPerBox']
+
+def updateCheaperProductInfoIfNeeded(curProductInfo, oldProductInfo):
+    try:
+        curCostPerBox = curProductInfo['costPerBox']/curProductInfo['quantityPerBox']
+        oldCostPerBox = oldProductInfo['costPerBox']/oldProductInfo['quantityPerBox']
+        # Update existing info if cheaper. Carefully write over oldProductInfo to avoid overwritting past data
+        if curCostPerBox < oldCostPerBox:
+            print(  str.format("Replacing with cheaper price:\nOld: {}\nNew: {}\n"
+            , str(oldProductInfo), str(curProductInfo) )  )
+            updateProductInfo(curProductInfo, oldProductInfo)
+    except TypeError as e:
+        pass
+
 def placeProductToInsert(userId:ObjectId, upcToShippingInfoDict:dict, dictOfProdsToInsert:dict, productToInsert:dict, packInfoToInsert:dict, sheetTitle:str):
     if 'packAmt' not in packInfoToInsert:
         return
     if 'UPC' in productToInsert:
         upc = productToInsert['UPC']
+        #If the product info not in dict, add. Else, check/update if product cost is cheaper (Different wholesale might sell cheaper)
         if upc not in dictOfProdsToInsert:
             productToInsert['userId'] = userId
             productToInsert['wholesaleComp'] = sheetTitle
             productToInsert['packsInfo'] = getShippingInfo(upcToShippingInfoDict, upc)
             dictOfProdsToInsert[upc] = productToInsert
+        else:
+            updateCheaperProductInfoIfNeeded( productToInsert, dictOfProdsToInsert[upc] )
+
         addOrModifyPackInfo(dictOfProdsToInsert[upc]['packsInfo'], packInfoToInsert)
     elif len(productToInsert) > 0:
         print(str.format('UPC not found in: {}', productToInsert) )
