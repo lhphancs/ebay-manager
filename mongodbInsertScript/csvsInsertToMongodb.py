@@ -117,7 +117,7 @@ def updateCheaperProductInfoIfNeeded(curProductInfo, oldProductInfo):
             print(  str.format("Replacing with cheaper price:\nOld: {}\nNew: {}\n"
             , str(oldProductInfo), str(curProductInfo) )  )
             updateProductInfo(curProductInfo, oldProductInfo)
-    except TypeError as e:
+    except TypeError:
         pass
 
 def placeProductToInsert(userId:ObjectId, upcToShippingInfoDict:dict, dictOfProdsToInsert:dict, productToInsert:dict, packInfoToInsert:dict, sheetTitle:str):
@@ -138,44 +138,35 @@ def placeProductToInsert(userId:ObjectId, upcToShippingInfoDict:dict, dictOfProd
     elif len(productToInsert) > 0:
         print(str.format('UPC not found in: {}', productToInsert) )
 
-def insertAllValidRowsToMongoDb(userId:ObjectId, upcToShippingInfoDict:dict, collection, sheet, headerRow
+def insertAllValidRowsToProductDict(userId:ObjectId, upcToShippingInfoDict:dict, sheet, headerRow
     , mainHeadersToMongoNameDict:dict, colNumToHeaderNameDict:dict
-    , packInfoHeadersToMongoNameDict, packInfoColNumToHeaderNameDict)->None:
-    dictOfProdsToInsert = {}
-
+    , packInfoHeadersToMongoNameDict, packInfoColNumToHeaderNameDict, dictOfProdsToInsert)->None:
     for row in sheet.iter_rows(row_offset=headerRow):
         productToInsert = getDictMongoHeaderToCellVal(row, mainHeadersToMongoNameDict
                                              , colNumToHeaderNameDict)
-        if 'UPC' not in productToInsert or productToInsert['UPC'] == None:
+
+        if productToInsert == None or 'UPC' not in productToInsert:
             continue
-        packInfoToInsert = getDictMongoHeaderToCellVal(row, packInfoHeadersToMongoNameDict
-                                             , packInfoColNumToHeaderNameDict)
+        upc = productToInsert['UPC']
+        try:
+            int(upc) #Checks if it's a valid upc
+            packInfoToInsert = getDictMongoHeaderToCellVal(row, packInfoHeadersToMongoNameDict
+                            , packInfoColNumToHeaderNameDict)
         
-        placeProductToInsert(userId, upcToShippingInfoDict, dictOfProdsToInsert, productToInsert, packInfoToInsert, sheet.title)
+            placeProductToInsert(userId, upcToShippingInfoDict, dictOfProdsToInsert
+                            , productToInsert, packInfoToInsert, sheet.title)
+        except (ValueError, TypeError):
+            pass
         
-    if len(dictOfProdsToInsert) > 0:
-        for prodToInsert in dictOfProdsToInsert.values():
-            packInfoAsList = []
-            packsInfo = prodToInsert['packsInfo']
-            for key in sorted(packsInfo.keys()):
-                packInfo = packsInfo[key]
-                packInfo['packAmt'] = key
-                packInfoAsList.append(packInfo)
-            prodToInsert['packsInfo'] = packInfoAsList
-            try:
-                collection.insert_one(prodToInsert)
-            except pymongo.errors.DuplicateKeyError as e:
-                print(e)
-        
-def processSheet(userId:ObjectId, prodCollection, sheet, upcToShippingInfoDict:dict, headerRow:int
-, mainHeadersToMongoNameDict:dict, packInfoHeadersToMongoNameDict:dict):
+def processSheet(userId:ObjectId, sheet, upcToShippingInfoDict:dict, headerRow:int
+, mainHeadersToMongoNameDict:dict, packInfoHeadersToMongoNameDict:dict, dictOfProdsToInsert:dict):
     print( str.format('==================== Working on: {} ====================', sheet.title) )
     
     mainColNumToHeaderNameDict = getColNumToHeaderNameDict(sheet, headerRow, mainHeadersToMongoNameDict)
     packInfoColNumToHeaderNameDict = getColNumToHeaderNameDict(sheet, headerRow, packInfoHeadersToMongoNameDict)
-    insertAllValidRowsToMongoDb(userId, upcToShippingInfoDict, prodCollection, sheet, headerRow
+    insertAllValidRowsToProductDict(userId, upcToShippingInfoDict, sheet, headerRow
     , mainHeadersToMongoNameDict, mainColNumToHeaderNameDict
-    , packInfoHeadersToMongoNameDict, packInfoColNumToHeaderNameDict)
+    , packInfoHeadersToMongoNameDict, packInfoColNumToHeaderNameDict, dictOfProdsToInsert)
 
 def getFirstExcelPathFromFolder(folderPath):
     for file in os.listdir(folderPath):
@@ -243,6 +234,21 @@ def getConfirmation(userEmail):
             return confirm
         print('Invalid response... Try again...')
 
+def insertToMongoDb(prodCollection, dictOfProdsToInsert):
+    if len(dictOfProdsToInsert) > 0:
+        for prodToInsert in dictOfProdsToInsert.values():
+            packInfoAsList = []
+            packsInfo = prodToInsert['packsInfo']
+            for key in sorted(packsInfo.keys()):
+                packInfo = packsInfo[key]
+                packInfo['packAmt'] = key
+                packInfoAsList.append(packInfo)
+            prodToInsert['packsInfo'] = packInfoAsList
+            try:
+                prodCollection.insert_one(prodToInsert)
+            except pymongo.errors.DuplicateKeyError as e:
+                print(e)
+
 def promptUserEmailAndIntegrateFiles(db, wholesaleExcelPath, shipMethodExcelPath):
     mainHeadersToMongoNameDict = {'UPC':'UPC', 'product name':'name', 'stock no':'stockNo'
                                    , 'total cost':'costPerBox', 'box amount':'quantityPerBox'}
@@ -261,9 +267,11 @@ def promptUserEmailAndIntegrateFiles(db, wholesaleExcelPath, shipMethodExcelPath
     wb = openpyxl.load_workbook(wholesaleExcelPath)
     headerRow = 2
     print("Adding to database...")
+    dictOfProdsToInsert = {}
     for sheet in wb:
-        processSheet(userId, prodCollection, sheet, upcToShippingInfoDict, headerRow, mainHeadersToMongoNameDict, packInfoHeadersToMongoNameDict)
-    
+        processSheet(userId, sheet, upcToShippingInfoDict, headerRow, mainHeadersToMongoNameDict, packInfoHeadersToMongoNameDict, dictOfProdsToInsert)
+    insertToMongoDb(prodCollection, dictOfProdsToInsert)
+
 if __name__ == '__main__':
     rootFolderName = os.path.dirname(os.path.abspath(__file__))
     wholesaleFolderName = 'placeWholesaleExcelFileHere'
