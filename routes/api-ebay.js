@@ -14,7 +14,7 @@ function getSellerListXmlRequestBody(ebayUserName, curDateStr, futureDateStr, pa
     <GetSellerListRequest xmlns="urn:ebay:apis:eBLBaseComponents">    
         <ErrorLanguage>en_US</ErrorLanguage>
         <WarningLevel>High</WarningLevel>
-        <GranularityLevel>Coarse</GranularityLevel>
+        <DetailLevel>ItemReturnDescription</DetailLevel>
         <EndTimeFrom>${curDateStr}</EndTimeFrom>
         <EndTimeTo>${futureDateStr}</EndTimeTo>
         <UserID>${ebayUserName}</UserID>
@@ -24,7 +24,7 @@ function getSellerListXmlRequestBody(ebayUserName, curDateStr, futureDateStr, pa
             <EntriesPerPage>${ENTRIES_PER_PAGE}</EntriesPerPage>
         </Pagination>
         
-        <OutputSelector>ItemID,Title,PictureDetails,Variations,SellingStatus,ViewItemURL,PaginationResult</OutputSelector>
+        <OutputSelector>ItemID,Title,PictureDetails,Variations,SellingStatus,ViewItemURL,PaginationResult,ShippingDetails</OutputSelector>
     </GetSellerListRequest>`;
 }
 
@@ -81,8 +81,7 @@ function getNonVariationDataFromXml(xml){
 
     let shippingDetails = item.ShippingDetails[0];
     let shippingServiceOptions = shippingDetails.ShippingServiceOptions[0];
-    if( !shippingServiceOptions.hasOwnProperty('FreeShipping') )
-        data.noFreeShipping = true;
+    data.isFreeShipping = shippingServiceOptions.hasOwnProperty('FreeShipping');
 
     let listingDetails = item.ListingDetails[0];
     data.listUrl = listingDetails.ViewItemURL[0];
@@ -137,6 +136,10 @@ function addToListingDictForVariationListing(item, listingDict){
     let listTitle = item.Title[0]
     let imgUrl = item.PictureDetails[0].GalleryURL[0];
 
+    //Find out shipping details. Will assume only take first shipping option.
+    let shippingDetails = item.ShippingDetails[0];
+    let shippingServiceOptions = shippingDetails.ShippingServiceOptions[0]; //Grab first shipping option
+    let isFreeShipping = shippingServiceOptions.FreeShipping[0] == 'true';
     let variations = item.Variations[0].Variation;
 
     for(let variation of variations){
@@ -150,8 +153,9 @@ function addToListingDictForVariationListing(item, listingDict){
                 UPC: upc,
                 listUrl: listUrl,
                 listTitle: listTitle,
-                imgUrl:imgUrl,
-                variation:{}
+                imgUrl: imgUrl,
+                isFreeShipping: isFreeShipping,
+                variation: {}
             }
         }
         listingDict[upc].variation[packAmt] = {packAmt: packAmt, ebayQuantityLeft:ebayQuantityLeft
@@ -221,10 +225,12 @@ function handleJsonOfListings(res, curDateStr, futureDateStr, ebayKey
                 else{
                     let sellerListResponse = result.GetSellerListResponse;
                     let ack = sellerListResponse.Ack[0];
-                    let lastEbayPage = getLastEbayPage(sellerListResponse);
-                    if(ack === 'Success')
+                    
+                    if(ack === 'Success'){
+                        let lastEbayPage = getLastEbayPage(sellerListResponse);
                         handleValidJsonOfListings(res, curDateStr, futureDateStr, ebayKey, ebaySettings, listingDict, nonVariationXmlRequests
                             , pageNum, lastEbayPage, sellerListResponse);
+                    }
                     else 
                         handleSellerListResponseErrMsg(res, sellerListResponse);
                 }

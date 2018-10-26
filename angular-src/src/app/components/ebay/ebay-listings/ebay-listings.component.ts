@@ -133,7 +133,7 @@ export class EbayListingsComponent implements OnInit {
         let shipId = variation.shipMethodId;
         let oz = variation.ozWeight;
         let key = shipId in this.ebayComponent.dictShipIdAndOzToCost ? shipId: shipId + oz;
-        let shipCost = this.ebayComponent.dictShipIdAndOzToCost[key];
+        let shipCost = listing.isFreeShipping ? this.ebayComponent.dictShipIdAndOzToCost[key] : 0;
 
         let totalEbayFee = calculateTotalEbayFee(ebaySellPrice, this.ebayPercentageFromSaleFee);
         let totalPaypalFee = calculateTotalPaypalFee(ebaySellPrice, this.paypalPercentageFromSaleFee, this.paypalFlatFee);
@@ -143,10 +143,7 @@ export class EbayListingsComponent implements OnInit {
         listingProfitStatus = this.handleVariationProfitStatus(variation, desiredPrice, listingProfitStatus);
       }
     }
-    listing.profitStatus = listingProfitStatus;
-    if( listing.hasOwnProperty('noFreeShipping') )
-      listing.profitStatus = ProfitStatus.incalculable;
-      
+    listing.profitStatus = listingProfitStatus;  
   }
 
   addVariationsToListing(listing, packsInfo){
@@ -163,7 +160,7 @@ export class EbayListingsComponent implements OnInit {
         let key = shipId in this.ebayComponent.dictShipIdAndOzToCost ? shipId: shipId + variationToEdit.ozWeight;
         
         let shipCost = this.ebayComponent.dictShipIdAndOzToCost[key];
-
+        
         variationToEdit.desiredPrice = calculateDesiredProfit(this.desiredProfitPerSingle
           , packAmt, listing.costPerSingle, shipCost, 0, this.ebayPercentageFromSaleFee
           , this.paypalPercentageFromSaleFee, this.paypalFlatFee)
@@ -202,8 +199,8 @@ export class EbayListingsComponent implements OnInit {
         let shipId = variation['shipMethodId'];
         let oz = variation.ozWeight;
         let key = shipId in this.ebayComponent.dictShipIdAndOzToCost ? shipId: shipId + oz;
-        let shipCost = this.ebayComponent.dictShipIdAndOzToCost[key];
-
+        let shipCost = listing['isFreeShipping'] ? this.ebayComponent.dictShipIdAndOzToCost[key] : 0;
+        
         variation['desiredPrice'] = calculateDesiredProfit(this.desiredProfitPerSingle
           , packAmt, listing.costPerSingle, shipCost, 0, this.ebayPercentageFromSaleFee
           , this.paypalPercentageFromSaleFee, this.paypalFlatFee)

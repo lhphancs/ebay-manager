@@ -17,7 +17,7 @@ function getErrMsg(totalProfit, totalProductCost, shipCost){
     let errMsg = BASE_ERR_MSG;
     if(!totalProfit) errMsg += "desiredProfit ";
     if(!totalProductCost) errMsg += "totalProductCost ";
-    if(!shipCost) errMsg += "shipId/oz";
+    if(shipCost == undefined) errMsg += "shipId/oz";
     return errMsg == BASE_ERR_MSG ? null : errMsg;
 }
 
