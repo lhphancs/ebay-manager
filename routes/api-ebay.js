@@ -166,14 +166,13 @@ function addNonVariationToListingDict(datas, listingDict){
     }
 }
 
-function isLastPage(pageNum, sellerListResponse){
+function getLastEbayPage(sellerListResponse){
     let paginationResult = sellerListResponse.PaginationResult[0]
-    let totalNumOfPages = paginationResult.TotalNumberOfPages[0];
-    return pageNum == totalNumOfPages;
+    return paginationResult.TotalNumberOfPages[0];
 }
 
 function handleValidJsonOfListings(res, curDateStr, futureDateStr, ebayKey, ebaySettings, listingDict
-, nonVariationXmlRequests, pageNum, sellerListResponse){
+, nonVariationXmlRequests, pageNum, lastEbayPage, sellerListResponse){
     let itemArray = sellerListResponse.ItemArray[0].Item;
     for(let item of itemArray){
         if(item.SellingStatus[0].ListingStatus[0] == 'Active'){
@@ -186,7 +185,7 @@ function handleValidJsonOfListings(res, curDateStr, futureDateStr, ebayKey, ebay
                 
         }
     }
-    if( isLastPage(pageNum, sellerListResponse) ){
+    if(pageNum == lastEbayPage){
         async.map(nonVariationXmlRequests, getItemRequest, function(err, r){
             if (err)
                 return console.log(err);
@@ -222,9 +221,10 @@ function handleJsonOfListings(res, curDateStr, futureDateStr, ebayKey
                 else{
                     let sellerListResponse = result.GetSellerListResponse;
                     let ack = sellerListResponse.Ack[0];
+                    let lastEbayPage = getLastEbayPage(sellerListResponse);
                     if(ack === 'Success')
                         handleValidJsonOfListings(res, curDateStr, futureDateStr, ebayKey, ebaySettings, listingDict, nonVariationXmlRequests
-                            , pageNum, sellerListResponse);
+                            , pageNum, lastEbayPage, sellerListResponse);
                     else 
                         handleSellerListResponseErrMsg(res, sellerListResponse);
                 }
