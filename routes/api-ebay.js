@@ -24,7 +24,7 @@ function getSellerListXmlRequestBody(ebayUserName, curDateStr, futureDateStr, pa
             <EntriesPerPage>${ENTRIES_PER_PAGE}</EntriesPerPage>
         </Pagination>
         
-        <OutputSelector>ItemID,Title,PictureDetails,Variations,SellingStatus,ViewItemURL</OutputSelector>
+        <OutputSelector>ItemID,Title,PictureDetails,Variations,SellingStatus,ViewItemURL,PaginationResult</OutputSelector>
     </GetSellerListRequest>`;
 }
 
@@ -166,7 +166,13 @@ function addNonVariationToListingDict(datas, listingDict){
     }
 }
 
-function handleValidJsonOfListings(res, ebayKey, ebaySettings, listingDict
+function isLastPage(pageNum, sellerListResponse){
+    let paginationResult = sellerListResponse.PaginationResult[0]
+    let totalNumOfPages = paginationResult.TotalNumberOfPages[0];
+    return pageNum == totalNumOfPages;
+}
+
+function handleValidJsonOfListings(res, curDateStr, futureDateStr, ebayKey, ebaySettings, listingDict
 , nonVariationXmlRequests, pageNum, sellerListResponse){
     let itemArray = sellerListResponse.ItemArray[0].Item;
     for(let item of itemArray){
@@ -180,9 +186,7 @@ function handleValidJsonOfListings(res, ebayKey, ebaySettings, listingDict
                 
         }
     }
-    if(itemArray.length == ENTRIES_PER_PAGE)
-        handleJsonOfListings(res, curDateStr, futureDateStr, ebayKey, ebaySettings, listingDict, nonVariationXmlRequests, pageNum+1)
-    else{
+    if( isLastPage(pageNum, sellerListResponse) ){
         async.map(nonVariationXmlRequests, getItemRequest, function(err, r){
             if (err)
                 return console.log(err);
@@ -192,6 +196,10 @@ function handleValidJsonOfListings(res, ebayKey, ebaySettings, listingDict
             }
         });
     }  
+    else
+        handleJsonOfListings(res, curDateStr
+            , futureDateStr, ebayKey, ebaySettings
+            , listingDict, nonVariationXmlRequests, pageNum+1)
 }
 
 function handleJsonOfListings(res, curDateStr, futureDateStr, ebayKey
@@ -215,7 +223,7 @@ function handleJsonOfListings(res, curDateStr, futureDateStr, ebayKey
                     let sellerListResponse = result.GetSellerListResponse;
                     let ack = sellerListResponse.Ack[0];
                     if(ack === 'Success')
-                        handleValidJsonOfListings(res, ebayKey, ebaySettings, listingDict, nonVariationXmlRequests
+                        handleValidJsonOfListings(res, curDateStr, futureDateStr, ebayKey, ebaySettings, listingDict, nonVariationXmlRequests
                             , pageNum, sellerListResponse);
                     else 
                         handleSellerListResponseErrMsg(res, sellerListResponse);
