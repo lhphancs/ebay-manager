@@ -80,8 +80,10 @@ export class EbayCalculatorComponent implements OnInit {
   }
 
   weightSelect(ozPriceIndex){
-    this.shippingCost = this.shipCompanies[this.selectedCompanyIndex]['shipMethods'][this.selectedMethodIndex].flatRatePrice;
-    if(!this.shippingCost){
+    let isFlatRate = this.shipCompanies[this.selectedCompanyIndex]['shipMethods'][this.selectedMethodIndex].isFlatRate
+    if(isFlatRate)
+      this.shippingCost = this.shipCompanies[this.selectedCompanyIndex]['shipMethods'][this.selectedMethodIndex].flatRatePrice;
+    else{
       this.selectedOzPriceIndex = ozPriceIndex;
       this.shippingCost = this.shipCompanies[this.selectedCompanyIndex]['shipMethods']
         [this.selectedMethodIndex]['ozPrice'][this.selectedOzPriceIndex]['price']; 

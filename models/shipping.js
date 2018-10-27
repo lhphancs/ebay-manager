@@ -7,9 +7,10 @@ const shippingSchema = Schema({
         userId:{type: ObjectId, required: true},
         shipCompanyName: {type: String, required: true},
         shipMethodName: {type: String, required: true},
-        description:{type: String},
-        imgUrl:{type:String},
-        flatRatePrice:{type: Number},
+        description: {type: String},
+        imgUrl: {type: String},
+        isFlatRate: {type: Boolean},
+        flatRatePrice: {type: Number},
         ozPrice: {type:[{
             oz: { type: Number, required: true, min: 0},
             price: { type: Number, required: true, min: 0} }]}

@@ -69,7 +69,7 @@
       </mat-menu>
     </div>
     <div class="div-inline mr-5"
-      *ngIf="!shipCompanies[selectedCompanyIndex]['shipMethods'][selectedMethodIndex].flatRatePrice">
+      *ngIf="!shipCompanies[selectedCompanyIndex]['shipMethods'][selectedMethodIndex].isFlatRate">
       <label class="center_vertically mr-1">Weight(oz):</label>
       <button mat-raised-button color="primary" [matMenuTriggerFor]="menuWeights">
         {{shipCompanies[selectedCompanyIndex]['shipMethods'][selectedMethodIndex]['ozPrice'][selectedOzPriceIndex].oz}}

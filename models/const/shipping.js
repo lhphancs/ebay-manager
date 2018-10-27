@@ -25,6 +25,7 @@ function getPriorityShippingObj(weightLb, maxCost){
         Volume: Less than or equal to 1ft*1ft*1ft (1 cubic ft)
         ${lengthAndGirthDescriptionString}
         `
+        , isFlatRate: true
         , flatRatePrice: maxCost, ozPrice: null
     }
 }
@@ -48,6 +49,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
 
         However, priority may be cheaper if it is a good location.
         `
+        , isFlatRate: false
         , flatRatePrice: null, ozPrice: DEFAULT_USPS_FIRST_CLASS_OZ_PRICE},
 
 
@@ -56,6 +58,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
         , description: `Package: "Flat rate envelope."
 
         Info: Not the same as "legal flat rate envelope" or "padded envelope".`
+        , isFlatRate: true
         , flatRatePrice: 6.35, ozPrice: null },
 
 
@@ -64,6 +67,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
         , description: `Package: "Flat rate envelope" with "legal flat rate enevelope" written in small prints.
         
         Info: Does not come with padding. Not the same as "flat rate envelope" or "padded envelope".`
+        , isFlatRate: true
         , flatRatePrice: 6.65, ozPrice: null },
 
 
@@ -72,6 +76,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
         , description: `Package: "Flat rate envelope" with bubble padding applied inside.
         
         Info: Not the same as "flat rate envelope" or "legal flat rate envelope".`
+        , isFlatRate: true
         , flatRatePrice: 6.90, ozPrice: null },
 
 
@@ -80,6 +85,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
         , description: `Package: "Small flat rate box".
         
         Info: ${noBulgeString}`
+        , isFlatRate: true
         , flatRatePrice: 6.85, ozPrice: null },
 
 
@@ -88,6 +94,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
         , description: `Package: "Medium flat rate box".
         
         Info: ${noBulgeString}`
+        , isFlatRate: true
         , flatRatePrice: 12.45, ozPrice: null },
 
 
@@ -96,6 +103,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
         , description: `Package: "Large flat rate box".
         
         Info: ${noBulgeString}`
+        , isFlatRate: true
         , flatRatePrice: 17.10, ozPrice: null },
 
     getPriorityShippingObj(2, 10.80),
@@ -105,28 +113,37 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
 const DEFAULT_FEDEX_SHIP_METHOD_LIST = [
     { shipMethodName:"tempFlatRateMethod"
         , description: "tempDescription"
+        , isFlatRate: true
         , flatRatePrice: 999.99, ozPrice: null }
 ];
 
 module.exports.getDefaultShipMethods = function getDefaultShipMethods(userId){
     let shipMethods = [];
     for(let obj of DEFAULT_USPS_SHIP_METHOD_LIST){
-        method = {userId: userId, shipCompanyName: "USPS", shipMethodName: obj.shipMethodName
-        , imgUrl: obj.imgUrl, description: obj.description};
-        if(obj.flatRatePrice)
-            method.flatRatePrice = obj.flatRatePrice;
-        else
-            method.ozPrice = obj.ozPrice;
+        let method = {userId: userId, shipCompanyName: "USPS", shipMethodName: obj.shipMethodName
+        , imgUrl: obj.imgUrl, description: obj.description
+        , isFlatRate: obj.isFlatRate
+        , flatRatePrice: obj.flatRatePrice, ozPrice: obj.ozPrice}
+
         shipMethods.push(method);
     }
     for(let obj of DEFAULT_FEDEX_SHIP_METHOD_LIST){
-        method = {userId: userId, shipCompanyName: "FEDEX", shipMethodName: obj.shipMethodName
-        , imgUrl: obj.imgUrl, description: obj.description};
-        if(obj.flatRatePrice)
-            method.flatRatePrice = obj.flatRatePrice;
-        else
-            method.ozPrice = obj.ozPrice;
+        let method = {userId: userId, shipCompanyName: "FEDEX", shipMethodName: obj.shipMethodName
+        , imgUrl: obj.imgUrl, description: obj.description
+        , isFlatRate: obj.isFlatRate
+        , flatRatePrice: obj.flatRatePrice, ozPrice: obj.ozPrice}
+
         shipMethods.push(method);
     }
+    let freeShipMethod = {
+        userId: userId, shipCompanyName: "FREE SHIPPING",
+        shipMethodName: "Free"
+        , imgUrl: '../../../assets/imgs/others/own_all.jpg'
+        , description: "Zero cost shipping. This can be used to specify your own shipping cost by using 'Misc cost'."
+        , isFlatRate: true
+        , flatRatePrice: 0.00, ozPrice: null
+    }
+    shipMethods.push(freeShipMethod)
+    
     return shipMethods;
 }

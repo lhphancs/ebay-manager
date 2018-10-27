@@ -21,6 +21,7 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
   mode:string;
   paramId:string;
 
+  isFlatRate:boolean;
   flatRatePrice:number;
 
   shipCompanyName:string;
@@ -39,7 +40,9 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
     , private databaseShippingsService:DatabaseShippingsService
     , private activatedRoute: ActivatedRoute
     , public snackBar: MatSnackBar
-    , private router: Router) { }
+    , private router: Router) {
+      this.isFlatRate = true;
+    }
 
   ngOnInit() {
     this.headerNames = getHeaderNames(this.headers);
@@ -65,8 +68,9 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
   }
 
   loadShipMethod(shipMethod){
+    this.isFlatRate = shipMethod['isFlatRate'];
     this.flatRatePrice = shipMethod['flatRatePrice'];
-    if(!this.flatRatePrice)
+    if(!this.isFlatRate)
       this.entries = shipMethod['ozPrice'];
   }
 
@@ -111,25 +115,18 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
     });
   }
 
-  getNewShipMethodObject(flatRatePrice, ozPrice){
-    let obj = {};
-    obj['._id'] = this.shipMethodId;
-    obj['userId'] = this.userId;
-    obj['shipCompanyName'] = this.shipCompanyName;
-    obj['shipMethodName'] = this.shipMethodName;
-    obj['description'] = this.description;
-    obj['imgUrl'] = this.imgUrl;
-    if(flatRatePrice){
-      obj['flatRatePrice'] = flatRatePrice;
-      obj['ozPrice'] = null;
-    }
-      
-    else{
-      obj['flatRatePrice'] = null;
-      obj['ozPrice'] = ozPrice;
-    }
-      
-
+  getNewShipMethodObject(isFlatRate, flatRatePrice, ozPrice){
+    let obj = {
+      _id: this.shipMethodId
+      , userId: this.userId
+      , shipCompanyName: this.shipCompanyName
+      , shipMethodName: this.shipMethodName
+      , description: this.description
+      , imgUrl: this.imgUrl
+      , isFlatRate: isFlatRate
+      , flatRatePrice: flatRatePrice
+      , ozPrice: ozPrice
+    };
     return obj;
   }
 
@@ -146,11 +143,11 @@ export class ShippingsAddOrUpdateComponent implements OnInit {
   ///The add is currently connected, but edit needs companyId
   onSubmit(){
     let newShipMethod;
-    if(this.flatRatePrice)
-      newShipMethod = this.getNewShipMethodObject(this.flatRatePrice, null);
+    if(this.isFlatRate)
+      newShipMethod = this.getNewShipMethodObject(this.isFlatRate, this.flatRatePrice, null);
     else{
       let processedEntries = getProcessedEntries(this.entries);
-      newShipMethod = this.getNewShipMethodObject(null, processedEntries);
+      newShipMethod = this.getNewShipMethodObject(this.isFlatRate, null, processedEntries);
     }
     if(this.mode == "update")
       this.updateShipMethod(this.paramId, newShipMethod)

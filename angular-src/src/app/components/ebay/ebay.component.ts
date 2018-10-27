@@ -39,7 +39,7 @@ export class EbayComponent implements OnInit {
     this.databaseShippingsService.getShipMethods(this.userId).subscribe((data)=>{
       for(let method of data['shipMethods']){
         this.dictShipIdToName[method._id] = method.shipCompanyName + " - " + method.shipMethodName;
-        if(method.flatRatePrice)
+        if(method.isFlatRate)
           this.dictShipIdAndOzToCost[method._id] = method.flatRatePrice;
         else{
           for(let obj of method.ozPrice)
