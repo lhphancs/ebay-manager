@@ -6,7 +6,7 @@ import { EbayComponent } from '../ebay.component';
 import { DatabaseProductsService } from '../../../services/database-products.service';
 import { openSnackbar } from '../../snackbar';
 import { DatabaseUsersService } from '../../../services/database-users.service';
-import { calculateDesiredProfit } from '../calculations';
+import { calculateDesiredSaleValue } from '../calculations';
 
 @Component({
   selector: 'ebay-calculations',
@@ -83,8 +83,8 @@ export class EbayCalculationsComponent implements OnInit {
     let key = shipId in this.ebayComponent.dictShipIdAndOzToCost ? shipId: shipId + roundedUpOz;
     let shipCost = this.ebayComponent.dictShipIdAndOzToCost[key];
     
-    return calculateDesiredProfit(this.desiredProfitPerSingle, packAmt, costPerSingle, shipCost
-      , 0, this.ebayPercentageFromSaleFee, this.paypalPercentageFromSaleFee, this.paypalFlatFee);
+    return calculateDesiredSaleValue(this.desiredProfitPerSingle, packAmt, costPerSingle, shipCost
+      , 0, this.ebayPercentageFromSaleFee, this.paypalPercentageFromSaleFee, this.paypalFlatFee, true);
   }
 }
 

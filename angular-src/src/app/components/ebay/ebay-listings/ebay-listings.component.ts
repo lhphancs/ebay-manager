@@ -9,7 +9,7 @@ import { DatabaseUsersService } from '../../../services/database-users.service';
 import { calculateTotalEbayFee } from '../calculations';
 import { calculateTotalPaypalFee } from '../calculations';
 import { calculateProfit } from '../calculations';
-import { calculateDesiredProfit } from '../calculations';
+import { calculateDesiredSaleValue } from '../calculations';
 
 var ProfitStatus = {
   incalculable: 1,
@@ -85,12 +85,33 @@ export class EbayListingsComponent implements OnInit {
       }
     });
   }
+  addProfitToListing(listing){
+    let costPerSingle = listing.costPerSingle;
+    let variations = listing.variation;
+      for(let key in variations){
+          let variation = variations[key];
+          variation.ebaySellPrice = Number(variation.ebaySellPrice);
+          let ebaySellPrice = variation.ebaySellPrice;
+          
+          let shipCost = this.getShipCost(variation.shipMethodId, variation.ozWeight);
+          
+          if(!listing.isFreeShipping)
+            ebaySellPrice += shipCost; //If buyer pays for shipping, then the salePrice goes up by shipCost
+            
+          let totalEbayFee = calculateTotalEbayFee(ebaySellPrice, this.ebayPercentageFromSaleFee);
+          let totalPaypalFee = calculateTotalPaypalFee(ebaySellPrice, this.paypalPercentageFromSaleFee, this.paypalFlatFee);
+          
+          variation.profit = calculateProfit(ebaySellPrice, variation.packAmt, costPerSingle, shipCost
+            , totalEbayFee, totalPaypalFee, 0);
+    }
+  }
 
   addListingsFromDict(listingDict){
     for(let key in listingDict){
       let listing = listingDict[key];
 
       listing.variation = Object.values(listing.variation);
+      this.addProfitToListing(listing);
       this.updateListingProfitStatus(listing);
       this.listings.push(listingDict[key]);
     }
@@ -114,9 +135,12 @@ export class EbayListingsComponent implements OnInit {
     }
   }
   
+  getShipCost(shipId, oz){
+    let key = shipId in this.ebayComponent.dictShipIdAndOzToCost ? shipId: shipId + oz;
+    return this.ebayComponent.dictShipIdAndOzToCost[key];
+  }
 
   updateListingProfitStatus(listing){
-    let costPerSingle = listing.costPerSingle;
     let listingProfitStatus = ProfitStatus.aboveDesiredPrice;
 
     let variations = listing.variation;
@@ -127,21 +151,8 @@ export class EbayListingsComponent implements OnInit {
         listingProfitStatus = ProfitStatus.incalculable;
         variation.profitStatus = ProfitStatus.incalculable;
       }
-      else{
-        let ebaySellPrice = variation.ebaySellPrice;
-        let packAmt = variation.packAmt;
-        let shipId = variation.shipMethodId;
-        let oz = variation.ozWeight;
-        let key = shipId in this.ebayComponent.dictShipIdAndOzToCost ? shipId: shipId + oz;
-        let shipCost = listing.isFreeShipping ? this.ebayComponent.dictShipIdAndOzToCost[key] : 0;
-
-        let totalEbayFee = calculateTotalEbayFee(ebaySellPrice, this.ebayPercentageFromSaleFee);
-        let totalPaypalFee = calculateTotalPaypalFee(ebaySellPrice, this.paypalPercentageFromSaleFee, this.paypalFlatFee);
-        variation.profit = calculateProfit(ebaySellPrice, packAmt, costPerSingle, shipCost
-          , totalEbayFee, totalPaypalFee, 0);
-
+      else
         listingProfitStatus = this.handleVariationProfitStatus(variation, desiredPrice, listingProfitStatus);
-      }
     }
     listing.profitStatus = listingProfitStatus;  
   }
@@ -157,13 +168,12 @@ export class EbayListingsComponent implements OnInit {
         variationToEdit.preparation = packInfo.preparation;
 
         let shipId = packInfo.shipMethodId;
-        let key = shipId in this.ebayComponent.dictShipIdAndOzToCost ? shipId: shipId + variationToEdit.ozWeight;
+        let shipCost = this.getShipCost(shipId, variationToEdit.ozWeight);
         
-        let shipCost = this.ebayComponent.dictShipIdAndOzToCost[key];
-        
-        variationToEdit.desiredPrice = calculateDesiredProfit(this.desiredProfitPerSingle
+        let isFreeShipping = listing.isFreeShipping;
+        variationToEdit.desiredPrice = calculateDesiredSaleValue(this.desiredProfitPerSingle
           , packAmt, listing.costPerSingle, shipCost, 0, this.ebayPercentageFromSaleFee
-          , this.paypalPercentageFromSaleFee, this.paypalFlatFee)
+          , this.paypalPercentageFromSaleFee, this.paypalFlatFee, isFreeShipping)
       }
     }
   }
@@ -197,13 +207,10 @@ export class EbayListingsComponent implements OnInit {
       for(let variation of listing['variation']){
         let packAmt = variation['packAmt'];
         let shipId = variation['shipMethodId'];
-        let oz = variation.ozWeight;
-        let key = shipId in this.ebayComponent.dictShipIdAndOzToCost ? shipId: shipId + oz;
-        let shipCost = listing['isFreeShipping'] ? this.ebayComponent.dictShipIdAndOzToCost[key] : 0;
-        
-        variation['desiredPrice'] = calculateDesiredProfit(this.desiredProfitPerSingle
+        let shipCost = this.getShipCost(shipId, variation.ozWeight);
+        variation['desiredPrice'] = calculateDesiredSaleValue(this.desiredProfitPerSingle
           , packAmt, listing.costPerSingle, shipCost, 0, this.ebayPercentageFromSaleFee
-          , this.paypalPercentageFromSaleFee, this.paypalFlatFee)
+          , this.paypalPercentageFromSaleFee, this.paypalFlatFee, true)
       }
       this.updateListingProfitStatus(listing);
     }

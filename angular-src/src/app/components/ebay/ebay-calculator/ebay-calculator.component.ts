@@ -6,7 +6,7 @@ import { DatabaseUsersService } from '../../../services/database-users.service';
 import { calculateTotalEbayFee } from '../calculations';
 import { calculateTotalPaypalFee } from '../calculations';
 import { calculateProfit } from '../calculations';
-import { calculateDesiredProfit } from '../calculations';
+import { calculateDesiredSaleValue } from '../calculations';
 
 
 @Component({
@@ -72,8 +72,8 @@ export class EbayCalculatorComponent implements OnInit {
       this.totalProfit = calculateProfit(this.saleValue, 1, this.productCost, this.shippingCost
         , this.totalEbayFee, this.totalPaypalFee, this.miscCost);
     else{
-      let desiredProfit = calculateDesiredProfit(this.totalProfit, 1, this.productCost, this.shippingCost
-        , this.miscCost, this.ebayPercentageFromSaleFee, this.paypalPercentageFromSaleFee, this.paypalFlatFee);
+      let desiredProfit = calculateDesiredSaleValue(this.totalProfit, 1, this.productCost, this.shippingCost
+        , this.miscCost, this.ebayPercentageFromSaleFee, this.paypalPercentageFromSaleFee, this.paypalFlatFee, true);
       this.saleValue = typeof(desiredProfit) == 'number' ? desiredProfit : NaN;
       this.updateEbayFees();
     }

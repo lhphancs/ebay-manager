@@ -84,7 +84,9 @@
   </div>
 
   <div class="row mt-4 mx-3 div-right-align">
-    <mat-icon color="primary" matTooltip="Total profit after all costs/fees"
+    <mat-icon color="primary" matTooltip="Total profit after all costs/fees
+    profit = saleValue - (saleValue * ebay%) - (saleValue * paypal%) - paypalFlatFee - productCost - shipCost - misc
+    "
       matTooltipClass="tooltip-background" class="center-vertically">info</mat-icon>
     <label for="profit">Profit:</label>
     <input type="number" step="any"

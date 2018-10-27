@@ -21,8 +21,8 @@ function getErrMsg(totalProfit, totalProductCost, shipCost){
     return errMsg == BASE_ERR_MSG ? null : errMsg;
 }
 
-export function calculateDesiredProfit(desiredProfitPerSingle, packAmt, costPerSingle, shipCost
-    , miscCost, ebayPercentageFromSaleFee, paypalPercentageFromSaleFee, paypalFlatFee){
+export function calculateDesiredSaleValue(desiredProfitPerSingle, packAmt, costPerSingle, shipCost
+    , miscCost, ebayPercentageFromSaleFee, paypalPercentageFromSaleFee, paypalFlatFee, isFreeShipping){
     let totalDesiredProfit = desiredProfitPerSingle * packAmt;
     let totalProductCost = costPerSingle * packAmt;
     
@@ -30,7 +30,17 @@ export function calculateDesiredProfit(desiredProfitPerSingle, packAmt, costPerS
     if(err)
         return err;
 
-    return Math.round((totalDesiredProfit + paypalFlatFee
-        + totalProductCost + miscCost + shipCost)
-        / (1-paypalPercentageFromSaleFee*0.01 - ebayPercentageFromSaleFee*0.01)*100)/100;
+    //This assume you pay for shipping
+    if(isFreeShipping)
+        return Math.round(
+            ( totalDesiredProfit + paypalFlatFee + totalProductCost + miscCost + shipCost)
+                / (1-paypalPercentageFromSaleFee*0.01 - ebayPercentageFromSaleFee*0.01
+            )
+            *100)/100;
+
+    //This assumes buyer pays for shipping
+    return Math.round(
+        ( (totalDesiredProfit + paypalFlatFee + totalProductCost + miscCost + shipCost)
+            / (1-paypalPercentageFromSaleFee*0.01 - ebayPercentageFromSaleFee*0.01) - shipCost)
+        *100)/100;
 }

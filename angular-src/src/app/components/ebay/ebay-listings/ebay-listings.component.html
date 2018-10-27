@@ -13,6 +13,15 @@
   <div *ngIf="!errMsg">
     <div class="d-flex justify-content-between align-items-center mt-3 px-3">
         <div>
+          <mat-icon color="primary" matTooltip="* on the very left of 'List Title' means buyer pays for shipping.
+          'Profit' and 'desired price' are handled appropriately if buyer pays for shipping.
+          "
+            matTooltipClass="tooltip-background" class="center-vertically">info
+          </mat-icon>
+          <span class="align-middle">List Title</span>
+        </div>
+
+        <div>
           <mat-icon color="primary" matTooltip="Purple: Atleast 1 variation is incalculable due to incomplete database
             Green: All ebayPrice >= packAmt*desiredPricePerSingle
             Yellow: All ebayPrice >= desiredPricePerSingle
@@ -20,7 +29,6 @@
             matTooltipClass="tooltip-background" class="center-vertically">info
           </mat-icon>
           <span class="align-middle">Color Scheme</span>
-          
         </div>
       
         <input class="form-control border border-primary filter"
@@ -47,7 +55,10 @@
           <!-- listTitle column -->
           <ng-container matColumnDef="listTitle">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>List Title</th>
-            <td mat-cell *matCellDef="let element"><a href={{element.listUrl}} target="_blank">{{element.listTitle}}</a></td>
+            <td mat-cell *matCellDef="let element">
+              <a href={{element.listUrl}} target="_blank">
+                {{element.isFreeShipping ? '  ' :'* '}}{{element.listTitle}}
+              </a></td>
           </ng-container>
         
           <!-- stockNo column -->
@@ -59,7 +70,7 @@
           <!-- quantityPerBox column -->
           <ng-container matColumnDef="costPerSingle">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Cost/Single</th>
-            <td mat-cell *matCellDef="let element">{{element.costPerSingle  | number : '1.2-2'}} </td>
+            <td mat-cell *matCellDef="let element">{{element.costPerSingle}} </td>
           </ng-container>
         
           <!-- UPC column -->
