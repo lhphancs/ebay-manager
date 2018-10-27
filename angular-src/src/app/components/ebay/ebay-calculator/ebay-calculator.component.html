@@ -42,6 +42,10 @@
   </div>
 
   <div class="mt-2" *ngIf="shipCompanies">
+      <div class="div-inline mr-5">
+        <mat-slide-toggle>Slide me!</mat-slide-toggle>
+      </div>
+
     <div class="div-inline mr-5">
       <label class="center_vertically mr-1">Shipping Company:</label>
       <button mat-raised-button color="primary"[matMenuTriggerFor]="menuCompanies">
