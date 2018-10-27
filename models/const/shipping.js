@@ -135,15 +135,5 @@ module.exports.getDefaultShipMethods = function getDefaultShipMethods(userId){
 
         shipMethods.push(method);
     }
-    let freeShipMethod = {
-        userId: userId, shipCompanyName: "FREE SHIPPING",
-        shipMethodName: "Free"
-        , imgUrl: '../../../assets/imgs/others/own_all.jpg'
-        , description: "Zero cost shipping. This can be used to specify your own shipping cost by using 'Misc cost'."
-        , isFlatRate: true
-        , flatRatePrice: 0.00, ozPrice: null
-    }
-    shipMethods.push(freeShipMethod)
-    
     return shipMethods;
 }

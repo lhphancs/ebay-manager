@@ -41,6 +41,7 @@ import { AccountPasswordComponent } from './components/account/account-password/
 import { EbayUpdateSettingsComponent } from './components/ebay/ebay-update-settings/ebay-update-settings.component';
 import { EbayUpdateSettingsFeesComponent } from './components/ebay/ebay-update-settings/ebay-update-settings-fees/ebay-update-settings-fees.component';
 import { EbayUpdateSettingsAccountComponent } from './components/ebay/ebay-update-settings/ebay-update-settings-account/ebay-update-settings-account.component';
+import 'hammerjs';
 
 @NgModule({
   declarations: [

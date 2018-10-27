@@ -36,11 +36,13 @@ export class EbayCalculatorComponent implements OnInit {
   selectedCompanyIndex;
   selectedMethodIndex;
   selectedOzPriceIndex;
+  isFreeShipping:boolean;
 
   constructor(private ebayComponent:EbayComponent
     , private databaseUsersService: DatabaseUsersService
     , private databaseShippingsService:DatabaseShippingsService) {
       this.miscCost = 0;
+      
   }
 
   loadAvailableShippings(){
@@ -53,12 +55,14 @@ export class EbayCalculatorComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.isFreeShipping = false;
     this.loadAvailableShippings();
     this.databaseUsersService.getEbayFees(this.ebayComponent.userId).subscribe( (data) =>{
       this.ebayPercentageFromSaleFee = data['ebayFees'].ebayPercentageFromSaleFee;
       this.paypalFlatFee = data['ebayFees'].paypalFlatFee;
       this.paypalPercentageFromSaleFee = data['ebayFees'].paypalPercentageFromSaleFee;
     });
+    
   }
   
   updateEbayFees(){
@@ -86,7 +90,7 @@ export class EbayCalculatorComponent implements OnInit {
     else{
       this.selectedOzPriceIndex = ozPriceIndex;
       this.shippingCost = this.shipCompanies[this.selectedCompanyIndex]['shipMethods']
-        [this.selectedMethodIndex]['ozPrice'][this.selectedOzPriceIndex]['price']; 
+        [this.selectedMethodIndex]['ozPrice'][this.selectedOzPriceIndex]['price'];
     }
     this.updateTotalOrSaleValue();
   }
@@ -108,6 +112,21 @@ export class EbayCalculatorComponent implements OnInit {
 
   onCalcNeededSaleClick(){
     this.totalProfit = 1;
+    this.updateTotalOrSaleValue();
+  }
+
+  onToggleFreeShipping(){
+    if(this.isFreeShipping)
+      this.shippingCost = 0;
+    else{
+      let isFlatRate = this.shipCompanies[this.selectedCompanyIndex]['shipMethods'][this.selectedMethodIndex].isFlatRate
+      if(isFlatRate)
+        this.shippingCost = this.shipCompanies[this.selectedCompanyIndex]['shipMethods'][this.selectedMethodIndex].flatRatePrice;
+      else{
+        this.shippingCost = this.shipCompanies[this.selectedCompanyIndex]['shipMethods']
+          [this.selectedMethodIndex]['ozPrice'][this.selectedOzPriceIndex]['price'];
+      }
+    }
     this.updateTotalOrSaleValue();
   }
 }
