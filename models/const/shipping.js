@@ -11,6 +11,13 @@ const DEFAULT_USPS_FIRST_CLASS_OZ_PRICE = [
 const noBulgeString = "Package cannot be bulging when shipped."
 const lengthAndGirthDescriptionString = `Length = The longest side of the parcel.
 Girth = Measurement around the thickest part.`
+const firstClassComparisonWithPriorityString = `Price comparison with 'priority mail':
+'Priority mail' cost depends on location. If package exceeds certain size criteria, there is added cost. If it is shipping to worst location and there are no added costs due to size of package, the following comparisons can be made:
+2x 16oz 'First class' packages are cheaper than the max cost of '2Lb priority mail'.
+3x 16oz 'First class' packages are cheaper than the max cost of '3Lb priority mail'.
+
+However, priority may be cheaper if it is a good location.
+`
 
 function getPriorityShippingObj(weightLb, maxCost){
     return { shipMethodName:`${weightLb}Lb Priority mail with size/volume restrictions`
@@ -42,12 +49,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
 
         ${lengthAndGirthDescriptionString}
 
-        Price comparison with 'priority mail':
-        'Priority mail' cost depends on location. If package exceeds certain size criteria, there is added cost. If it is shipping to worst location and there are no added costs due to size of package, the following comparisons can be made:
-        2x 16oz 'First class' packages are cheaper than the max cost of '2Lb priority mail'.
-        3x 16oz 'First class' packages are cheaper than the max cost of '3Lb priority mail'.
-
-        However, priority may be cheaper if it is a good location.
+        ${firstClassComparisonWithPriorityString}
         `
         , isFlatRate: false
         , flatRatePrice: null, ozPrice: DEFAULT_USPS_FIRST_CLASS_OZ_PRICE},
@@ -107,7 +109,22 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
         , flatRatePrice: 17.10, ozPrice: null },
 
     getPriorityShippingObj(2, 10.80),
-    getPriorityShippingObj(3, 15.34)
+    getPriorityShippingObj(3, 15.34),
+
+    { shipMethodName:"2x 16oz 'First Class'"
+        , imgUrl: '../../../assets/imgs/others/own_all.jpg'
+        , description: `Package: Your own envelope/box. Can't use USPS priority box.
+        Info: This is for 2 packages that are both 16oz or less. This is intended for packages that are 2Lb, which cannot fit in flat rate padded envelope.
+
+        Weight: Both packages must be 16oz or less.
+
+        Size: Maximum combined length and girth is 108 inches.
+
+        ${lengthAndGirthDescriptionString}
+
+        ${firstClassComparisonWithPriorityString}`
+        , isFlatRate: true
+        , flatRatePrice: 9.88, ozPrice: null }
 ];
 
 const DEFAULT_FEDEX_SHIP_METHOD_LIST = [
