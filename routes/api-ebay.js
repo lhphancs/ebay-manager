@@ -86,7 +86,10 @@ function getNonVariationDataFromXml(xml){
     let listingDetails = item.ListingDetails[0];
     data.listUrl = listingDetails.ViewItemURL[0];
 
-    let quantityLeft = item.Quantity[0];
+    
+    let quantity = item.Quantity[0]; //IMPORTANT! ebayDefines this as 'amtSold' + 'amtAvailable'
+    let amtSold = sellingStatus.QuantitySold[0];
+    let quantityLeft = quantity - amtSold;
     data.variation = {};
     data.variation[1] = {packAmt: 1, ebayQuantityLeft:quantityLeft
         , ebaySellPrice: currentPrice};
@@ -144,7 +147,11 @@ function addToListingDictForVariationListing(item, listingDict){
 
     for(let variation of variations){
         let ebaySellPrice = Number(variation.StartPrice[0]._);
-        let ebayQuantityLeft = variation.Quantity[0];
+        let ebayQuantity = variation.Quantity[0]; //IMPORTANT! ebayDefines this as 'amtSold' + 'amtAvailable'
+        let sellingStatus = variation.SellingStatus[0];
+        let ebayQuantitySold = sellingStatus.QuantitySold[0];
+        let ebayQuantityLeft = ebayQuantity - ebayQuantitySold;
+
         let upc = variation.VariationProductListingDetails[0].UPC[0];
         let packAmt = getPackAmt(variation);
 
