@@ -3,6 +3,48 @@
   incalculable: 1,                aboveDesiredPrice: 2,
   aboveDesiredProfitPerSingle: 3,   belowDesiredProfitPerSingle: 4
 -->
+
+<div class="d-flex justify-content-between align-items-center mt-3 px-3">
+  <div>
+    <div class="mb-2">
+      <mat-icon color="primary" matTooltip="Non-variation listings are assumed to be '1 pack'.
+      Any non-variation listing that is not a '1 pack' will have an incorrect 'profit' and 'desired profit' calculations."
+        matTooltipClass="tooltip-background" class="center-vertically">info
+      </mat-icon>
+      <span class="align-middle">Non-variation listings</span>
+    </div>
+    <div class="mb-2">
+      <mat-icon color="primary" matTooltip="* on the very left of a listing's 'List Title' means Buyer pays for shipping.
+        'Profit' and 'desired price' are handled appropriately for both 'Free shipping' and 'Non free shipping'
+        "
+        matTooltipClass="tooltip-background" class="center-vertically">info
+      </mat-icon>
+      <span class="align-middle">List Title</span>
+    </div>
+    <div class="mb-2">
+      <mat-icon color="primary" matTooltip="Purple: Listing's calculation was not possible due to incomplete database
+        Green: All ebayPrice >= packAmt*desiredPricePerSingle
+        Yellow: All ebayPrice >= desiredPricePerSingle
+        Red: Atleast 1 variation has eBay price below desiredPricePerSingle"
+        matTooltipClass="tooltip-background" class="center-vertically">info
+      </mat-icon>
+      <span class="align-middle">Color Scheme</span>
+    </div>
+  </div>
+  
+  <input *ngIf="!isLoading" class="form-control border border-primary filter"
+    placeholder="Filter" (keyup)="applyFilter($event.target.value)">
+  
+  <form *ngIf="!isLoading" class="entire-form mb-2 p-1" ngNativeValidate>
+    <mat-form-field>
+      <input class="" [(ngModel)]='desiredProfitPerSingle' (ngModelChange)="onDesiredProfitChange()" matInput
+        placeholder="Desired profit/pack" [ngModelOptions]="{standalone: true}"
+        type="number" min="0" step="any" required>
+      <span matPrefix>$&nbsp;</span>
+    </mat-form-field>
+  </form>
+</div>
+
 <progress-spinner *ngIf="!dataSource && isLoading" [msg]="loadingMsg"></progress-spinner>
 
 <div *ngIf="!isLoading">
@@ -11,129 +53,96 @@
   </div>
 
   <div *ngIf="!errMsg">
-    <div class="d-flex justify-content-between align-items-center mt-3 px-3">
-        <div>
-          <mat-icon color="primary" matTooltip="* on the very left of 'List Title' means Buyer pays for shipping.
-          'Profit' and 'desired price' are handled appropriately for both 'Free shipping' and 'Non free shipping'
-          "
-            matTooltipClass="tooltip-background" class="center-vertically">info
-          </mat-icon>
-          <span class="align-middle">Shipping</span>
-        </div>
-
-        <div>
-          <mat-icon color="primary" matTooltip="Purple: Atleast 1 variation is incalculable due to incomplete database
-            Green: All ebayPrice >= packAmt*desiredPricePerSingle
-            Yellow: All ebayPrice >= desiredPricePerSingle
-            Red: Atleast 1 variation has eBay price below desiredPricePerSingle"
-            matTooltipClass="tooltip-background" class="center-vertically">info
-          </mat-icon>
-          <span class="align-middle">Row Color</span>
-        </div>
+    <div *ngIf="dataSource" >
+      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+        <!-- imgUrl column -->
+        <ng-container matColumnDef="imgUrl">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Img</th>
+          <td mat-cell *matCellDef="let element"><a href={{element.listUrl}} target="_blank"><img class="img-in-tbl text-center border border-secondary" src="{{element.imgUrl}}"></a></td>
+        </ng-container>
+    
+        <!-- listTitle column -->
+        <ng-container matColumnDef="listTitle">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>List Title</th>
+          <td mat-cell *matCellDef="let element">
+            <a href={{element.listUrl}} target="_blank">
+              {{element.isFreeShipping ? '  ' :'* '}}{{element.listTitle}}
+            </a></td>
+        </ng-container>
       
-        <input class="form-control border border-primary filter"
-          placeholder="Filter" (keyup)="applyFilter($event.target.value)">
-        
-        <form class="entire-form mb-2 p-1" ngNativeValidate>
-          <mat-form-field>
-            <input class="" [(ngModel)]='desiredProfitPerSingle' (ngModelChange)="onDesiredProfitChange()" matInput
-              placeholder="Desired profit/pack" [ngModelOptions]="{standalone: true}"
-              type="number" min="0" step="any" required>
-            <span matPrefix>$&nbsp;</span>
-          </mat-form-field>
-        </form>
-      </div>
+        <!-- stockNo column -->
+        <ng-container matColumnDef="stockNo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Stock No.</th>
+          <td mat-cell *matCellDef="let element">{{element.stockNo}} </td>
+        </ng-container>
       
-      <div *ngIf="dataSource" >
-        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-          <!-- imgUrl column -->
-          <ng-container matColumnDef="imgUrl">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Img</th>
-            <td mat-cell *matCellDef="let element"><a href={{element.listUrl}} target="_blank"><img class="img-in-tbl text-center border border-secondary" src="{{element.imgUrl}}"></a></td>
-          </ng-container>
+        <!-- quantityPerBox column -->
+        <ng-container matColumnDef="costPerSingle">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Cost/Single</th>
+          <td mat-cell *matCellDef="let element">{{element.costPerSingle | number : '1.2-2'}}</td>
+        </ng-container>
       
-          <!-- listTitle column -->
-          <ng-container matColumnDef="listTitle">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>List Title</th>
-            <td mat-cell *matCellDef="let element">
-              <a href={{element.listUrl}} target="_blank">
-                {{element.isFreeShipping ? '  ' :'* '}}{{element.listTitle}}
-              </a></td>
-          </ng-container>
-        
-          <!-- stockNo column -->
-          <ng-container matColumnDef="stockNo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Stock No.</th>
-            <td mat-cell *matCellDef="let element">{{element.stockNo}} </td>
-          </ng-container>
-        
-          <!-- quantityPerBox column -->
-          <ng-container matColumnDef="costPerSingle">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Cost/Single</th>
-            <td mat-cell *matCellDef="let element">{{element.costPerSingle | number : '1.2-2'}}</td>
-          </ng-container>
-        
-          <!-- UPC column -->
-          <ng-container matColumnDef="UPC">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>UPC</th>
-            <td mat-cell *matCellDef="let element">{{element.UPC}} </td>
-          </ng-container>
-        
-          <!-- wholesaleComp column -->
-          <ng-container matColumnDef="wholesaleComp">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Wholesale Comp.</th>
-            <td mat-cell *matCellDef="let element">{{element.wholesaleComp}} </td>
-          </ng-container>
-        
-          <ng-container matColumnDef="variations">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Variations</th>
-            <td mat-cell *matCellDef="let element">
-                <ng-template #popContent>
-                  <div class="popTable">
-                    <table class="table table-striped table-primary">
-                      <thead>
-                        <tr>
-                          <th scope="col">Pack Amt</th>
-                          <th scope="col">Ship</th>
-                          <th scope="col">Oz</th>
-                          <th scope="col">Preparation</th>
-                          <th scope="col">Desired Price</th>
-                          <th scope="col">eBay Sell Price</th>
-                          <th scope="col">Profit</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr *ngFor="let entry of element.variation">
-                          <td>{{entry.packAmt}}</td>
-                          <td>{{ebayComponent.dictShipIdToName[entry.shipMethodId]}}</td>
-                          <td>{{entry.ozWeight}}</td>
-                          <td>{{entry.preparation}}</td>
-                          <td>{{entry.desiredPrice}}</td>
-                          <td >{{entry.ebaySellPrice}}</td>
-                          <td [ngClass]="entry.profitStatus == 1 ? 'bg-purple'
-                            : entry.profitStatus == 2 ? 'bg-green'
-                            : entry.profitStatus == 3 ? 'bg-yellow'
-                            : 'bg-red'">{{entry.profit}}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </ng-template>
-                  
-                <button class="btn btn-secondary btn-sm" type="button" [autoClose]="'outside'"
-                  popoverTitle={{element.listTitle}} [ngbPopover]="popContent" popoverClass="packinfo"
-                  placement="left">Variations</button>
-            </td>
-          </ng-container>
-        
-          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header-row"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-          [ngClass]="row.profitStatus == 1 ? 'bg-purple':
-                      row.profitStatus == 2 ? 'bg-green':
-                      row.profitStatus ==  3 ? 'bg-yellow' : 'bg-red'"></tr>
-        </table>
-      </div>
+        <!-- UPC column -->
+        <ng-container matColumnDef="UPC">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>UPC</th>
+          <td mat-cell *matCellDef="let element">{{element.UPC}} </td>
+        </ng-container>
+      
+        <!-- wholesaleComp column -->
+        <ng-container matColumnDef="wholesaleComp">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Wholesale Comp.</th>
+          <td mat-cell *matCellDef="let element">{{element.wholesaleComp}} </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="variations">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Variations</th>
+          <td mat-cell *matCellDef="let element">
+              <ng-template #popContent>
+                <div class="popTable">
+                  <table class="table table-striped table-primary">
+                    <thead>
+                      <tr>
+                        <th scope="col">Pack Amt</th>
+                        <th scope="col">Ship</th>
+                        <th scope="col">Oz</th>
+                        <th scope="col">Preparation</th>
+                        <th scope="col">Desired Price</th>
+                        <th scope="col">eBay Sell Price</th>
+                        <th scope="col">Profit</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let entry of element.variation">
+                        <td>{{entry.packAmt}}</td>
+                        <td>{{ebayComponent.dictShipIdToName[entry.shipMethodId]}}</td>
+                        <td>{{entry.ozWeight}}</td>
+                        <td>{{entry.preparation}}</td>
+                        <td>{{entry.desiredPrice}}</td>
+                        <td >{{entry.ebaySellPrice}}</td>
+                        <td [ngClass]="entry.profitStatus == 1 ? 'bg-purple'
+                          : entry.profitStatus == 2 ? 'bg-green'
+                          : entry.profitStatus == 3 ? 'bg-yellow'
+                          : 'bg-red'">{{entry.profit}}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </ng-template>
+                
+              <button class="btn btn-secondary btn-sm" type="button" [autoClose]="'outside'"
+                popoverTitle={{element.listTitle}} [ngbPopover]="popContent" popoverClass="packinfo"
+                placement="left">Variations</button>
+          </td>
+        </ng-container>
+      
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header-row"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+        [ngClass]="row.profitStatus == 1 ? 'bg-purple':
+                    row.profitStatus == 2 ? 'bg-green':
+                    row.profitStatus ==  3 ? 'bg-yellow' : 'bg-red'"></tr>
+      </table>
+    </div>
   </div>
   
   
