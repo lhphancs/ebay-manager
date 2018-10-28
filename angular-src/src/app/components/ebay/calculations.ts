@@ -9,7 +9,7 @@ export function calculateTotalPaypalFee(ebaySellPrice, paypalPercentageFromSaleF
 export function calculateProfit(ebaySellPrice, packAmt, costPerSingle, shippingCost
     , totalEbayFee, totalPaypalFee, miscCost){
     let profit = ebaySellPrice - packAmt*costPerSingle - shippingCost - totalEbayFee - totalPaypalFee - miscCost;
-    return Math.ceil(profit*100)/100;
+    return Math.round(profit*100)/100;
 }
 
 function getErrMsg(totalProfit, totalProductCost, shipCost){

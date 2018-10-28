@@ -1,7 +1,9 @@
 
-<!-- Note: profitStatus uses const value 1-4:
-  incalculable: 1,                aboveDesiredPrice: 2,
-  aboveDesiredProfitPerSingle: 3,   belowDesiredProfitPerSingle: 4
+<!-- Note: 
+  profitStatus uses const value 1-4:
+  outOfStock: 0,
+  incalculable: 1,                    aboveDesiredPrice: 2,
+  onlyAboveProfitPerSingle: 3,     belowProfitPerSingle: 4
 -->
 
 <div class="d-flex justify-content-between align-items-center mt-3 px-3">
@@ -22,10 +24,18 @@
       <span class="align-middle">List Title</span>
     </div>
     <div class="mb-2">
-      <mat-icon color="primary" matTooltip="Purple: Listing's calculation was not possible due to incomplete database
-        Green: All ebayPrice >= packAmt*desiredPricePerSingle
-        Yellow: All ebayPrice >= desiredPricePerSingle
-        Red: Atleast 1 variation has eBay price below desiredPricePerSingle"
+      <mat-icon color="primary" matTooltip="White: Listing has at least one variation that is 'Out Of Stock' 
+        Purple: Listing's calculation was not possible due to incomplete database.
+        Orange: Atleast one variation has eBay price above desiredPriceRange.
+        Green: All ebayPrice are in desired price range.
+        Yellow: All ebayPrice >= desiredPricePerSingle.
+        Red: Atleast one variation has eBay price below desiredPricePerSingle.
+        
+        Color's precedence is as follows:
+        White > Purple > Red > Orange > Yellow > Green
+
+        As an example, suppose variation1 is purple and variation2 is white. This means the row's color will be white. 
+        "
         matTooltipClass="tooltip-background" class="center-vertically">info
       </mat-icon>
       <span class="align-middle">Color Scheme</span>
@@ -119,9 +129,11 @@
                         <td>{{entry.preparation}}</td>
                         <td>{{entry.desiredPrice}}</td>
                         <td >{{entry.ebaySellPrice}}</td>
-                        <td [ngClass]="entry.profitStatus == 1 ? 'bg-purple'
-                          : entry.profitStatus == 2 ? 'bg-green'
-                          : entry.profitStatus == 3 ? 'bg-yellow'
+                        <td [ngClass]="entry.profitStatus == 0 ? 'bg-white'
+                          : entry.profitStatus == 1 ? 'bg-purple'
+                          : entry.profitStatus == 2 ? 'bg-orange'
+                          : entry.profitStatus == 3 ? 'bg-green'
+                          : entry.profitStatus == 4 ? 'bg-yellow'
                           : 'bg-red'">{{entry.profit}}
                         </td>
                       </tr>
@@ -138,9 +150,11 @@
       
         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header-row"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-        [ngClass]="row.profitStatus == 1 ? 'bg-purple':
-                    row.profitStatus == 2 ? 'bg-green':
-                    row.profitStatus ==  3 ? 'bg-yellow' : 'bg-red'"></tr>
+        [ngClass]="row.profitStatus == 0 ? 'bg-white'
+                    : row.profitStatus == 1 ? 'bg-purple'
+                    : row.profitStatus == 2 ? 'bg-orange'
+                    : row.profitStatus == 3 ? 'bg-green'
+                    : row.profitStatus ==  4 ? 'bg-yellow' : 'bg-red'"></tr>
       </table>
     </div>
   </div>

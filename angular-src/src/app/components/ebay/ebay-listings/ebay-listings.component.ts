@@ -12,10 +12,12 @@ import { calculateProfit } from '../calculations';
 import { calculateDesiredSaleValue } from '../calculations';
 
 var ProfitStatus = {
+  outOfStock: 0,
   incalculable: 1,
-  aboveDesiredPrice: 2,
-  aboveDesiredProfitPerSingle: 3,
-  belowDesiredProfitPerSingle: 4
+  tooMuchProfit: 2,
+  desiredPriceRange: 3,
+  onlyAboveProfitPerSingle: 4,
+  belowProfitPerSingle: 5
 };
 
 @Component({
@@ -118,20 +120,33 @@ export class EbayListingsComponent implements OnInit {
   }
 
   handleVariationProfitStatus(variation, desiredPrice, listingProfitStatus){
-    if(variation['ebaySellPrice'] >= desiredPrice)
-      variation.profitStatus = ProfitStatus.aboveDesiredPrice;
-    else if( variation.profit < this.desiredProfitPerSingle)
-      variation.profitStatus = ProfitStatus.belowDesiredProfitPerSingle;
-    else
-      variation.profitStatus = ProfitStatus.aboveDesiredProfitPerSingle;
+    const tooMuchProfitAmt = 0.50;
     
+    if(variation['ebaySellPrice'] >= desiredPrice + tooMuchProfitAmt)
+      variation.profitStatus = ProfitStatus.tooMuchProfit;
+    else if(variation['ebaySellPrice'] >= desiredPrice)
+      variation.profitStatus = ProfitStatus.desiredPriceRange;
+    else if( variation.profit < this.desiredProfitPerSingle)
+      variation.profitStatus = ProfitStatus.belowProfitPerSingle;
+    else
+      variation.profitStatus = ProfitStatus.onlyAboveProfitPerSingle;
+    
+    //Now return updated row's profitStatus
+    let vProfitStatus = variation.profitStatus;
     switch(listingProfitStatus){
-      case ProfitStatus.incalculable:                 return ProfitStatus.incalculable;
-      case ProfitStatus.belowDesiredProfitPerSingle:  return ProfitStatus.belowDesiredProfitPerSingle;
-      case ProfitStatus.aboveDesiredPrice:            return variation.profitStatus;
-      case ProfitStatus.aboveDesiredProfitPerSingle:
-        return variation.profitStatus == ProfitStatus.belowDesiredProfitPerSingle 
-          ? ProfitStatus.belowDesiredProfitPerSingle : ProfitStatus.aboveDesiredProfitPerSingle
+      case ProfitStatus.outOfStock:             return ProfitStatus.outOfStock;
+      case ProfitStatus.incalculable:           return ProfitStatus.incalculable;
+      case ProfitStatus.belowProfitPerSingle:   return ProfitStatus.belowProfitPerSingle;
+      case ProfitStatus.desiredPriceRange:      return vProfitStatus;
+
+      case ProfitStatus.tooMuchProfit:
+        return vProfitStatus == ProfitStatus.belowProfitPerSingle 
+          ? ProfitStatus.belowProfitPerSingle : ProfitStatus.tooMuchProfit;
+      
+      case ProfitStatus.onlyAboveProfitPerSingle:
+        return vProfitStatus == ProfitStatus.belowProfitPerSingle ? ProfitStatus.belowProfitPerSingle
+          : vProfitStatus == ProfitStatus.tooMuchProfit ? ProfitStatus.tooMuchProfit
+          : ProfitStatus.onlyAboveProfitPerSingle
     }
   }
   
@@ -141,13 +156,17 @@ export class EbayListingsComponent implements OnInit {
   }
 
   updateListingProfitStatus(listing){
-    let listingProfitStatus = ProfitStatus.aboveDesiredPrice;
+    let listingProfitStatus = ProfitStatus.desiredPriceRange;
 
     let variations = listing.variation;
     for(let key in variations){
       let variation = variations[key];
       let desiredPrice = variation.desiredPrice;
-      if( typeof(desiredPrice) != 'number' ){
+      if(variation['ebayQuantityLeft'] == 0){
+        listingProfitStatus = ProfitStatus.outOfStock;
+        variation.profitStatus = ProfitStatus.outOfStock;
+      }
+      else if( typeof(desiredPrice) != 'number' ){
         listingProfitStatus = ProfitStatus.incalculable;
         variation.profitStatus = ProfitStatus.incalculable;
       }

@@ -26,6 +26,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.bg-orange{
+    background-color: orange;
+}
+
 .bg-purple{
     background-color: purple;
 }
