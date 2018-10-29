@@ -155,3 +155,8 @@
     max-height: 400px !important;
     overflow: scroll;
 }
+
+.scroll-tbl-container{
+    height: 600px;
+    overflow: auto;
+}

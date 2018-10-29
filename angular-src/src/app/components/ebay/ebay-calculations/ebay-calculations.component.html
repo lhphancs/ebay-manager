@@ -16,7 +16,7 @@
 
 <progress-spinner *ngIf="!dataSource" [msg]="loadingMsg"></progress-spinner>
 
-<div *ngIf="dataSource" >
+<div *ngIf="dataSource" class="scroll-tbl-container">
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
     <!-- name column -->
     <ng-container matColumnDef="name">
