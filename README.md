@@ -1,8 +1,12 @@
 # inventory-manager
 
-## Purpose: Inventory manager to store details of products and calculate profits from eBay and amazon
-
+## Purpose: MEAN application that serves as an inventory manager for eBay by providing a database for product information.
 ### IMPORTANT: At the moment, project should only be used locally due to security reasons.
+
+### Features
+- Database to store product details and shipping details
+- eBay calculator to determine profit amount or desired price
+- Listing analysis by using eBay API. Can detect out of stock or undesirable prices
 
 ### Main running instructions
 1. Open command prompt
