@@ -156,8 +156,6 @@ export class EbayListingsComponent implements OnInit {
   }
 
   updateListingProfitStatus(listing){
-    if(listing.UPC == '8934717024023')
-    console.log(listing)
     let listingProfitStatus = ProfitStatus.desiredPriceRange;
 
     let variations = listing.variation;
