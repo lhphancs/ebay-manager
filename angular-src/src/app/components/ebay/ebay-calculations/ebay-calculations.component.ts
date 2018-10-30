@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Product } from '../../../classesAndInterfaces/Product';
 import { MatTableDataSource, MatSort, MatSnackBar } from '@angular/material';
-import { SelectionModel } from '@angular/cdk/collections';
 import { EbayComponent } from '../ebay.component';
 import { DatabaseProductsService } from '../../../services/database-products.service';
 import { openSnackbar } from '../../snackbar';

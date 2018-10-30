@@ -18,6 +18,14 @@
           matInput type="number" step="any" min="0" required>
       </mat-form-field>
     </div>
+
+    <div fxFlex="33%">
+      <mat-form-field fxFlex>
+        <input [(ngModel)]='websitePercentageDiscount'
+          name="websitePercentageDiscount" placeholder="Website Discount Percentage"
+          matInput type="number" step="any" min="0" required>
+      </mat-form-field>
+    </div>
   </div>
 
   <button mat-raised-button color="primary"

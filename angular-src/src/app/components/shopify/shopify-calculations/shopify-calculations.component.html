@@ -1,3 +1,9 @@
-<p>
-  shopify-calculations works!
-</p>
+<progress-spinner *ngIf="!dataSource" [msg]="loadingMsg"></progress-spinner>
+
+<div *ngIf="dataSource">
+  <calculations [percentages]="percentages" [flatFees]="flatFees"
+  [flatFees]="flatFees" 
+  [dictShipIdToName]="shopifyComponent.dictShipIdToName"
+  [dictShipIdAndOzToCost]="shopifyComponent.dictShipIdAndOzToCost"
+  [dataSource]="dataSource"></calculations>
+</div>

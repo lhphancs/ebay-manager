@@ -26,11 +26,13 @@ const userSchema = Schema({
     shopifySettings:{
         shopifyFees: { type:{
             shopifyPercentageFromSaleFee:{ type: Number, min: 0, required:true},
-            shopifyFlatFee:{ type: Number, min: 0, required:true}
+            shopifyFlatFee:{ type: Number, min: 0, required:true},
+            websitePercentageDiscount:{ type: Number, min: 0, required:true}
             },
             default:{
                 shopifyPercentageFromSaleFee: 2.9
                 , shopifyFlatFee: 0.30
+                , websitePercentageDiscount: 15
             }, required: true
         }
 
@@ -102,7 +104,8 @@ module.exports.updateEbayFees = function(userId, newEbayFees, callback){
 module.exports.updateShopifyFees = function(userId, newShopifyFees, callback){
     User.findOneAndUpdate({_id: userId}
         , {$set: { "shopifySettings.shopifyFees.shopifyPercentageFromSaleFee" : newShopifyFees.shopifyPercentageFromSaleFee
-            , "shopifySettings.shopifyFees.shopifyFlatFee" : newShopifyFees.shopifyFlatFee} }
+            , "shopifySettings.shopifyFees.shopifyFlatFee" : newShopifyFees.shopifyFlatFee
+            , "shopifySettings.shopifyFees.websitePercentageDiscount" : newShopifyFees.websitePercentageDiscount} }
         , (err, user) =>{
         if(err) callback(err, null);
         else{

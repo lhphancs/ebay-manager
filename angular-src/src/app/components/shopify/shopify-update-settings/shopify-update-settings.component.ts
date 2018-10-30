@@ -12,6 +12,7 @@ import { openSnackbar } from '../../snackbar';
 export class ShopifyUpdateSettingsComponent implements OnInit {
   shopifyPercentageFromSaleFee: number;
   shopifyFlatFee: number;
+  websitePercentageDiscount: number;
 
   constructor(private shopifyComponent: ShopifyComponent
     , private databaseUsersService: DatabaseUsersService
@@ -26,13 +27,15 @@ export class ShopifyUpdateSettingsComponent implements OnInit {
       let shopifyFees = data['shopifyFees'];
       this.shopifyPercentageFromSaleFee = shopifyFees.shopifyPercentageFromSaleFee;
       this.shopifyFlatFee = shopifyFees.shopifyFlatFee;
+      this.websitePercentageDiscount = shopifyFees.websitePercentageDiscount;
     });
   }
   
   getShopifyFeesFromForm(){
     let values = {
-        shopifyPercentageFromSaleFee: this.shopifyPercentageFromSaleFee,
-        shopifyFlatFee: this.shopifyFlatFee,
+        shopifyPercentageFromSaleFee: this.shopifyPercentageFromSaleFee
+        , shopifyFlatFee: this.shopifyFlatFee
+        , websitePercentageDiscount: this.websitePercentageDiscount
       }
     return values;
   }
