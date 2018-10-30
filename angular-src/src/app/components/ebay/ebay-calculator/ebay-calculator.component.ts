@@ -3,10 +3,9 @@ import { DatabaseShippingsService } from '../../../services/database-shippings.s
 import { getProcessedShipMethods } from '../../getProcessedShipMethods';
 import { EbayComponent } from '../ebay.component';
 import { DatabaseUsersService } from '../../../services/database-users.service';
-import { calculateTotalEbayFee } from '../calculations';
-import { calculateTotalPaypalFee } from '../calculations';
-import { calculateEbayProfit } from '../calculations';
-import { calculateEbayDesiredSaleValue } from '../calculations';
+import { calculateTotalFee } from '../../calculations';
+import { calculateProfit } from '../../calculations';
+import { calculateDesiredSaleValue } from '../../calculations';
 
 @Component({
   selector: 'ebay-calculator',
@@ -65,18 +64,19 @@ export class EbayCalculatorComponent implements OnInit {
   }
   
   updateEbayFees(){
-    this.totalEbayFee = calculateTotalEbayFee(this.saleValue, this.ebayPercentageFromSaleFee);
-    this.totalPaypalFee = calculateTotalPaypalFee(this.saleValue
-                          , this.paypalPercentageFromSaleFee, this.paypalFlatFee);
+    this.totalEbayFee = calculateTotalFee(this.saleValue, [this.ebayPercentageFromSaleFee], []);
+    this.totalPaypalFee = calculateTotalFee(this.saleValue
+                          , [this.paypalPercentageFromSaleFee], [this.paypalFlatFee]);
   }
 
   updateTotalOrSaleValue(){
     if(this.mode=="calcProfit")
-      this.totalProfit = calculateEbayProfit(this.saleValue, 1, this.productCost, this.shippingCost
-        , this.totalEbayFee, this.totalPaypalFee, this.miscCost);
+      this.totalProfit = calculateProfit(this.saleValue, 1, this.productCost, this.shippingCost
+        , [this.totalEbayFee, this.totalPaypalFee], this.miscCost);
     else{
-      let desiredProfit = calculateEbayDesiredSaleValue(this.totalProfit, 1, this.productCost, this.shippingCost
-        , this.miscCost, this.ebayPercentageFromSaleFee, this.paypalPercentageFromSaleFee, this.paypalFlatFee, true);
+      let desiredProfit = calculateDesiredSaleValue(this.totalProfit, 1, this.productCost, this.shippingCost
+        , [this.ebayPercentageFromSaleFee, this.paypalPercentageFromSaleFee]
+        , [this.paypalFlatFee], this.miscCost, true);
       this.saleValue = typeof(desiredProfit) == 'number' ? desiredProfit : NaN;
       this.updateEbayFees();
     }

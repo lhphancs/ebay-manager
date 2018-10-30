@@ -6,10 +6,9 @@ import { DatabaseProductsService } from '../../../services/database-products.ser
 import { MatSnackBar, MatTableDataSource, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DatabaseUsersService } from '../../../services/database-users.service';
-import { calculateTotalEbayFee } from '../calculations';
-import { calculateTotalPaypalFee } from '../calculations';
-import { calculateEbayProfit } from '../calculations';
-import { calculateEbayDesiredSaleValue } from '../calculations';
+import { calculateTotalFee } from '../../calculations';
+import { calculateProfit } from '../../calculations';
+import { calculateDesiredSaleValue } from '../../calculations';
 
 var ProfitStatus = {
   outOfStock: 0,
@@ -108,11 +107,11 @@ export class EbayListingsComponent implements OnInit {
           if(!listing.isFreeShipping)
             ebaySellPrice += shipCost; //If buyer pays for shipping, then the salePrice goes up by shipCost
             
-          let totalEbayFee = calculateTotalEbayFee(ebaySellPrice, this.ebayPercentageFromSaleFee);
-          let totalPaypalFee = calculateTotalPaypalFee(ebaySellPrice, this.paypalPercentageFromSaleFee, this.paypalFlatFee);
+          let totalEbayFee = calculateTotalFee(ebaySellPrice, [this.ebayPercentageFromSaleFee], []);
+          let totalPaypalFee = calculateTotalFee(ebaySellPrice, [this.paypalPercentageFromSaleFee], [this.paypalFlatFee]);
           
-          variation.profit = calculateEbayProfit(ebaySellPrice, variation.packAmt, costPerSingle, shipCost
-            , totalEbayFee, totalPaypalFee, 0);
+          variation.profit = calculateProfit(ebaySellPrice, variation.packAmt, costPerSingle, shipCost
+            , [totalEbayFee, totalPaypalFee], 0);
     }
   }
 
@@ -198,9 +197,10 @@ export class EbayListingsComponent implements OnInit {
         let shipCost = this.getShipCost(shipId, variationToEdit.ozWeight);
         
         let isFreeShipping = listing.isFreeShipping;
-        variationToEdit.desiredPrice = calculateEbayDesiredSaleValue(this.desiredProfitPerSingle
-          , packAmt, listing.costPerSingle, shipCost, 0, this.ebayPercentageFromSaleFee
-          , this.paypalPercentageFromSaleFee, this.paypalFlatFee, isFreeShipping)
+        variationToEdit.desiredPrice = calculateDesiredSaleValue(this.desiredProfitPerSingle
+          , packAmt, listing.costPerSingle, shipCost
+          , [this.ebayPercentageFromSaleFee, this.paypalPercentageFromSaleFee]
+          , [this.paypalFlatFee], 0, isFreeShipping)
       }
     }
   }
@@ -235,9 +235,10 @@ export class EbayListingsComponent implements OnInit {
         let packAmt = variation['packAmt'];
         let shipId = variation['shipMethodId'];
         let shipCost = this.getShipCost(shipId, variation.ozWeight);
-        variation['desiredPrice'] = calculateEbayDesiredSaleValue(this.desiredProfitPerSingle
-          , packAmt, listing.costPerSingle, shipCost, 0, this.ebayPercentageFromSaleFee
-          , this.paypalPercentageFromSaleFee, this.paypalFlatFee, true)
+        variation['desiredPrice'] = calculateDesiredSaleValue(this.desiredProfitPerSingle
+          , packAmt, listing.costPerSingle, shipCost
+          , [this.ebayPercentageFromSaleFee, this.paypalPercentageFromSaleFee]
+          , [this.paypalFlatFee], 0, true)
       }
       this.updateListingProfitStatus(listing);
     }
