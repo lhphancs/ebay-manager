@@ -42,6 +42,10 @@ import { EbayUpdateSettingsComponent } from './components/ebay/ebay-update-setti
 import { EbayUpdateSettingsFeesComponent } from './components/ebay/ebay-update-settings/ebay-update-settings-fees/ebay-update-settings-fees.component';
 import { EbayUpdateSettingsAccountComponent } from './components/ebay/ebay-update-settings/ebay-update-settings-account/ebay-update-settings-account.component';
 import 'hammerjs';
+import { ShopifyComponent } from './components/shopify/shopify.component';
+import { ShopifyUpdateSettingsComponent } from './components/shopify/shopify-update-settings/shopify-update-settings.component';
+import { ShopifyCalculationsComponent } from './components/shopify/shopify-calculations/shopify-calculations.component';
+import { NavtabsComponent } from './components/navtabs/navtabs.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +72,11 @@ import 'hammerjs';
     EbayListingsComponent,
     EbayUpdateSettingsComponent,
     EbayUpdateSettingsFeesComponent,
-    EbayUpdateSettingsAccountComponent
+    EbayUpdateSettingsAccountComponent,
+    ShopifyComponent,
+    ShopifyUpdateSettingsComponent,
+    ShopifyCalculationsComponent,
+    NavtabsComponent
   ],
   imports: [
     NgbModule.forRoot(),

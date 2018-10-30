@@ -146,15 +146,21 @@ module.exports.getEbaySettings = function(userId, callback){
     });
 };
 
+module.exports.getShopifySettings = function(userId, callback){
+    User.findOne({_id: userId}, null, {select:'shopifySettings -_id'}, (err, user) =>{
+        callback(err, user.shopifySettings);
+    });
+};
+
 module.exports.getEbayFees = function(userId, callback){
     User.findOne({_id: userId}, null, {select:'ebaySettings.ebayFees -_id'}, (err, user) =>{
         callback(err, user.ebaySettings.ebayFees);
     });
 };
 
-module.exports.getShopifySettings = function(userId, callback){
-    User.findOne({_id: userId}, null, {select:'shopifySettings -_id'}, (err, user) =>{
-        callback(err, user.shopifySettings);
+module.exports.getShopifyFees = function(userId, callback){
+    User.findOne({_id: userId}, null, {select:'shopifySettings.shopifyFees -_id'}, (err, user) =>{
+        callback(err, user.shopifySettings.shopifyFees);
     });
 };
 

@@ -83,9 +83,19 @@ export class DatabaseUsersService {
     , {headers: this.normalHeader});
   }
 
+  getShopifyFees(userId){
+    return this.httpClient.get(`/api/users/shopify-fees/${userId}`
+    , {headers: this.normalHeader});
+  }
+
   updateEbayFees(userId, newEbayFees){
     return this.httpClient.put('/api/users/ebay-fees/update'
     , {userId: userId, newEbayFees: newEbayFees}, {headers: this.normalHeader});
+  }
+
+  updateShopifyFees(userId, newShopifyFees){
+    return this.httpClient.put('/api/users/shopify-fees/update'
+    , {userId: userId, newShopifyFees: newShopifyFees}, {headers: this.normalHeader});
   }
 
   updateEbayAccountSettings(userId, newEbayAccountSettings){

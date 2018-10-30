@@ -1,27 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { DatabaseUsersService } from '../../services/database-users.service';
-import { Link } from '../../classesAndInterfaces/Link';
-import { DatabaseShippingsService } from '../../services/database-shippings.service';
-import { initializeShipDicts } from '../getProcessedShipMethods'
+import { Link } from 'src/app/classesAndInterfaces/Link';
+import { DatabaseUsersService } from 'src/app/services/database-users.service';
+import { DatabaseShippingsService } from 'src/app/services/database-shippings.service';
+import { initializeShipDicts } from '../getProcessedShipMethods';
 
 @Component({
-  selector: 'ebay',
-  templateUrl: './ebay.component.html',
-  styleUrls: ['./ebay.component.css']
+  selector: 'shopify',
+  templateUrl: './shopify.component.html',
+  styleUrls: ['./shopify.component.css']
 })
-export class EbayComponent implements OnInit {
+export class ShopifyComponent implements OnInit {
   userId;
   dictShipIdToName = {};
   dictShipIdAndOzToCost = {};
 
   leftSublinks = [
     new Link("Calculations", "calculations")
-    , new Link("Listings", "listings")
-    , new Link("Calculator", "calculator")
   ];
 
   rightSublinks = [
-    new Link("eBay Settings", "update-ebay-settings")
+    new Link("Shopify Settings", "update-shopify-settings")
   ];
   
   constructor(private databaseUsersService: DatabaseUsersService
@@ -36,7 +34,7 @@ export class EbayComponent implements OnInit {
     });
   }
 
-  //For 'calculations' and 'listings' tab
+  //For 'calculations'
   initializeShippingMethods(){
     this.databaseShippingsService.getShipMethods(this.userId).subscribe((data)=>{
       initializeShipDicts(this.dictShipIdToName, this.dictShipIdAndOzToCost, data['shipMethods']);

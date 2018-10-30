@@ -1,0 +1,26 @@
+<progress-spinner *ngIf="!shopifyPercentageFromSaleFee" [msg]="loadingMsg"></progress-spinner>
+<form *ngIf="shopifyPercentageFromSaleFee" class="entire-form m-4" ngNativeValidate (ngSubmit)="onUpdateFees()">
+  <h5 class="text-center">Update Shopify fees</h5>
+
+  <div class="form-row-container mt-4" fxLayoutWrap fxLayoutGap="0.5%">
+    <div fxFlex="33%">
+        <mat-form-field fxFlex>
+          <input [(ngModel)]='shopifyPercentageFromSaleFee'
+            name="shopifyPercentageFromSaleFee" placeholder="Shopify Fee Percentage"
+            matInput type="number" step="any" min="0" required>
+        </mat-form-field>
+    </div>
+
+    <div fxFlex="33%">
+      <mat-form-field fxFlex>
+        <input [(ngModel)]='shopifyFlatFee'
+          name="shopifyFlatFee" placeholder="Shopify Flat Fee"
+          matInput type="number" step="any" min="0" required>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <button mat-raised-button color="primary"
+    type="submit" class="btn-block btn-submit">Update
+  </button>
+</form>

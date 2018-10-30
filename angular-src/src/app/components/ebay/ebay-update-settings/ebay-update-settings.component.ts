@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EbayComponent } from '../ebay.component';
 import { DatabaseUsersService } from '../../../services/database-users.service';
-import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'ebay-update-settings',

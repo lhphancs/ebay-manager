@@ -18,6 +18,9 @@ import { EbayCalculationsComponent } from './components/ebay/ebay-calculations/e
 import { EbayCalculatorComponent } from './components/ebay/ebay-calculator/ebay-calculator.component';
 import { EbayListingsComponent } from './components/ebay/ebay-listings/ebay-listings.component';
 import { EbayUpdateSettingsComponent } from './components/ebay/ebay-update-settings/ebay-update-settings.component';
+import { ShopifyComponent } from './components/shopify/shopify.component';
+import { ShopifyCalculationsComponent } from './components/shopify/shopify-calculations/shopify-calculations.component';
+import { ShopifyUpdateSettingsComponent } from './components/shopify/shopify-update-settings/shopify-update-settings.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -32,6 +35,13 @@ const routes: Routes = [
       { path: 'listings', component: EbayListingsComponent },
       { path: 'calculator', component: EbayCalculatorComponent },
       { path: 'update-ebay-settings', component: EbayUpdateSettingsComponent },
+    ]
+  },
+  { path: 'shopify', component: ShopifyComponent, canActivate:[AuthGuard],
+    children: [
+      { path: '', redirectTo: 'calculations', pathMatch: 'full' },
+      { path: 'calculations', component: ShopifyCalculationsComponent },
+      { path: 'update-shopify-settings', component: ShopifyUpdateSettingsComponent },
     ]
   },
   { path: 'account', component: AccountComponent, canActivate:[AuthGuard] },
