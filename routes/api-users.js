@@ -90,8 +90,22 @@ router.get('/ebay-fees/:userId', (req, res, next) => {
     });
 });
 
+router.get('/shopify-fees/:userId', (req, res, next) => {
+    User.getEbayFees( req.params.userId, (err, shopifyFees) => {
+        if(err) res.json({success: false, msg: `Failed to grab fee: ${err.message}`});
+        else res.json({success:true, shopifyFees: shopifyFees});
+    });
+});
+
 router.put('/ebay-fees/update', (req, res, next) => {
     User.updateEbayFees( req.body.userId, req.body.newEbayFees, (err) => {
+        if(err) res.json({success: false, msg: err.message});
+        else res.json({success:true});
+    });
+});
+
+router.put('/shopify-fees/update', (req, res, next) => {
+    User.updateEbayFees( req.body.userId, req.body.newShopifyFees, (err) => {
         if(err) res.json({success: false, msg: err.message});
         else res.json({success:true});
     });

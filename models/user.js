@@ -100,6 +100,20 @@ module.exports.updateEbayFees = function(userId, newEbayFees, callback){
     });
 };
 
+module.exports.updateShopifyFees = function(userId, newShopifyFees, callback){
+    User.findOneAndUpdate({_id: userId}
+        , {$set: { "shopifySettings.shopifyFees.shopifyPercentageFromSaleFee" : newShopifyFees.shopifyPercentageFromSaleFee
+            , "shopifySettings.shopifyFees.shopifyFlatFee" : newShopifyFees.shopifyFlatFee} }
+        , (err, user) =>{
+        if(err) callback(err, null);
+        else{
+            if(user)
+                callback(err, user);
+            else callback(new Error("userId not found"), null);
+        }
+    });
+};
+
 module.exports.updateEbayAccountSettings = function(userId, newEbayAccountSettings, callback){
     User.findOneAndUpdate({_id: userId}
         , {$set: { "ebaySettings.ebayUserName" : newEbayAccountSettings.ebayUserName ? newEbayAccountSettings.ebayUserName : ""
@@ -136,6 +150,12 @@ module.exports.getEbaySettings = function(userId, callback){
 module.exports.getEbayFees = function(userId, callback){
     User.findOne({_id: userId}, null, {select:'ebaySettings.ebayFees -_id'}, (err, user) =>{
         callback(err, user.ebaySettings.ebayFees);
+    });
+};
+
+module.exports.getShopifySettings = function(userId, callback){
+    User.findOne({_id: userId}, null, {select:'shopifySettings -_id'}, (err, user) =>{
+        callback(err, user.shopifySettings);
     });
 };
 
