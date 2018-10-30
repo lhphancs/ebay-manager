@@ -6,7 +6,7 @@ export function calculateTotalPaypalFee(ebaySellPrice, paypalPercentageFromSaleF
     return Math.round((paypalPercentageFromSaleFee * ebaySellPrice * 0.01 + paypalFlatFee)*100)/100;
 }
 
-export function calculateProfit(ebaySellPrice, packAmt, costPerSingle, shippingCost
+export function calculateEbayProfit(ebaySellPrice, packAmt, costPerSingle, shippingCost
     , totalEbayFee, totalPaypalFee, miscCost){
     let profit = ebaySellPrice - packAmt*costPerSingle - shippingCost - totalEbayFee - totalPaypalFee - miscCost;
     return Math.round(profit*100)/100;
@@ -21,7 +21,7 @@ function getErrMsg(totalProfit, totalProductCost, shipCost){
     return errMsg == BASE_ERR_MSG ? null : errMsg;
 }
 
-export function calculateDesiredSaleValue(desiredProfitPerSingle, packAmt, costPerSingle, shipCost
+export function calculateEbayDesiredSaleValue(desiredProfitPerSingle, packAmt, costPerSingle, shipCost
     , miscCost, ebayPercentageFromSaleFee, paypalPercentageFromSaleFee, paypalFlatFee, isFreeShipping){
     let totalDesiredProfit = desiredProfitPerSingle * packAmt;
     let totalProductCost = costPerSingle * packAmt;

@@ -8,8 +8,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { DatabaseUsersService } from '../../../services/database-users.service';
 import { calculateTotalEbayFee } from '../calculations';
 import { calculateTotalPaypalFee } from '../calculations';
-import { calculateProfit } from '../calculations';
-import { calculateDesiredSaleValue } from '../calculations';
+import { calculateEbayProfit } from '../calculations';
+import { calculateEbayDesiredSaleValue } from '../calculations';
 
 var ProfitStatus = {
   outOfStock: 0,
@@ -111,7 +111,7 @@ export class EbayListingsComponent implements OnInit {
           let totalEbayFee = calculateTotalEbayFee(ebaySellPrice, this.ebayPercentageFromSaleFee);
           let totalPaypalFee = calculateTotalPaypalFee(ebaySellPrice, this.paypalPercentageFromSaleFee, this.paypalFlatFee);
           
-          variation.profit = calculateProfit(ebaySellPrice, variation.packAmt, costPerSingle, shipCost
+          variation.profit = calculateEbayProfit(ebaySellPrice, variation.packAmt, costPerSingle, shipCost
             , totalEbayFee, totalPaypalFee, 0);
     }
   }
@@ -198,7 +198,7 @@ export class EbayListingsComponent implements OnInit {
         let shipCost = this.getShipCost(shipId, variationToEdit.ozWeight);
         
         let isFreeShipping = listing.isFreeShipping;
-        variationToEdit.desiredPrice = calculateDesiredSaleValue(this.desiredProfitPerSingle
+        variationToEdit.desiredPrice = calculateEbayDesiredSaleValue(this.desiredProfitPerSingle
           , packAmt, listing.costPerSingle, shipCost, 0, this.ebayPercentageFromSaleFee
           , this.paypalPercentageFromSaleFee, this.paypalFlatFee, isFreeShipping)
       }
@@ -235,7 +235,7 @@ export class EbayListingsComponent implements OnInit {
         let packAmt = variation['packAmt'];
         let shipId = variation['shipMethodId'];
         let shipCost = this.getShipCost(shipId, variation.ozWeight);
-        variation['desiredPrice'] = calculateDesiredSaleValue(this.desiredProfitPerSingle
+        variation['desiredPrice'] = calculateEbayDesiredSaleValue(this.desiredProfitPerSingle
           , packAmt, listing.costPerSingle, shipCost, 0, this.ebayPercentageFromSaleFee
           , this.paypalPercentageFromSaleFee, this.paypalFlatFee, true)
       }
