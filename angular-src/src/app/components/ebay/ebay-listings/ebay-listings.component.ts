@@ -6,9 +6,9 @@ import { DatabaseProductsService } from '../../../services/database-products.ser
 import { MatSnackBar, MatTableDataSource, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DatabaseUsersService } from '../../../services/database-users.service';
-import { calculateTotalFee } from '../../calculations';
-import { calculateProfit } from '../../calculations';
-import { calculateDesiredSaleValue } from '../../calculations';
+import { calculateTotalFee } from '../../profitCalculations';
+import { calculateProfit } from '../../profitCalculations';
+import { calculateDesiredSaleValue } from '../../profitCalculations';
 
 var ProfitStatus = {
   outOfStock: 0,

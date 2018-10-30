@@ -6,7 +6,6 @@ import { EbayComponent } from '../ebay.component';
 import { DatabaseProductsService } from '../../../services/database-products.service';
 import { openSnackbar } from '../../snackbar';
 import { DatabaseUsersService } from '../../../services/database-users.service';
-import { calculateDesiredSaleValue } from '../../calculations';
 
 @Component({
   selector: 'ebay-calculations',
@@ -14,18 +13,11 @@ import { calculateDesiredSaleValue } from '../../calculations';
   styleUrls: ['./ebay-calculations.component.css']
 })
 export class EbayCalculationsComponent implements OnInit {
-  loadingMsg = "Loading products..."
-  ebayPercentageFromSaleFee;
-  paypalFlatFee;
-  paypalPercentageFromSaleFee;
-
-  desiredProfitPerSingle = 1;
+  percentages:number[];
+  flatFees:number[];
   
   products: Product[];
-  displayedColumns: string[] = ['name', 'stockNo', 'costPerSingle'
-    , 'ASINS', 'UPC', 'wholesaleComp', 'calculations'];
   dataSource: MatTableDataSource<Product>;
-  selection = new SelectionModel<Product>(true, []);
 
   constructor(
     private ebayComponent:EbayComponent
@@ -45,9 +37,8 @@ export class EbayCalculationsComponent implements OnInit {
   
   ngOnInit() {
     this.databaseUsersService.getEbayFees(this.ebayComponent.userId).subscribe( (data) =>{
-      this.ebayPercentageFromSaleFee = data['ebayFees'].ebayPercentageFromSaleFee;
-      this.paypalFlatFee = data['ebayFees'].paypalFlatFee;
-      this.paypalPercentageFromSaleFee = data['ebayFees'].paypalPercentageFromSaleFee;
+      this.percentages = [ data['ebayFees'].ebayPercentageFromSaleFee, data['ebayFees'].paypalPercentageFromSaleFee ];
+      this.flatFees = [ data['ebayFees'].paypalFlatFee ];
       this.initializeProducts();
     });
   }
@@ -81,19 +72,4 @@ export class EbayCalculationsComponent implements OnInit {
       product.ASINS = strASINS;
     }
   }
-
-  applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-  calculateDesiredPrice(packAmt, shipId, oz, costPerSingle){
-    let roundedUpOz = oz ? Math.ceil(oz): "";
-    let key = shipId in this.ebayComponent.dictShipIdAndOzToCost ? shipId: shipId + roundedUpOz;
-    let shipCost = this.ebayComponent.dictShipIdAndOzToCost[key];
-    
-    return calculateDesiredSaleValue(this.desiredProfitPerSingle, packAmt, costPerSingle, shipCost
-      , [this.ebayPercentageFromSaleFee, this.paypalPercentageFromSaleFee]
-      , [this.paypalFlatFee], 0, true);
-  }
 }
-

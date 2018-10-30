@@ -3,9 +3,9 @@ import { DatabaseShippingsService } from '../../../services/database-shippings.s
 import { getProcessedShipMethods } from '../../getProcessedShipMethods';
 import { EbayComponent } from '../ebay.component';
 import { DatabaseUsersService } from '../../../services/database-users.service';
-import { calculateTotalFee } from '../../calculations';
-import { calculateProfit } from '../../calculations';
-import { calculateDesiredSaleValue } from '../../calculations';
+import { calculateTotalFee } from '../../profitCalculations';
+import { calculateProfit } from '../../profitCalculations';
+import { calculateDesiredSaleValue } from '../../profitCalculations';
 
 @Component({
   selector: 'ebay-calculator',
