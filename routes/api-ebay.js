@@ -7,8 +7,6 @@ const async = require('async');
 const parseString = require('xml2js').parseString;
 const ENTRIES_PER_PAGE = 200;
 
-
-
 function getSellerListXmlRequestBody(ebayUserName, curDateStr, futureDateStr, pageNum){
     return `<?xml version="1.0" encoding="utf-8"?>
     <GetSellerListRequest xmlns="urn:ebay:apis:eBLBaseComponents">    
@@ -28,18 +26,6 @@ function getSellerListXmlRequestBody(ebayUserName, curDateStr, futureDateStr, pa
     </GetSellerListRequest>`;
 }
 
-function getItemXmlRequestBody(itemId){
-    return `<?xml version="1.0" encoding="utf-8"?>
-        <GetItemRequest xmlns="urn:ebay:apis:eBLBaseComponents">    
-            <ErrorLanguage>en_US</ErrorLanguage>
-            <WarningLevel>High</WarningLevel>
-            <!--Enter an ItemID-->
-            <ItemID>${itemId}</ItemID>
-            <DetailLevel>ItemReturnAttributes</DetailLevel>
-            <OutputSelector>Title,Quantity,ProductListingDetails,SellingStatus,ShippingDetails,PictureDetails,ListingDetails</OutputSelector>
-        </GetItemRequest>`;
-}
-
 function getXmlHeader(ebayKey, callName){
     let xmlHeaders = {
         'X-EBAY-API-SITEID':'0',
@@ -50,62 +36,21 @@ function getXmlHeader(ebayKey, callName){
     return xmlHeaders;
 }
 
-function getNonVariationXmlRequests(ebayKey, itemId){
-    let body = getItemXmlRequestBody(itemId); //Do not put this directly in below's body. Doing so will insert \n 's
-    return {
-        url: "https://api.ebay.com/ws/api.dll",
-        method: "POST",
-        headers: {
-            "content-type": "application/xml",
-            },
-        headers: getXmlHeader(ebayKey, 'GetItem'),
-        body: body
+function getMultipleItemsRequestUrls(arrayOfMaxItemIdsStrs, ebaySettings){
+    let ebayAppId = ebaySettings.ebayAppId;
+
+    let retUrls = [];
+    for(let i=0; i<arrayOfMaxItemIdsStrs.length; ++i){
+        let itemIdsStr = arrayOfMaxItemIdsStrs[i];
+        let url = `http://open.api.ebay.com/shopping?callname=GetMultipleItems`
+        + `&appid=${ebayAppId}`
+        + `&siteid=0&version=897`
+        + `&ItemID=${itemIdsStr}`
+        + `&IncludeSelector=Details,ItemSpecifics,ShippingCosts`
+        + `&responseencoding=JSON`;
+        retUrls.push(url);
     }
-}
-
-function getNonVariationDataFromXml(xml){
-    let data = {nonVariation: true};
-    let getItemResponse = xml.GetItemResponse;
-    let item = getItemResponse.Item[0];
-    data.listTitle = item.Title[0];
-    
-
-    let sellingStatus = item.SellingStatus[0];
-    let currentPrice = sellingStatus.CurrentPrice[0]._;
-
-    let productListingDetails = item.ProductListingDetails[0];
-    data.UPC = productListingDetails.UPC[0];
-
-    let pictureDetails = item.PictureDetails[0];
-    data.imgUrl = pictureDetails.GalleryURL[0];
-
-    let shippingDetails = item.ShippingDetails[0];
-    let shippingServiceOptions = shippingDetails.ShippingServiceOptions[0];
-    data.isFreeShipping = shippingServiceOptions.hasOwnProperty('FreeShipping');
-
-    let listingDetails = item.ListingDetails[0];
-    data.listUrl = listingDetails.ViewItemURL[0];
-
-    
-    let quantity = item.Quantity[0]; //IMPORTANT! ebayDefines this as 'amtSold' + 'amtAvailable'
-    let amtSold = sellingStatus.QuantitySold[0];
-    let quantityLeft = quantity - amtSold;
-    data.variation = {};
-    data.variation[1] = {packAmt: 1, ebayQuantityLeft:quantityLeft
-        , ebaySellPrice: currentPrice};
-    return data;
-}
-
-function getItemRequest(nonVariationXmlRequest, callback) {
-    request(nonVariationXmlRequest, function (err, response, body){
-        parseString(body, function (e, result) {
-            if(e) callback(e, result);
-            else{
-                let data = getNonVariationDataFromXml(result);
-                callback(e, data);
-            }
-        });
-    });
+    return retUrls;
 }
 
 function handleSellerListResponseErrMsg(res, sellerListResponse){
@@ -170,50 +115,118 @@ function addToListingDictForVariationListing(item, listingDict){
     }
 }
 
-function addNonVariationToListingDict(datas, listingDict){
-    for(let data of datas){
-        let upc = data.UPC;
-        listingDict[upc] = data;
-    }
-}
-
 function getLastEbayPage(sellerListResponse){
     let paginationResult = sellerListResponse.PaginationResult[0]
     return paginationResult.TotalNumberOfPages[0];
 }
 
+function getConcatenatedItemIdsStr(nonVariationItemIds, startIndex, lastIndex){
+    let retStr = '';
+    for(let i=startIndex; i<=lastIndex; ++i)
+        retStr += nonVariationItemIds[i] + ',';
+    retStr = retStr.substring(0, retStr.length - 1);
+    return retStr;
+}
+
+function getArrayOfMaxItemIdsStrs(nonVariationItemIds, maxItemIds){
+    let arrayOfMaxItemIdsStrs = [];
+    for(let i=0; i<nonVariationItemIds.length; i+=maxItemIds){
+        let iMaxIndex = i + maxItemIds - 1;
+        let iLastIndex = iMaxIndex <= nonVariationItemIds.length - 1
+            ? iMaxIndex : nonVariationItemIds.length - 1;
+        let concatItemIdsStr = getConcatenatedItemIdsStr(nonVariationItemIds, i, iLastIndex)
+        arrayOfMaxItemIdsStrs.push(concatItemIdsStr);
+    }
+    return arrayOfMaxItemIdsStrs;
+}
+
+function getMultipleItemsRequest(requestUrls, callback){
+    request(requestUrls, (err, res, body) => {
+        if (err) console.log(err.message);
+        else{
+            callback(err, body);
+        }
+    });
+}
+
+function getUpcFromNonVariationItem(item){
+    let itemSpecifics = item.ItemSpecifics;
+    let nameValueList = itemSpecifics.NameValueList;
+    for(let nameValue of nameValueList){
+        if(nameValue.Name == 'UPC')
+            return nameValue.Value[0];
+    }
+    return undefined;
+}
+
+function parseItemAndAddToListingDict(item, listingDict){
+    let data = {nonVariation: true};
+    data.listTitle = item.Title;
+    data.listUrl = item.ViewItemURLForNaturalSearch;
+    data.imgUrl = item.PictureURL[0];
+
+    let currentPrice = item.CurrentPrice.Value;
+    let quantity = item.Quantity; //IMPORTANT! ebayDefines this as 'amtSold' + 'amtAvailable'
+    let quantitySold = item.QuantitySold;
+    let quantityLeft = quantity - quantitySold;
+    data.variation = {};
+    data.variation[1] = {packAmt: 1, ebayQuantityLeft:quantityLeft
+        , ebaySellPrice: currentPrice};
+
+    let upc = getUpcFromNonVariationItem(item)
+    data.UPC = upc;
+    
+    let shippingCostSummary = item.ShippingCostSummary;
+    let shippingType = shippingCostSummary.ShippingType;
+    data.isFreeShipping = shippingType != 'Calculated';
+
+    listingDict[upc] = data;
+}
+
+function addNonVariationToListingDict(responses, listingDict){
+    for(let response of responses){
+        jsonResponse = JSON.parse(response);
+        
+        let items = jsonResponse.Item;
+        for(let item of items)
+            parseItemAndAddToListingDict(item, listingDict);
+    }
+}
+
 function handleValidJsonOfListings(res, curDateStr, futureDateStr, ebayKey, ebaySettings, listingDict
-, nonVariationXmlRequests, pageNum, lastEbayPage, sellerListResponse){
+, nonVariationItemIds, pageNum, lastEbayPage, sellerListResponse){
     let itemArray = sellerListResponse.ItemArray[0].Item;
     for(let item of itemArray){
         if(item.SellingStatus[0].ListingStatus[0] == 'Active'){
             if(item.Variations)
                 addToListingDictForVariationListing(item, listingDict);
-            else{
-                let xmlRequest = getNonVariationXmlRequests(ebayKey, item.ItemID[0])
-                nonVariationXmlRequests.push(xmlRequest);
-            }
-                
+            else
+                nonVariationItemIds.push(item.ItemID[0]);
         }
     }
     if(pageNum == lastEbayPage){
-        async.map(nonVariationXmlRequests, getItemRequest, function(err, r){
-            if (err)
-                return console.log(err);
-            else{
-                addNonVariationToListingDict(r, listingDict);
-                res.json({success: true, listingDict: listingDict});
-            }
-        });
+        if(nonVariationItemIds.length > 0){
+            const maxItemIds = 20; // This is the max itemIds that eBay allows per request
+            let arrayOfMaxItemIdsStrs = getArrayOfMaxItemIdsStrs(nonVariationItemIds, maxItemIds);
+            let requestUrls = getMultipleItemsRequestUrls(arrayOfMaxItemIdsStrs, ebaySettings)
+            async.map(requestUrls, getMultipleItemsRequest, function(err, responses){
+                if (err)
+                    return console.log(err);
+                else{
+                    addNonVariationToListingDict(responses, listingDict);
+                    res.json({success: true, listingDict: listingDict});
+                }
+            });
+        }
     }  
     else
         handleJsonOfListings(res, curDateStr
             , futureDateStr, ebayKey, ebaySettings
-            , listingDict, nonVariationXmlRequests, pageNum+1)
+            , listingDict, nonVariationItemIds, pageNum+1)
 }
 
 function handleJsonOfListings(res, curDateStr, futureDateStr, ebayKey
-, ebaySettings, listingDict, nonVariationXmlRequests, pageNum){
+, ebaySettings, listingDict, nonVariationItemIds, pageNum){
     let body = getSellerListXmlRequestBody(ebaySettings.ebayUserName, curDateStr, futureDateStr, pageNum);
     request({
         url: "https://api.ebay.com/ws/api.dll",
@@ -235,7 +248,7 @@ function handleJsonOfListings(res, curDateStr, futureDateStr, ebayKey
                     
                     if(ack === 'Success'){
                         let lastEbayPage = getLastEbayPage(sellerListResponse);
-                        handleValidJsonOfListings(res, curDateStr, futureDateStr, ebayKey, ebaySettings, listingDict, nonVariationXmlRequests
+                        handleValidJsonOfListings(res, curDateStr, futureDateStr, ebayKey, ebaySettings, listingDict, nonVariationItemIds
                             , pageNum, lastEbayPage, sellerListResponse);
                     }
                     else 
@@ -245,8 +258,6 @@ function handleJsonOfListings(res, curDateStr, futureDateStr, ebayKey
         }
     });
 }
-
-
 
 function getStrDateNowAndDate30DaysInFuture(){
     let curDate = new Date();
@@ -266,9 +277,9 @@ router.post('/listings', (req, res, next) => {
                 else{
                     let listingDict = {};
                     let strDates = getStrDateNowAndDate30DaysInFuture();
-                    let nonVariationXmlRequests = [];
+                    let nonVariationItemIds = [];
                     handleJsonOfListings(res, strDates.curDateStr, strDates.futureDateStr
-                        , ebayKey, ebaySettings, listingDict, nonVariationXmlRequests, 1);
+                        , ebayKey, ebaySettings, listingDict, nonVariationItemIds, 1);
                 }
             });
         }
