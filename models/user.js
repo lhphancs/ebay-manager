@@ -13,12 +13,28 @@ const userSchema = Schema({
             ebayPercentageFromSaleFee:{type: Number, min:0, required:true},
             paypalPercentageFromSaleFee:{ type: Number, min: 0, required:true},
             paypalFlatFee:{ type: Number, min: 0, required:true}
-           }, default:{ebayPercentageFromSaleFee:9.15, paypalPercentageFromSaleFee: 2.9,
-            paypalFlatFee: 0.30}, required: true},
+            }, 
+            default:{ebayPercentageFromSaleFee:9.15
+                , paypalPercentageFromSaleFee: 2.9
+                , paypalFlatFee: 0.30}, required: true
+        },
         ebayUserName: {type: String, default:""},
         ebayStoreName: {type: String, default:""},
         ebayAppId: {type: String, default:""},
         ebayKey: {type: String, default:""}
+        , required: true
+    },
+    shopifySettings:{
+        shopifyFees: { type:{
+            shopifyPercentageFromSaleFee:{ type: Number, min: 0, required:true},
+            shopifyFlatFee:{ type: Number, min: 0, required:true}
+            },
+            default:{
+                shopifyPercentageFromSaleFee: 2.9
+                , shopifyFlatFee: 0.30
+            }, required: true
+        }
+        , required: true
     }
 });
 
