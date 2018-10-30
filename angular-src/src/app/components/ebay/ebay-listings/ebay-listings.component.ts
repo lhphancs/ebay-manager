@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Listing } from '../../../classesAndInterfaces/Listing'
 import { EbayService } from '../../../services/ebay.service';
 import { EbayComponent } from '../ebay.component';
@@ -48,7 +48,15 @@ export class EbayListingsComponent implements OnInit {
       this.listings = [];
     }
 
-  @ViewChild(MatSort) sort: MatSort;
+    sort;
+
+    @ViewChild(MatSort) set content(content: ElementRef) {
+      this.sort = content;
+      if (this.sort){
+         this.dataSource.sort = this.sort;
+    
+      }
+    }
   
   ngOnInit() {
     this.databaseUsersService.getEbayFees(this.ebayComponent.userId).subscribe( (data) =>{

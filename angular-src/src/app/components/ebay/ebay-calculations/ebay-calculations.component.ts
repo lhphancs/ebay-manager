@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Product } from '../../../classesAndInterfaces/Product';
 import { MatTableDataSource, MatSort, MatSnackBar } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -33,7 +33,14 @@ export class EbayCalculationsComponent implements OnInit {
     , public snackBar: MatSnackBar){
   }
 
-  @ViewChild(MatSort) sort: MatSort;
+  sort;
+  @ViewChild(MatSort) set content(content: ElementRef) {
+    this.sort = content;
+    if (this.sort){
+       this.dataSource.sort = this.sort;
+  
+    }
+  }
   
   ngOnInit() {
     this.databaseUsersService.getEbayFees(this.ebayComponent.userId).subscribe( (data) =>{

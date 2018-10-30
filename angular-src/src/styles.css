@@ -157,6 +157,7 @@
 }
 
 .scroll-tbl-container{
+    border: 1px solid grey;
     height: 600px;
     overflow: auto;
 }

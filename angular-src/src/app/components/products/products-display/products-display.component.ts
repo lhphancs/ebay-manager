@@ -34,8 +34,15 @@ export class ProductsDisplayComponent implements OnInit {
     , public snackBar: MatSnackBar, private dialog: MatDialog){
       this.deletedGroupsStack = new Stack();
   }
+  sort;
 
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) set content(content: ElementRef) {
+    this.sort = content;
+    if (this.sort){
+       this.dataSource.sort = this.sort;
+  
+    }
+  }
   
   ngOnInit() {
     this.userId = this.productsComponent.userId;
