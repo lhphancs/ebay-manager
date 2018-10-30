@@ -6,7 +6,7 @@ import { EbayComponent } from '../ebay.component';
 import { DatabaseProductsService } from '../../../services/database-products.service';
 import { openSnackbar } from '../../snackbar';
 import { DatabaseUsersService } from '../../../services/database-users.service';
-import { calculateDesiredSaleValue } from '../calculations';
+import { calculateEbayDesiredSaleValue } from '../calculations';
 
 @Component({
   selector: 'ebay-calculations',
@@ -86,12 +86,12 @@ export class EbayCalculationsComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  calculateDesiredPrice(packAmt, shipId, oz, costPerSingle){
+  calculateEbayDesiredPrice(packAmt, shipId, oz, costPerSingle){
     let roundedUpOz = oz ? Math.ceil(oz): "";
     let key = shipId in this.ebayComponent.dictShipIdAndOzToCost ? shipId: shipId + roundedUpOz;
     let shipCost = this.ebayComponent.dictShipIdAndOzToCost[key];
     
-    return calculateDesiredSaleValue(this.desiredProfitPerSingle, packAmt, costPerSingle, shipCost
+    return calculateEbayDesiredSaleValue(this.desiredProfitPerSingle, packAmt, costPerSingle, shipCost
       , 0, this.ebayPercentageFromSaleFee, this.paypalPercentageFromSaleFee, this.paypalFlatFee, true);
   }
 }
