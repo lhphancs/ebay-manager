@@ -5,8 +5,10 @@
 
 ### Features
 - Database to store product details and shipping details
-- eBay calculator to determine profit amount or desired price
+- eBay and Shopify desired price calculations for each product in the database
+- eBay specific manual input calculator to determine profit amount or desired price
 - Listing analysis by using eBay API. Can detect out of stock or undesirable prices
+
 
 ### Main running instructions
 1. Open command prompt

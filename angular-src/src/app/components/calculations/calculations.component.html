@@ -1,103 +1,103 @@
 <div *ngIf="dataSource">
   <div class="d-flex justify-content-between align-items-center mt-3 px-3">
-      <div></div>
+    <div></div>
+  
+    <input class="form-control border border-primary filter ml-5"
+      placeholder="Filter" (keyup)="applyFilter($event.target.value)">
     
-      <input class="form-control border border-primary filter ml-5"
-        placeholder="Filter" (keyup)="applyFilter($event.target.value)">
-      
-      <form class="entire-form ml-5 mb-2 p-1" ngNativeValidate>
-        <mat-form-field>
-          <input class="" [(ngModel)]='desiredProfitPerSingle' matInput
-            placeholder="Desired profit/pack" [ngModelOptions]="{standalone: true}"
-            type="number" min="0" step="any" required>
-          <span matPrefix>$&nbsp;</span>
-        </mat-form-field>
-      </form>
-    </div>
+    <form class="entire-form ml-5 mb-2 p-1" ngNativeValidate>
+      <mat-form-field>
+        <input class="" [(ngModel)]='desiredProfitPerSingle' matInput
+          placeholder="Desired profit/pack" [ngModelOptions]="{standalone: true}"
+          type="number" min="0" step="any" required>
+        <span matPrefix>$&nbsp;</span>
+      </mat-form-field>
+    </form>
+  </div>
     
-    <div class="scroll-tbl-container scroll-tbl-container">
-      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-        <!-- name column -->
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-          <td mat-cell *matCellDef="let element"><a routerLink='/products/update/{{element.UPC}}'>{{element.name}}</a></td>
-        </ng-container>
-      
-        <!-- stockNo column -->
-        <ng-container matColumnDef="stockNo">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Stock No.</th>
-          <td mat-cell *matCellDef="let element">{{element.stockNo}}</td>
-        </ng-container>
-      
-        <!-- quantityPerBox column -->
-        <ng-container matColumnDef="costPerSingle">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Cost/Single</th>
-          <td mat-cell *matCellDef="let element">{{element.costPerSingle  | number : '1.2-2'}}</td>
-        </ng-container>
-      
-        <!-- ASINS column -->
-        <ng-container matColumnDef="ASINS">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>ASINS</th>
-          <td mat-cell *matCellDef="let element">{{element.ASINS}}</td>
-        </ng-container>
-      
-        <!-- UPC column -->
-        <ng-container matColumnDef="UPC">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>UPC</th>
-          <td mat-cell *matCellDef="let element">{{element.UPC}}</td>
-        </ng-container>
-      
-        <!-- wholesaleComp column -->
-        <ng-container matColumnDef="wholesaleComp">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Wholesale Comp.</th>
-          <td mat-cell *matCellDef="let element">{{element.wholesaleComp}} </td>
-        </ng-container>
-      
-        <ng-container matColumnDef="calculations">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Calculations</th>
-          <td mat-cell *matCellDef="let element">
-              <ng-template #popContent>
-                <div class="popTable">
-                  <table class="table table-striped table-primary">
-                    <thead>
-                      <tr>
-                        <th scope="col">UPC</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Pack Amt</th>
-                        <th scope="col">Ship Type</th>
-                        <th scope="col">Oz</th>
-                        <th scope="col">Packaging</th>
-                        <th scope="col">Preparation</th>
-                        <th scope="col">Sale Calc.</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let entry of element.packsInfo">
-                        <td>{{element.UPC}}</td>
-                        <td>{{element.name}}</td>
-                        <td>{{entry.packAmt}}</td>
-                        <td>{{dictShipIdToName[entry.shipMethodId]}}</td>
-                        <td>{{entry.ozWeight}}</td>
-                        <td>{{entry.packaging}}</td>
-                        <td>{{entry.preparation}}</td>
-                        <td>{{calculateDesiredPrice(entry.packAmt
-                          , entry.shipMethodId, entry.ozWeight
-                          , element.costPerSingle)}}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                
-              </ng-template>
-                
-              <button class="btn btn-secondary btn-sm" type="button" [autoClose]="'outside'"
-                popoverTitle={{element.name}} [ngbPopover]="popContent" popoverClass="packinfo"
-                placement="left">Calculations</button>
-          </td>
-        </ng-container>
-      
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header-row"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-    </div>
+  <div class="scroll-tbl-container scroll-tbl-container">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+      <!-- name column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+        <td mat-cell *matCellDef="let element"><a routerLink='/products/update/{{element.UPC}}'>{{element.name}}</a></td>
+      </ng-container>
+    
+      <!-- stockNo column -->
+      <ng-container matColumnDef="stockNo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Stock No.</th>
+        <td mat-cell *matCellDef="let element">{{element.stockNo}}</td>
+      </ng-container>
+    
+      <!-- quantityPerBox column -->
+      <ng-container matColumnDef="costPerSingle">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Cost/Single</th>
+        <td mat-cell *matCellDef="let element">{{element.costPerSingle  | number : '1.2-2'}}</td>
+      </ng-container>
+    
+      <!-- ASINS column -->
+      <ng-container matColumnDef="ASINS">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ASINS</th>
+        <td mat-cell *matCellDef="let element">{{element.ASINS}}</td>
+      </ng-container>
+    
+      <!-- UPC column -->
+      <ng-container matColumnDef="UPC">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>UPC</th>
+        <td mat-cell *matCellDef="let element">{{element.UPC}}</td>
+      </ng-container>
+    
+      <!-- wholesaleComp column -->
+      <ng-container matColumnDef="wholesaleComp">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Wholesale Comp.</th>
+        <td mat-cell *matCellDef="let element">{{element.wholesaleComp}} </td>
+      </ng-container>
+    
+      <ng-container matColumnDef="calculations">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Calculations</th>
+        <td mat-cell *matCellDef="let element">
+            <ng-template #popContent>
+              <div class="popTable">
+                <table class="table table-striped table-primary">
+                  <thead>
+                    <tr>
+                      <th scope="col">UPC</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Pack Amt</th>
+                      <th scope="col">Ship Type</th>
+                      <th scope="col">Oz</th>
+                      <th scope="col">Packaging</th>
+                      <th scope="col">Preparation</th>
+                      <th scope="col">Sale Calc.</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let entry of element.packsInfo">
+                      <td>{{element.UPC}}</td>
+                      <td>{{element.name}}</td>
+                      <td>{{entry.packAmt}}</td>
+                      <td>{{dictShipIdToName[entry.shipMethodId]}}</td>
+                      <td>{{entry.ozWeight}}</td>
+                      <td>{{entry.packaging}}</td>
+                      <td>{{entry.preparation}}</td>
+                      <td>{{calculateDesiredPrice(entry.packAmt
+                        , entry.shipMethodId, entry.ozWeight
+                        , element.costPerSingle)}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              
+            </ng-template>
+              
+            <button class="btn btn-secondary btn-sm" type="button" [autoClose]="'outside'"
+              popoverTitle={{element.name}} [ngbPopover]="popContent" popoverClass="packinfo"
+              placement="left">Calculations</button>
+        </td>
+      </ng-container>
+    
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header-row"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
 </div>
