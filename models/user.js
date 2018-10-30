@@ -22,7 +22,6 @@ const userSchema = Schema({
         ebayStoreName: {type: String, default:""},
         ebayAppId: {type: String, default:""},
         ebayKey: {type: String, default:""}
-        , required: true
     },
     shopifySettings:{
         shopifyFees: { type:{
@@ -34,7 +33,7 @@ const userSchema = Schema({
                 , shopifyFlatFee: 0.30
             }, required: true
         }
-        , required: true
+
     }
 });
 

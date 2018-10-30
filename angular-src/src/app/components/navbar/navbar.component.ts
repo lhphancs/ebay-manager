@@ -28,7 +28,8 @@ export class NavbarComponent implements OnInit {
 
   loggedLeftLinks = [
       new Link("Amazon", "amazon"),
-      new Link("eBay", "ebay")
+      new Link("eBay", "ebay"),
+      new Link("Shopify", "shopify")
 
   ];
 
