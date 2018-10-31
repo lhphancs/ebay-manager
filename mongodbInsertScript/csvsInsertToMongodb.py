@@ -101,7 +101,7 @@ def addOrModifyPackInfo(packsInfo, packInfoToInsert):
     if packAmt not in packsInfo:
         packsInfo[packAmt] = {}
 
-    if packInfoToInsert != None:
+    if packInfoToInsert != None and 'ASIN' in packInfoToInsert:
         packsInfo[packAmt]['ASIN'] = packInfoToInsert['ASIN']
     
     if packInfoToInsert['preparation'] != None:
