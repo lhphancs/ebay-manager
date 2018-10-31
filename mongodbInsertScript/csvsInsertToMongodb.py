@@ -86,6 +86,7 @@ def getShippingInfo(upcToShippingInfoDict, upc):
         for key in sorted(shippingInfos.keys()):
             for i in range(key-1, terminateIndex, -1):
                 shippingInfos[i] = copy.deepcopy( shippingInfos[key] )
+                shippingInfos[i].pop('preparation', None)
                 shippingInfos[i].pop('ASIN', None)
             terminateIndex = key
         return shippingInfos
@@ -100,8 +101,14 @@ def addOrModifyPackInfo(packsInfo, packInfoToInsert):
     if packAmt not in packsInfo:
         packsInfo[packAmt] = {}
 
-    if 'ASIN' in packInfoToInsert:
+    if packInfoToInsert != None:
         packsInfo[packAmt]['ASIN'] = packInfoToInsert['ASIN']
+    
+    if packInfoToInsert['preparation'] != None:
+        if 'preparation' in packsInfo[packAmt]:
+            packsInfo[packAmt]['preparation'] = packsInfo[packAmt]['preparation'] + ' && ' + packInfoToInsert['preparation']
+        else:
+            packsInfo[packAmt]['preparation'] = packInfoToInsert['preparation']
 
 def updateProductInfo(curProductInfo, oldProductInfo):
     oldProductInfo['stockNo'] = curProductInfo['stockNo']
@@ -255,7 +262,7 @@ def insertToMongoDb(prodCollection, dictOfProdsToInsert):
 def promptUserEmailAndIntegrateFiles(db, wholesaleExcelPath, shipMethodExcelPath):
     mainHeadersToMongoNameDict = {'UPC':'UPC', 'product name':'name', 'stock no':'stockNo'
                                    , 'total cost':'costPerBox', 'box amount':'quantityPerBox'}
-    packInfoHeadersToMongoNameDict = {'pack':'packAmt', 'ASIN':'ASIN'}   
+    packInfoHeadersToMongoNameDict = {'pack':'packAmt', 'ASIN':'ASIN', 'prep':'preparation'}   
     email, userId = getUserId(db)
     confirmation = getConfirmation(email)
     if confirmation == 'N':

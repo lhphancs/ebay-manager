@@ -5,6 +5,7 @@ import { EbayComponent } from '../ebay.component';
 import { DatabaseProductsService } from '../../../services/database-products.service';
 import { openSnackbar } from '../../snackbar';
 import { DatabaseUsersService } from '../../../services/database-users.service';
+import { addAsinsToProducts } from '../../modifyProducts';
 
 @Component({
   selector: 'ebay-calculations',
@@ -47,7 +48,7 @@ export class EbayCalculationsComponent implements OnInit {
       if(data['success']){
         this.products = data['products'];
         this.addCostPerSingleToProducts(this.products);
-        this.addAsinsToProducts(this.products);
+        addAsinsToProducts(this.products);
         this.dataSource = new MatTableDataSource<Product>(this.products);
         this.dataSource.sort = this.sort;
       }
@@ -60,15 +61,6 @@ export class EbayCalculationsComponent implements OnInit {
   addCostPerSingleToProducts(products){
     for(let product of products){
       product.costPerSingle = product.costPerBox/product.quantityPerBox;
-    }
-  }
-
-  addAsinsToProducts(products){
-    for(let product of products){
-      let strASINS = "";
-      for(let packInfo of product.packsInfo)
-        strASINS += packInfo.ASIN + '   |   ';
-      product.ASINS = strASINS;
     }
   }
 }

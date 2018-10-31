@@ -10,6 +10,10 @@
   src: url(https://fonts.gstatic.com/s/materialicons/v39/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format('woff2');
 }
 
+.max-width{
+    width: 100%;
+}
+
 .material-icons {
   font-family: 'Material Icons';
   font-weight: normal;

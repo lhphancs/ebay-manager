@@ -3,12 +3,13 @@ import { Stack } from '../../../classesAndInterfaces/Stack';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Product } from '../../../classesAndInterfaces/Product';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { MatSort, MatTableDataSource, MatSnackBar, MatDialog, MatDialogRef } from '@angular/material';
+import { MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 
 import { openSnackbar } from '../../snackbar';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { DatabaseProductsService } from '../../../services/database-products.service';
 import { DatabaseShippingsService } from '../../../services/database-shippings.service';
+import { addAsinsToProducts } from '../../modifyProducts';
 
 @Component({
   selector: 'products-display',
@@ -51,7 +52,7 @@ export class ProductsDisplayComponent implements OnInit {
       this.databaseProductsService.getProducts(this.userId).subscribe( (data) => {
         if(data['success']){
           this.products = data['products'];
-          this.addAsinsToProducts(this.products);
+          addAsinsToProducts(this.products);
           this.dataSource = new MatTableDataSource<Product>(this.products);
           this.dataSource.sort = this.sort;
         }
@@ -59,15 +60,6 @@ export class ProductsDisplayComponent implements OnInit {
           openSnackbar(this.snackBar, data['msg']);
       });
     });
-  }
-
-  addAsinsToProducts(products){
-    for(let product of products){
-      let strASINS = "";
-      for(let packInfo of product.packsInfo)
-        strASINS += packInfo.ASIN + '   |   ';
-      product.ASINS = strASINS;
-    }
   }
 
   initializeShippingMethods(methods){

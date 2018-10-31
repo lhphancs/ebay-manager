@@ -5,6 +5,7 @@ import { ShopifyComponent } from '../shopify.component';
 import { DatabaseUsersService } from 'src/app/services/database-users.service';
 import { DatabaseProductsService } from 'src/app/services/database-products.service';
 import { openSnackbar } from '../../snackbar';
+import { addAsinsToProducts } from '../../modifyProducts';
 
 @Component({
   selector: 'app-shopify-calculations',
@@ -45,7 +46,7 @@ export class ShopifyCalculationsComponent implements OnInit {
       if(data['success']){
         this.products = data['products'];
         this.addCostPerSingleToProducts(this.products);
-        this.addAsinsToProducts(this.products);
+        addAsinsToProducts(this.products);
         this.dataSource = new MatTableDataSource<Product>(this.products);
         this.dataSource.sort = this.sort;
       }
@@ -58,15 +59,6 @@ export class ShopifyCalculationsComponent implements OnInit {
   addCostPerSingleToProducts(products){
     for(let product of products){
       product.costPerSingle = product.costPerBox/product.quantityPerBox;
-    }
-  }
-
-  addAsinsToProducts(products){
-    for(let product of products){
-      let strASINS = "";
-      for(let packInfo of product.packsInfo)
-        strASINS += packInfo.ASIN + '   |   ';
-      product.ASINS = strASINS;
     }
   }
 

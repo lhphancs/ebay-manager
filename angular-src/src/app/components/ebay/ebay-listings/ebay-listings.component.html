@@ -64,7 +64,7 @@
 
   <div *ngIf="!errMsg" class="scroll-tbl-container">
     <div *ngIf="dataSource" >
-      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 max-width">
         <!-- imgUrl column -->
         <ng-container matColumnDef="imgUrl">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Img</th>
