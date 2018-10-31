@@ -32,7 +32,7 @@ const userSchema = Schema({
             default:{
                 shopifyPercentageFromSaleFee: 2.9
                 , shopifyFlatFee: 0.30
-                , websitePercentageDiscount: 15
+                , websitePercentageDiscount: 10
             }, required: true
         }
 
