@@ -1,11 +1,12 @@
 const FIRST_CLASS_LOW_WEIGHT_PRICE = 2.66;
+const FIRST_CLASS_16_OZ_PRICE = 4.94;
 
 const DEFAULT_USPS_FIRST_CLASS_OZ_PRICE = [
     {oz: 1, price:FIRST_CLASS_LOW_WEIGHT_PRICE}, {oz: 2, price:FIRST_CLASS_LOW_WEIGHT_PRICE},
     {oz: 3, price:FIRST_CLASS_LOW_WEIGHT_PRICE}, {oz: 4, price:FIRST_CLASS_LOW_WEIGHT_PRICE},
     {oz: 5, price:2.79},   {oz: 6, price:2.92},   {oz: 7, price:3.05},   {oz: 8, price:3.18},
     {oz: 9, price:3.34},   {oz: 10, price:3.50},  {oz: 11, price:3.66},  {oz: 12, price:3.82},
-    {oz: 13, price:4.10},  {oz: 14, price:4.38},  {oz: 15, price:4.66},  {oz: 16, price:4.94}
+    {oz: 13, price:4.10},  {oz: 14, price:4.38},  {oz: 15, price:4.66},  {oz: 16, price:FIRST_CLASS_16_OZ_PRICE}
 ]
 
 const noBulgeString = "Package cannot be bulging when shipped."
@@ -35,6 +36,23 @@ function getPriorityShippingObj(weightLb, maxCost){
         , isFlatRate: true
         , flatRatePrice: maxCost, ozPrice: null
     }
+}
+
+function getMultipleFirstClass(multiple){
+    return { shipMethodName:`${multiple}x 16oz 'First Class'`
+        , imgUrl: '../../../assets/imgs/others/own_all.jpg'
+        , description: `Package: Your own envelope/box. Can't use USPS priority box.
+        Info: This is for ${multiple} packages that are both 16oz or less. This is intended for packages that are 3Lb, which cannot fit in flat rate padded envelope.
+
+        Weight: Both packages must be 16oz or less.
+
+        Size: Maximum combined length and girth is 108 inches.
+
+        ${lengthAndGirthDescriptionString}
+
+        ${firstClassComparisonWithPriorityString}`
+        , isFlatRate: true
+        , flatRatePrice: multiple*FIRST_CLASS_16_OZ_PRICE, ozPrice: null }
 }
 
 const DEFAULT_USPS_SHIP_METHOD_LIST = [
@@ -110,21 +128,8 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
 
     getPriorityShippingObj(2, 10.80),
     getPriorityShippingObj(3, 15.34),
-
-    { shipMethodName:"2x 16oz 'First Class'"
-        , imgUrl: '../../../assets/imgs/others/own_all.jpg'
-        , description: `Package: Your own envelope/box. Can't use USPS priority box.
-        Info: This is for 2 packages that are both 16oz or less. This is intended for packages that are 2Lb, which cannot fit in flat rate padded envelope.
-
-        Weight: Both packages must be 16oz or less.
-
-        Size: Maximum combined length and girth is 108 inches.
-
-        ${lengthAndGirthDescriptionString}
-
-        ${firstClassComparisonWithPriorityString}`
-        , isFlatRate: true
-        , flatRatePrice: 9.88, ozPrice: null }
+    getMultipleFirstClass(2),
+    getMultipleFirstClass(3)
 ];
 
 const DEFAULT_FEDEX_SHIP_METHOD_LIST = [
