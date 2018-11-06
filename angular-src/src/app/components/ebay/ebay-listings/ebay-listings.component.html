@@ -6,7 +6,7 @@
   onlyAboveProfitPerSingle: 4,  belowProfitPerSingle: 5
 -->
 
-<div class="d-flex justify-content-between align-items-center mt-3 px-3">
+<div class="d-flex justify-content-between align-items-center px-3">
   <div>
     <div class="mb-2">
       <mat-icon color="primary" matTooltip="Non-variation listings are assumed to be '1 pack'.
@@ -55,6 +55,15 @@
   </form>
 </div>
 
+<section class="mt-2 ml-3">
+  <mat-checkbox class="mr-5" [(ngModel)]="chkOutOfStock">Out of Stock</mat-checkbox>
+  <mat-checkbox class="mr-5" [(ngModel)]="chkIncalculable">Incalculable</mat-checkbox>
+  <mat-checkbox class="mr-5" [(ngModel)]="chkTooMuchProfit">High Price</mat-checkbox>
+  <mat-checkbox class="mr-5" [(ngModel)]="chkDesiredPriceRange">Desired Price</mat-checkbox>
+  <mat-checkbox class="mr-5" [(ngModel)]="chkOnlyAboveProfitPerSingle">DesiredProfit > Profit > DesiredProfit/Single</mat-checkbox>
+  <mat-checkbox class="mr-5" [(ngModel)]="chkBelowProfitPerSingle">Undesired Price</mat-checkbox>
+</section>
+
 <progress-spinner *ngIf="!dataSource && isLoading" [msg]="loadingMsg"></progress-spinner>
 
 <div *ngIf="!isLoading">
@@ -64,7 +73,7 @@
 
   <div *ngIf="!errMsg" class="scroll-tbl-container">
     <div *ngIf="dataSource" >
-      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 max-width">
+      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 max-width mt-3">
         <!-- imgUrl column -->
         <ng-container matColumnDef="imgUrl">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Img</th>
@@ -148,11 +157,12 @@
       
         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header-row"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-        [ngClass]="row.profitStatus == 0 ? 'bg-white'
-                    : row.profitStatus == 1 ? 'bg-purple'
-                    : row.profitStatus == 2 ? 'bg-orange'
-                    : row.profitStatus == 3 ? 'bg-green'
-                    : row.profitStatus ==  4 ? 'bg-yellow' : 'bg-red'"></tr>
+        [ngClass]="row.profitStatus == 0 && chkOutOfStock ? 'bg-white'
+                    : row.profitStatus == 1 && chkIncalculable ? 'bg-purple'
+                    : row.profitStatus == 2 && chkTooMuchProfit ? 'bg-orange'
+                    : row.profitStatus == 3 && chkDesiredPriceRange ? 'bg-green'
+                    : row.profitStatus == 4 && chkOnlyAboveProfitPerSingle ? 'bg-yellow' 
+                    : row.profitStatus == 5 && chkBelowProfitPerSingle ? 'bg-red' : 'd-none'"></tr>
       </table>
     </div>
   </div>

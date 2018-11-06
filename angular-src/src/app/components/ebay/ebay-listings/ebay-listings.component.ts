@@ -25,6 +25,13 @@ var ProfitStatus = {
   styleUrls: ['./ebay-listings.component.css']
 })
 export class EbayListingsComponent implements OnInit {
+  chkOutOfStock = true;
+  chkIncalculable = true;
+  chkTooMuchProfit = true;
+  chkDesiredPriceRange = true;
+  chkOnlyAboveProfitPerSingle = true;
+  chkBelowProfitPerSingle = true;
+
   isLoading = true;
   errMsg;
   loadingMsg = "Loading settings..."
