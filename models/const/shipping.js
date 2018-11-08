@@ -39,7 +39,7 @@ function getPriorityShippingObj(weightLb, maxCost){
 }
 
 function getMultipleFirstClass(multiple){
-    return { shipMethodName:`${multiple}x 16oz 'First Class'`
+    let obj = { shipMethodName:`${multiple}x 'First Class'`
         , imgUrl: '../../../assets/imgs/others/own_all.jpg'
         , description: `Package: Your own envelope/box. Can't use USPS priority box.
         Info: This is for ${multiple} packages that are both 16oz or less. This is intended for packages that are 3Lb, which cannot fit in flat rate padded envelope.
@@ -51,8 +51,16 @@ function getMultipleFirstClass(multiple){
         ${lengthAndGirthDescriptionString}
 
         ${firstClassComparisonWithPriorityString}`
-        , isFlatRate: true
-        , flatRatePrice: multiple*FIRST_CLASS_16_OZ_PRICE, ozPrice: null }
+        , isFlatRate: false
+        , flatRatePrice: null, ozPrice: JSON.parse(JSON.stringify(DEFAULT_USPS_FIRST_CLASS_OZ_PRICE))};
+
+    for(let i in obj.ozPrice){
+        let newPrice = multiple*obj.ozPrice[i].price;
+        let roundedUpPrice = Math.round(newPrice * 100) / 100;
+        obj.ozPrice[i].price = roundedUpPrice;
+    }
+        
+    return obj;
 }
 
 const DEFAULT_USPS_SHIP_METHOD_LIST = [
