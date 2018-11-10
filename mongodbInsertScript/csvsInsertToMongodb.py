@@ -211,7 +211,7 @@ def getUpcToShippingInfoDict(shipMethodExcelPath, db, userId):
 
     if shipMethodExcelPath == None:
         return upcToShippingInfoDict
-    wb = openpyxl.load_workbook(shipMethodExcelPath)
+    wb = openpyxl.load_workbook(shipMethodExcelPath, data_only=True)
     for sheet in wb:
         for row in sheet.iter_rows(row_offset=1):
             addToUpcToShippingInfoDict(upcToShippingInfoDict, shipNameToIdDict, row)
@@ -274,7 +274,7 @@ def promptUserEmailAndIntegrateFiles(db, wholesaleExcelPath, shipMethodExcelPath
     print("Reading excel files...")
     upcToShippingInfoDict = getUpcToShippingInfoDict(shipMethodExcelPath, db, userId)
         
-    wb = openpyxl.load_workbook(wholesaleExcelPath)
+    wb = openpyxl.load_workbook(wholesaleExcelPath, data_only=True)
     headerRow = 2
 
     dictOfProdsToInsert = {}
