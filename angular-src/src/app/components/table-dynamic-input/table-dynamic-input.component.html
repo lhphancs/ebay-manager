@@ -22,7 +22,7 @@
     <th mat-header-cell *matHeaderCellDef>{{column.name}}</th>
     <td mat-cell *matCellDef="let element">
       <input *ngIf="column.data == 'input'; else optionTemplate" [(ngModel)]="element[column.name]"
-      ngModel [ngModelOptions]="{standalone: true}"
+      ngModel [ngModelOptions]="{standalone: true}" onwheel="return false;"
       (ngModelChange)="addBlankEntryIfNeeded()"
         [type]="column.type" [min]="column.min"
         [step]="column.step"

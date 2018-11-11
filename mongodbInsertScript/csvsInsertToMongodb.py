@@ -295,6 +295,7 @@ if __name__ == '__main__':
             db = client['inventory-manager']
             print("Connected to mongodb successfully!")
             promptUserEmailAndIntegrateFiles(db, wholesaleExcelPath, shipMethodExcelPath)
+            print("Successfully inserted to database...")
         except pymongo.errors.ConnectionFailure as e:
             print(e)
-    print('\nProgram terminated...')
+    input('\nPress enter to terminate program...')
