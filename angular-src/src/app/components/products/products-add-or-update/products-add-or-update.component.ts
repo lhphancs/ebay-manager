@@ -33,6 +33,7 @@ export class ProductsAddOrUpdateComponent implements OnInit {
   inputUPC;
   inputwholesaleComp;
   inputStockNo;
+  inputShelfLocation;
   inputCostPerBox;
   inputQuantityPerBox;
 
@@ -89,6 +90,7 @@ export class ProductsAddOrUpdateComponent implements OnInit {
     this.inputUPC = product.UPC;
     this.inputwholesaleComp = product.wholesaleComp;
     this.inputStockNo = product.stockNo;
+    this.inputShelfLocation = product.shelfLocation;
     this.inputCostPerBox = product.costPerBox;
     this.inputQuantityPerBox = product.quantityPerBox;
   }
@@ -146,6 +148,7 @@ export class ProductsAddOrUpdateComponent implements OnInit {
     return new Product(this.inputName, this.inputUPC
       , this.inputCostPerBox, this.inputQuantityPerBox
         , this.inputwholesaleComp, this.inputStockNo
+        , this.inputShelfLocation
         , processedEntries);
   }
 

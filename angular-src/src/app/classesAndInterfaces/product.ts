@@ -7,15 +7,18 @@ export class Product {
     quantityPerBox: number;
     wholesaleComp: string;
     stockNo: string;
+    shelfLocation:string;
     packsInfo: PackInfo[];
 
-    constructor(name, UPC, costPerBox, quantityPerBox, wholesaleComp, stockNo, packsInfo){
+    constructor(name, UPC, costPerBox, quantityPerBox, wholesaleComp, stockNo
+        , shelfLocation, packsInfo){
         this.name = name;
         this.UPC = UPC;
         this.costPerBox = costPerBox;
         this.quantityPerBox = quantityPerBox;
         this.wholesaleComp = wholesaleComp;
         this.stockNo = stockNo;
+        this.shelfLocation = shelfLocation;
         this.packsInfo = packsInfo;
     }
 }

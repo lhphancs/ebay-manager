@@ -8,6 +8,7 @@ export class Listing {
     quantityPerBox: number;
     wholesaleComp: string;
     stockNo: string;
+    shelfLocation: string;
     variations: Variation[];
 
     constructor(imgUrl, listTitle, UPC){

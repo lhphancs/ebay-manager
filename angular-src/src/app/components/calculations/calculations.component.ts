@@ -20,7 +20,7 @@ export class CalculationsComponent implements OnInit {
   loadingMsg = "Loading products..."
   desiredProfitPerSingle = 1;
   
-  displayedColumns: string[] = ['name', 'stockNo', 'costPerSingle'
+  displayedColumns: string[] = ['name', 'stockNo', 'stockLocation', 'costPerSingle'
     , 'ASINS', 'UPC', 'wholesaleComp', 'calculations'];
   selection = new SelectionModel<Product>(true, []);
 

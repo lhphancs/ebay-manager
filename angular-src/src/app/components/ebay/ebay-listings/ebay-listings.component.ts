@@ -42,7 +42,8 @@ export class EbayListingsComponent implements OnInit {
   desiredProfitPerSingle = 1;
 
   listings: Listing[];
-  displayedColumns: string[] = ['imgUrl', 'listTitle', 'UPC', 'costPerSingle', 'wholesaleComp', 'stockNo', 'variations'];
+  displayedColumns: string[] = ['imgUrl', 'listTitle', 'UPC', 'costPerSingle'
+  , 'wholesaleComp', 'stockNo', 'shelfLocation', 'variations'];
   dataSource: MatTableDataSource<Listing>;
   selection = new SelectionModel<Listing>(true, []);
 
@@ -218,6 +219,7 @@ export class EbayListingsComponent implements OnInit {
       let listing = listingDict[upc];
       listing.wholesaleComp = product.wholesaleComp;
       listing.stockNo = product.stockNo;
+      listing.shelfLocation = product.shelfLocation;
       listing.costPerSingle = product.costPerBox/product.quantityPerBox;
       this.addVariationsToListing(listing, product.packsInfo)
     }

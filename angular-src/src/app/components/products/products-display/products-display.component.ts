@@ -24,7 +24,7 @@ export class ProductsDisplayComponent implements OnInit {
   dictShipIdToName = {};
   filterValue: string;
   products: Product[];
-  displayedColumns: string[] = ['select', 'name', 'stockNo', 'costPerBox', 'quantityPerBox', 'costPerSingle', 'ASINS', 'UPC', 'wholesaleComp', 'packsInfo'];
+  displayedColumns: string[] = ['select', 'name', 'stockNo', 'shelfLocation', 'costPerBox', 'quantityPerBox', 'costPerSingle', 'ASINS', 'UPC', 'wholesaleComp', 'packsInfo'];
   dataSource: MatTableDataSource<Product>;
   selection = new SelectionModel<Product>(true, []);
   deletedGroupsStack: Stack; // Used to undo delete

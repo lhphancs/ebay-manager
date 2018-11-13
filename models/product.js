@@ -10,6 +10,7 @@ const productSchema = Schema({
     quantityPerBox: {type: Number, required: true, min: 1},
     wholesaleComp: {type: String},
     stockNo: {type: String},
+    shelfLocation: {type: String},
     packsInfo: {
         type:
         [{ ASIN: { type: String},

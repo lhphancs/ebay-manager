@@ -93,6 +93,12 @@
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Stock No.</th>
           <td mat-cell *matCellDef="let element">{{element.stockNo}}</td>
         </ng-container>
+
+        <!-- shelfLocation column -->
+        <ng-container matColumnDef="shelfLocation">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Shelf Loc.</th>
+          <td mat-cell *matCellDef="let element">{{element.shelfLocation}}</td>
+        </ng-container>
       
         <!-- quantityPerBox column -->
         <ng-container matColumnDef="costPerSingle">

@@ -112,6 +112,7 @@ def addOrModifyPackInfo(packsInfo, packInfoToInsert):
 
 def updateProductInfo(curProductInfo, oldProductInfo):
     oldProductInfo['stockNo'] = curProductInfo['stockNo']
+    oldProductInfo['shelfLocation'] = curProductInfo['shelfLocation']
     oldProductInfo['costPerBox'] = curProductInfo['costPerBox']
     oldProductInfo['quantityPerBox'] = curProductInfo['quantityPerBox']
 
@@ -261,7 +262,8 @@ def insertToMongoDb(prodCollection, dictOfProdsToInsert):
 
 def promptUserEmailAndIntegrateFiles(db, wholesaleExcelPath, shipMethodExcelPath):
     mainHeadersToMongoNameDict = {'UPC':'UPC', 'product name':'name', 'stock no':'stockNo'
-                                   , 'total cost':'costPerBox', 'box amount':'quantityPerBox'}
+                                   , 'location':'shelfLocation', 'total cost':'costPerBox'
+                                   , 'box amount':'quantityPerBox'}
     packInfoHeadersToMongoNameDict = {'pack':'packAmt', 'ASIN':'ASIN', 'prep':'preparation'}   
     email, userId = getUserId(db)
     confirmation = getConfirmation(email)
