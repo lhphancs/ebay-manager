@@ -105,10 +105,13 @@ def addOrModifyPackInfo(packsInfo, packInfoToInsert):
         packsInfo[packAmt]['ASIN'] = packInfoToInsert['ASIN']
     
     if packInfoToInsert['preparation'] != None:
-        if 'preparation' in packsInfo[packAmt]:
-            packsInfo[packAmt]['preparation'] = packsInfo[packAmt]['preparation'] + ' && ' + packInfoToInsert['preparation']
-        else:
-            packsInfo[packAmt]['preparation'] = packInfoToInsert['preparation']
+        try:
+            if 'preparation' in packsInfo[packAmt]:
+                packsInfo[packAmt]['preparation'] = packsInfo[packAmt]['preparation'] + ' && ' + packInfoToInsert['preparation']
+            else:
+                packsInfo[packAmt]['preparation'] = packInfoToInsert['preparation']
+        except (TypeError):
+            pass
 
 def updateProductInfo(curProductInfo, oldProductInfo):
     oldProductInfo['stockNo'] = curProductInfo['stockNo']
@@ -158,15 +161,12 @@ def insertAllValidRowsToProductDict(userId:ObjectId, upcToShippingInfoDict:dict,
         if productToInsert == None or 'UPC' not in productToInsert:
             continue
         upc = productToInsert['UPC']
-        try:
-            int(upc) #Checks if it's a valid upc
+        if upc != None and upc.lower() != 'missing' and upc.lower() != 'ignore':
             packInfoToInsert = getDictMongoHeaderToCellVal(row, packInfoHeadersToMongoNameDict
                             , packInfoColNumToHeaderNameDict)
         
             placeProductToInsert(userId, upcToShippingInfoDict, dictOfProdsToInsert
                             , productToInsert, packInfoToInsert, sheet.title)
-        except (ValueError, TypeError):
-            pass
         
 def processSheet(userId:ObjectId, sheet, upcToShippingInfoDict:dict, headerRow:int
 , mainHeadersToMongoNameDict:dict, packInfoHeadersToMongoNameDict:dict, dictOfProdsToInsert:dict):
