@@ -18,6 +18,7 @@ export class EbayComponent implements OnInit {
     new Link("Calculations", "calculations")
     , new Link("Listings", "listings")
     , new Link("Calculator", "calculator")
+    , new Link("Shipping", "shipping")
   ];
 
   rightSublinks = [

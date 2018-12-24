@@ -47,6 +47,7 @@ import { ShopifyUpdateSettingsComponent } from './components/shopify/shopify-upd
 import { ShopifyCalculationsComponent } from './components/shopify/shopify-calculations/shopify-calculations.component';
 import { NavtabsComponent } from './components/navtabs/navtabs.component';
 import { CalculationsComponent } from './components/calculations/calculations.component';
+import { EbayShippingComponent } from './components/ebay/ebay-shipping/ebay-shipping.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import { CalculationsComponent } from './components/calculations/calculations.co
     ShopifyUpdateSettingsComponent,
     ShopifyCalculationsComponent,
     NavtabsComponent,
-    CalculationsComponent
+    CalculationsComponent,
+    EbayShippingComponent
   ],
   imports: [
     NgbModule.forRoot(),

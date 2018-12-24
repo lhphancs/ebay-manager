@@ -5,28 +5,23 @@ export class Stack {
         this.items = [];
     }
 
-    push(element)
-    {
+    push(element){
         this.items.push(element);
     }
 
-    pop()
-    {
+    pop(){
         return this.isEmpty() ? null:this.items.pop();
     }
 
-    peek()
-    {
+    peek(){
         return this.items[this.items.length - 1];
     }
 
-    isEmpty()
-    {
+    isEmpty(){
         return this.items.length == 0;
     }
 
-    printStack()
-    {
+    printStack(){
         for (let i = 0; i < this.items.length; ++i)
             console.log(this.items[i])
         console.log("")

@@ -21,6 +21,7 @@ import { EbayUpdateSettingsComponent } from './components/ebay/ebay-update-setti
 import { ShopifyComponent } from './components/shopify/shopify.component';
 import { ShopifyCalculationsComponent } from './components/shopify/shopify-calculations/shopify-calculations.component';
 import { ShopifyUpdateSettingsComponent } from './components/shopify/shopify-update-settings/shopify-update-settings.component';
+import { EbayShippingComponent } from './components/ebay/ebay-shipping/ebay-shipping.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -34,6 +35,7 @@ const routes: Routes = [
       { path: 'calculations', component: EbayCalculationsComponent },
       { path: 'listings', component: EbayListingsComponent },
       { path: 'calculator', component: EbayCalculatorComponent },
+      { path: 'shipping', component: EbayShippingComponent },
       { path: 'update-ebay-settings', component: EbayUpdateSettingsComponent },
     ]
   },
