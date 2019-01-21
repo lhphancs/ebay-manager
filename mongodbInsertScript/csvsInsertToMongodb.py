@@ -94,7 +94,7 @@ def getShippingInfo(upcToShippingInfoDict, upc):
 
 def addOrModifyPackInfo(packsInfo, packInfoToInsert):
     packAmt = packInfoToInsert['packAmt']
-    if packAmt == None:
+    if packAmt == None or type(packAmt) is str:
         return
     packAmt = int(packAmt)
 
