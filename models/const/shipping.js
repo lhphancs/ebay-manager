@@ -1,12 +1,12 @@
-const FIRST_CLASS_LOW_WEIGHT_PRICE = 2.66;
-const FIRST_CLASS_16_OZ_PRICE = 4.94;
+const FIRST_CLASS_LOW_WEIGHT_PRICE = 2.76;
+const FIRST_CLASS_16_OZ_PRICE = 5.12;
 
 const DEFAULT_USPS_FIRST_CLASS_OZ_PRICE = [
     {oz: 1, price:FIRST_CLASS_LOW_WEIGHT_PRICE}, {oz: 2, price:FIRST_CLASS_LOW_WEIGHT_PRICE},
     {oz: 3, price:FIRST_CLASS_LOW_WEIGHT_PRICE}, {oz: 4, price:FIRST_CLASS_LOW_WEIGHT_PRICE},
-    {oz: 5, price:2.79},   {oz: 6, price:2.92},   {oz: 7, price:3.05},   {oz: 8, price:3.18},
-    {oz: 9, price:3.34},   {oz: 10, price:3.50},  {oz: 11, price:3.66},  {oz: 12, price:3.82},
-    {oz: 13, price:4.10},  {oz: 14, price:4.38},  {oz: 15, price:4.66},  {oz: 16, price:FIRST_CLASS_16_OZ_PRICE}
+    {oz: 5, price:3.28},   {oz: 6, price:3.28},   {oz: 7, price:3.28},   {oz: 8, price:3.28},
+    {oz: 9, price:3.96},   {oz: 10, price:3.96},  {oz: 11, price:3.96},  {oz: 12, price:3.96},
+    {oz: 13, price:5.12},  {oz: 14, price:5.12},  {oz: 15, price:5.12},  {oz: 16, price:FIRST_CLASS_16_OZ_PRICE}
 ]
 
 const noBulgeString = "Package cannot be bulging when shipped."
@@ -87,7 +87,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
 
         Info: Not the same as "legal flat rate envelope" or "padded envelope".`
         , isFlatRate: true
-        , flatRatePrice: 6.35, ozPrice: null },
+        , flatRatePrice: 6.95, ozPrice: null },
 
 
     { shipMethodName:"Flat rate legal envelope"
@@ -96,7 +96,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
         
         Info: Does not come with padding. Not the same as "flat rate envelope" or "padded envelope".`
         , isFlatRate: true
-        , flatRatePrice: 6.65, ozPrice: null },
+        , flatRatePrice: 7.25, ozPrice: null },
 
 
     { shipMethodName:"Flat rate padded envelope"
@@ -105,7 +105,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
         
         Info: Not the same as "flat rate envelope" or "legal flat rate envelope".`
         , isFlatRate: true
-        , flatRatePrice: 6.90, ozPrice: null },
+        , flatRatePrice: 7.55, ozPrice: null },
 
 
     { shipMethodName:"Flat rate small box"
@@ -114,7 +114,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
         
         Info: ${noBulgeString}`
         , isFlatRate: true
-        , flatRatePrice: 6.85, ozPrice: null },
+        , flatRatePrice: 7.50, ozPrice: null },
 
 
     { shipMethodName:"Flat rate medium box"
@@ -123,7 +123,7 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
         
         Info: ${noBulgeString}`
         , isFlatRate: true
-        , flatRatePrice: 12.45, ozPrice: null },
+        , flatRatePrice: 12.80, ozPrice: null },
 
 
     { shipMethodName:"Flat rate large box"
@@ -132,10 +132,10 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
         
         Info: ${noBulgeString}`
         , isFlatRate: true
-        , flatRatePrice: 17.10, ozPrice: null },
+        , flatRatePrice: 17.60, ozPrice: null },
 
-    getPriorityShippingObj(2, 10.80),
-    getPriorityShippingObj(3, 15.34),
+    getPriorityShippingObj(2, 10.86),
+    getPriorityShippingObj(3, 15.28),
     getMultipleFirstClass(2),
     getMultipleFirstClass(3)
 ];
