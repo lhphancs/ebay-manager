@@ -1,12 +1,12 @@
-const FIRST_CLASS_LOW_WEIGHT_PRICE = 2.76;
-const FIRST_CLASS_16_OZ_PRICE = 5.12;
+const FIRST_CLASS_LOW_WEIGHT_PRICE = 3.09;
+const FIRST_CLASS_16_OZ_PRICE = 5.53;
 
 const DEFAULT_USPS_FIRST_CLASS_OZ_PRICE = [
     {oz: 1, price:FIRST_CLASS_LOW_WEIGHT_PRICE}, {oz: 2, price:FIRST_CLASS_LOW_WEIGHT_PRICE},
     {oz: 3, price:FIRST_CLASS_LOW_WEIGHT_PRICE}, {oz: 4, price:FIRST_CLASS_LOW_WEIGHT_PRICE},
-    {oz: 5, price:3.28},   {oz: 6, price:3.28},   {oz: 7, price:3.28},   {oz: 8, price:3.28},
-    {oz: 9, price:3.96},   {oz: 10, price:3.96},  {oz: 11, price:3.96},  {oz: 12, price:3.96},
-    {oz: 13, price:5.12},  {oz: 14, price:5.12},  {oz: 15, price:5.12},  {oz: 16, price:FIRST_CLASS_16_OZ_PRICE}
+    {oz: 5, price:3.63},   {oz: 6, price:3.63},   {oz: 7, price:3.63},   {oz: 8, price:3.63},
+    {oz: 9, price:4.33},   {oz: 10, price:4.33},  {oz: 11, price:4.33},  {oz: 12, price:4.33},
+    {oz: 13, price:5.53},  {oz: 14, price:5.53},  {oz: 15, price:5.53},  {oz: 16, price:FIRST_CLASS_16_OZ_PRICE}
 ]
 
 const noBulgeString = "Package cannot be bulging when shipped."
