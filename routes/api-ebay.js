@@ -247,9 +247,14 @@ function handleJsonOfListings(res, curDateStr, futureDateStr, ebayKey
                     let ack = sellerListResponse.Ack[0];
                     
                     if(ack === 'Success'){
-                        let lastEbayPage = getLastEbayPage(sellerListResponse);
-                        handleValidJsonOfListings(res, curDateStr, futureDateStr, ebayKey, ebaySettings, listingDict, nonVariationItemIds
-                            , pageNum, lastEbayPage, sellerListResponse);
+                        try {
+                            let lastEbayPage = getLastEbayPage(sellerListResponse);
+                            handleValidJsonOfListings(res, curDateStr, futureDateStr, ebayKey, ebaySettings, listingDict, nonVariationItemIds
+                                , pageNum, lastEbayPage, sellerListResponse);
+                        }
+                        catch (err) {
+                            console.log(err);
+                        }
                     }
                     else 
                         handleSellerListResponseErrMsg(res, sellerListResponse);
