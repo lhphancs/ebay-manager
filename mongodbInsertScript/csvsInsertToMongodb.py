@@ -1,10 +1,10 @@
-import re
 import os
 import pymongo
 import openpyxl
 from pathlib import Path
 from bson import ObjectId
 import copy
+from utils import *
 
 '''
 Prog will iterate through all sheet in excel file that is placed in 'placeWholesaleExcelFileHere'.
@@ -21,13 +21,6 @@ The column order of the header names for a excel file do not matter.
 Coder Note:
     At the moment, ship method excel must have columns in certain order. Ie) UPC first col...
 '''
-
-def getLoweredAlphaNumericStr(string:str)->str:
-    if type(string) is not str:
-        return None
-    string = re.sub('[^A-Za-z0-9]+', '', string)
-    string = str.lower(string)
-    return string
 
 #Will remove any non-alphaNumeric character in search
 def getColForHeaderName(sheet, headerRow:int, headerName:str)->int:
@@ -53,14 +46,6 @@ def getColNumToHeaderNameDict(sheet, headerRow:int, headersToMongoNameDict:dict)
         colNumToHeaderNameDict[headerCol] = headerName
     
     return colNumToHeaderNameDict
-
-'''
-Returns true if in the form of '$#.##'
-ex) isMoneyCellVal('$4.2') == true  isMoneyCellVal('4.2') == false
-ex) isMoneyCellVal('$.2') == true  isMoneyCellVal('abc') == false
-'''
-def isMoneyCellVal(val:str)->bool:
-    return val[0] == '$' and eval(val[1:])
 
 def getDictMongoHeaderToCellVal(row:list, headersToMongoNameDict:dict
                           , colNumToHeaderNameDict:dict) ->dict:

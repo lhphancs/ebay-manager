@@ -7,3 +7,5 @@ mongodbInsertScript/placeShipMethodExcelFileHere/*
 mongodbInsertScript/placeWholesaleExcelFileHere/*
 !mongodbInsertScript/placeWholesaleExcelFileHere/info.txt
 !mongodbInsertScript/placeWholesaleExcelFileHere/z_sampleExcelForScript.xlsx
+angular-src/src/assets/imgs/product_imgs
+mongodbInsertScript/__pycache__
