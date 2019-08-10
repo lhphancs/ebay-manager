@@ -5,6 +5,7 @@ from pathlib import Path
 from bson import ObjectId
 import copy
 from utils import *
+from parseImgUrl import *
 
 '''
 Prog will iterate through all sheet in excel file that is placed in 'placeWholesaleExcelFileHere'.
@@ -21,6 +22,8 @@ The column order of the header names for a excel file do not matter.
 Coder Note:
     At the moment, ship method excel must have columns in certain order. Ie) UPC first col...
 '''
+
+BASE_IMG_DIR_PATH = 'assets/imgs/product_imgs'
 
 #Will remove any non-alphaNumeric character in search
 def getColForHeaderName(sheet, headerRow:int, headerName:str)->int:
@@ -118,7 +121,7 @@ def updateCheaperProductInfoIfNeeded(curProductInfo, oldProductInfo):
     except TypeError:
         pass
 
-def placeProductToInsert(userId:ObjectId, upcToShippingInfoDict:dict, dictOfProdsToInsert:dict, productToInsert:dict, packInfoToInsert:dict, sheetTitle:str):
+def placeProductToInsert(dictOfUpcToImgDirName, userId:ObjectId, upcToShippingInfoDict:dict, dictOfProdsToInsert:dict, productToInsert:dict, packInfoToInsert:dict, sheetTitle:str):
     if 'packAmt' not in packInfoToInsert:
         return
     if 'UPC' in productToInsert:
@@ -128,6 +131,8 @@ def placeProductToInsert(userId:ObjectId, upcToShippingInfoDict:dict, dictOfProd
             productToInsert['userId'] = userId
             productToInsert['wholesaleComp'] = sheetTitle
             productToInsert['packsInfo'] = getShippingInfo(upcToShippingInfoDict, upc)
+            if(upc in dictOfUpcToImgDirName):
+                productToInsert['imgUrl'] = BASE_IMG_DIR_PATH + '/' + dictOfUpcToImgDirName[upc] + '/1.jpg'
             dictOfProdsToInsert[upc] = productToInsert
         else:
             updateCheaperProductInfoIfNeeded( productToInsert, dictOfProdsToInsert[upc] )
@@ -136,7 +141,7 @@ def placeProductToInsert(userId:ObjectId, upcToShippingInfoDict:dict, dictOfProd
     elif len(productToInsert) > 0:
         print(str.format('UPC not found in: {}', productToInsert) )
 
-def insertAllValidRowsToProductDict(userId:ObjectId, upcToShippingInfoDict:dict, sheet, headerRow
+def insertAllValidRowsToProductDict(dictOfUpcToImgDirName, userId:ObjectId, upcToShippingInfoDict:dict, sheet, headerRow
     , mainHeadersToMongoNameDict:dict, colNumToHeaderNameDict:dict
     , packInfoHeadersToMongoNameDict, packInfoColNumToHeaderNameDict, dictOfProdsToInsert)->None:
     for row in sheet.iter_rows(row_offset=headerRow):
@@ -150,16 +155,16 @@ def insertAllValidRowsToProductDict(userId:ObjectId, upcToShippingInfoDict:dict,
             packInfoToInsert = getDictMongoHeaderToCellVal(row, packInfoHeadersToMongoNameDict
                             , packInfoColNumToHeaderNameDict)
         
-            placeProductToInsert(userId, upcToShippingInfoDict, dictOfProdsToInsert
+            placeProductToInsert(dictOfUpcToImgDirName, userId, upcToShippingInfoDict, dictOfProdsToInsert
                             , productToInsert, packInfoToInsert, sheet.title)
         
-def processSheet(userId:ObjectId, sheet, upcToShippingInfoDict:dict, headerRow:int
+def processSheet(dictOfUpcToImgDirName, userId:ObjectId, sheet, upcToShippingInfoDict:dict, headerRow:int
 , mainHeadersToMongoNameDict:dict, packInfoHeadersToMongoNameDict:dict, dictOfProdsToInsert:dict):
     print( str.format('==================== Reading: {} ====================', sheet.title) )
     
     mainColNumToHeaderNameDict = getColNumToHeaderNameDict(sheet, headerRow, mainHeadersToMongoNameDict)
     packInfoColNumToHeaderNameDict = getColNumToHeaderNameDict(sheet, headerRow, packInfoHeadersToMongoNameDict)
-    insertAllValidRowsToProductDict(userId, upcToShippingInfoDict, sheet, headerRow
+    insertAllValidRowsToProductDict(dictOfUpcToImgDirName, userId, upcToShippingInfoDict, sheet, headerRow
     , mainHeadersToMongoNameDict, mainColNumToHeaderNameDict
     , packInfoHeadersToMongoNameDict, packInfoColNumToHeaderNameDict, dictOfProdsToInsert)
 
@@ -245,7 +250,7 @@ def insertToMongoDb(prodCollection, dictOfProdsToInsert):
 
         prodCollection.insert_many(listToInsert)
 
-def promptUserEmailAndIntegrateFiles(db, wholesaleExcelPath, shipMethodExcelPath):
+def promptUserEmailAndIntegrateFiles(db, dictOfUpcToImgDirName, wholesaleExcelPath, shipMethodExcelPath):
     mainHeadersToMongoNameDict = {'UPC':'UPC', 'product name':'name', 'stock no':'stockNo'
                                    , 'location':'shelfLocation', 'total cost':'costPerBox'
                                    , 'box amount':'quantityPerBox'}
@@ -266,7 +271,7 @@ def promptUserEmailAndIntegrateFiles(db, wholesaleExcelPath, shipMethodExcelPath
 
     dictOfProdsToInsert = {}
     for sheet in wb:
-        processSheet(userId, sheet, upcToShippingInfoDict, headerRow, mainHeadersToMongoNameDict, packInfoHeadersToMongoNameDict, dictOfProdsToInsert)
+        processSheet(dictOfUpcToImgDirName, userId, sheet, upcToShippingInfoDict, headerRow, mainHeadersToMongoNameDict, packInfoHeadersToMongoNameDict, dictOfProdsToInsert)
     insertToMongoDb(prodCollection, dictOfProdsToInsert)
 
 if __name__ == '__main__':
@@ -281,7 +286,11 @@ if __name__ == '__main__':
             client = pymongo.MongoClient() #This connects to 'localhost', port# 27017 by default
             db = client['inventory-manager']
             print("Connected to mongodb successfully!")
-            promptUserEmailAndIntegrateFiles(db, wholesaleExcelPath, shipMethodExcelPath)
+            print('Parsing img url...')
+            dictOfUpcToImgDirName = getDictUpcToDirName('../angular-src/src/' + BASE_IMG_DIR_PATH)
+            print('Completed img url. Processing inserts...')
+            print('Processing inserts...')
+            promptUserEmailAndIntegrateFiles(db, dictOfUpcToImgDirName, wholesaleExcelPath, shipMethodExcelPath)
             print("Successfully inserted to database...")
         except pymongo.errors.ConnectionFailure as e:
             print(e)

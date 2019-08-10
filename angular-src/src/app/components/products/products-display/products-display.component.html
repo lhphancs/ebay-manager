@@ -35,7 +35,12 @@
       <!-- img column -->
       <ng-container matColumnDef="imgUrl">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Image</th>
-        <td mat-cell *matCellDef="let element"><img src={{element.imgUrl}}/></td>
+        <td mat-cell *matCellDef="let element">
+          <div class="ship-img-container d-flex justify-content-center border border-secondary p-1"
+          (click)="toggleZoomClass(shipMethodObj)" [class.zoom]="shipMethodObj.active">
+            <img class="ship-img" src={{element.imgUrl}}>
+          </div>
+        </td>
       </ng-container>
     
       <!-- name column -->
