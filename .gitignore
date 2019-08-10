@@ -4,8 +4,12 @@ angular-src/node_modules
 mongodbInsertScript/placeShipMethodExcelFileHere/*
 !mongodbInsertScript/placeShipMethodExcelFileHere/info.txt
 !mongodbInsertScript/placeShipMethodExcelFileHere/z_sampleShipMethod.xlsx
+
 mongodbInsertScript/placeWholesaleExcelFileHere/*
 !mongodbInsertScript/placeWholesaleExcelFileHere/info.txt
 !mongodbInsertScript/placeWholesaleExcelFileHere/z_sampleExcelForScript.xlsx
-angular-src/src/assets/imgs/product_imgs
+
+angular-src/src/assets/imgs/wholesale/*
+!angular-src/src/assets/imgs/wholesale/.keep
+
 mongodbInsertScript/__pycache__

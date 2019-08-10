@@ -13,3 +13,14 @@ th.mat-sort-header-sorted {
 .header-row{
   background-color: #d9e5ff;
 }
+
+.ship-img-container{
+    width: 200px;
+    background-color: white;
+    margin: 10px 0px;
+}
+
+.ship-img{
+    max-width:190px;
+    max-height:90px;
+}

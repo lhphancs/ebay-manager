@@ -23,7 +23,7 @@ Coder Note:
     At the moment, ship method excel must have columns in certain order. Ie) UPC first col...
 '''
 
-BASE_IMG_DIR_PATH = 'assets/imgs/product_imgs'
+BASE_IMG_DIR_PATH = 'assets/imgs/wholesale'
 
 #Will remove any non-alphaNumeric character in search
 def getColForHeaderName(sheet, headerRow:int, headerName:str)->int:
@@ -63,6 +63,8 @@ def getDictMongoHeaderToCellVal(row:list, headersToMongoNameDict:dict
 
             csvHeaderName = colNumToHeaderNameDict[i]
             mongoDbName = headersToMongoNameDict[csvHeaderName]
+            if isinstance(cellVal, str):
+                cellVal = cellVal.strip()
             retDict[mongoDbName] = cellVal
         i = i+1
     return retDict
@@ -113,10 +115,10 @@ def updateCheaperProductInfoIfNeeded(curProductInfo, oldProductInfo):
         oldCostPerBox = oldProductInfo['costPerBox']/oldProductInfo['quantityPerBox']
         # Update existing info if cheaper. Carefully write over oldProductInfo to avoid overwritting past data
         if curCostPerBox != oldCostPerBox:
-            print(  str.format("Price change detected:\nOld: {}\nNew: {}\n"
-            , str(oldProductInfo), str(curProductInfo) )  )
+            #print(  str.format("Price change detected:\nOld: {}\nNew: {}\n"
+            #, str(oldProductInfo), str(curProductInfo) )  )
             if curCostPerBox < oldCostPerBox:
-                print("Old product info was replaced due to cheaper price.")
+                #print("Old product info was replaced due to cheaper price.")
                 updateProductInfo(curProductInfo, oldProductInfo)
     except TypeError:
         pass
@@ -126,13 +128,14 @@ def placeProductToInsert(dictOfUpcToImgDirName, userId:ObjectId, upcToShippingIn
         return
     if 'UPC' in productToInsert:
         upc = productToInsert['UPC']
+
+        if(upc in dictOfUpcToImgDirName):
+            productToInsert['imgUrl'] = BASE_IMG_DIR_PATH + '/' + dictOfUpcToImgDirName[upc]
         #If the product info not in dict, add. Else, check/update if product cost is cheaper (Different wholesale might sell cheaper)
         if upc not in dictOfProdsToInsert:
             productToInsert['userId'] = userId
             productToInsert['wholesaleComp'] = sheetTitle
             productToInsert['packsInfo'] = getShippingInfo(upcToShippingInfoDict, upc)
-            if(upc in dictOfUpcToImgDirName):
-                productToInsert['imgUrl'] = BASE_IMG_DIR_PATH + '/' + dictOfUpcToImgDirName[upc] + '/1.jpg'
             dictOfProdsToInsert[upc] = productToInsert
         else:
             updateCheaperProductInfoIfNeeded( productToInsert, dictOfProdsToInsert[upc] )
