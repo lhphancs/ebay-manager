@@ -53,6 +53,13 @@
       </mat-form-field>
     </div>
   </div>
+  <div class="form-row-container" fxLayoutWrap fxLayoutGap="0.5%">    
+    <div fxFlex="33%">
+      <mat-form-field fxFlex>
+        <input [(ngModel)]='inputImgUrl' name="imgUrl" matInput placeholder="Image Url">
+      </mat-form-field>
+    </div>
+  </div>
 
   <table-dynamic-input [headers]="headers" [entries]="entries" id="tbl-id"></table-dynamic-input>
   <button mat-raised-button color="primary"

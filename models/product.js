@@ -11,6 +11,7 @@ const productSchema = Schema({
     wholesaleComp: {type: String},
     stockNo: {type: String},
     shelfLocation: {type: String},
+    imgUrl: {type: String},
     packsInfo: {
         type:
         [{ ASIN: { type: String},

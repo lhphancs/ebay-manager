@@ -10,6 +10,7 @@ function getFilteredProductJson(newProductJson){
         wholesaleComp: newProductJson.wholesaleComp,
         stockNo: newProductJson.stockNo,
         shelfLocation: newProductJson.shelfLocation,
+        imgUrl: newProductJson.imgUrl,
         UPC: newProductJson.UPC,
         packsInfo: newProductJson.packsInfo
     };

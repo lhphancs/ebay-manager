@@ -8,10 +8,11 @@ export class Product {
     wholesaleComp: string;
     stockNo: string;
     shelfLocation:string;
+    imgUrl: string;
     packsInfo: PackInfo[];
 
     constructor(name, UPC, costPerBox, quantityPerBox, wholesaleComp, stockNo
-        , shelfLocation, packsInfo){
+        , shelfLocation, imgUrl, packsInfo){
         this.name = name;
         this.UPC = UPC;
         this.costPerBox = costPerBox;
@@ -19,6 +20,7 @@ export class Product {
         this.wholesaleComp = wholesaleComp;
         this.stockNo = stockNo;
         this.shelfLocation = shelfLocation;
+        this.imgUrl = imgUrl;
         this.packsInfo = packsInfo;
     }
 }
