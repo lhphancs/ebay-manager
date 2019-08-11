@@ -27,14 +27,11 @@ export class NavbarComponent implements OnInit {
   ];
 
   loggedLeftLinks = [
-      new Link("Amazon", "amazon"),
       new Link("eBay", "ebay"),
-      new Link("Shopify", "shopify")
 
   ];
 
   loggedRightLinks = [
-      new Link("Products", "products"),
       new Link("Shippings", "shippings"),
   ];
 

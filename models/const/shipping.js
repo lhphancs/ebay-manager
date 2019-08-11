@@ -134,31 +134,16 @@ const DEFAULT_USPS_SHIP_METHOD_LIST = [
         , isFlatRate: true
         , flatRatePrice: 17.60, ozPrice: null },
 
-    getPriorityShippingObj(2, 10.86),
-    getPriorityShippingObj(3, 15.28),
-    getMultipleFirstClass(2),
-    getMultipleFirstClass(3)
-];
-
-const DEFAULT_FEDEX_SHIP_METHOD_LIST = [
-    { shipMethodName:"tempFlatRateMethod"
-        , description: "tempDescription"
-        , isFlatRate: true
-        , flatRatePrice: 999.99, ozPrice: null }
+        getPriorityShippingObj(2, 10.86),
+        getPriorityShippingObj(3, 15.28),
+        getMultipleFirstClass(2),
+        getMultipleFirstClass(3)
 ];
 
 module.exports.getDefaultShipMethods = function getDefaultShipMethods(userId){
     let shipMethods = [];
     for(let obj of DEFAULT_USPS_SHIP_METHOD_LIST){
         let method = {userId: userId, shipCompanyName: "USPS", shipMethodName: obj.shipMethodName
-        , imgUrl: obj.imgUrl, description: obj.description
-        , isFlatRate: obj.isFlatRate
-        , flatRatePrice: obj.flatRatePrice, ozPrice: obj.ozPrice}
-
-        shipMethods.push(method);
-    }
-    for(let obj of DEFAULT_FEDEX_SHIP_METHOD_LIST){
-        let method = {userId: userId, shipCompanyName: "FEDEX", shipMethodName: obj.shipMethodName
         , imgUrl: obj.imgUrl, description: obj.description
         , isFlatRate: obj.isFlatRate
         , flatRatePrice: obj.flatRatePrice, ozPrice: obj.ozPrice}

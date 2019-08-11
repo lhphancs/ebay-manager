@@ -15,12 +15,13 @@ th.mat-sort-header-sorted {
 }
 
 .ship-img-container{
+    min-height: 150px;
     width: 200px;
     background-color: white;
     margin: 10px 0px;
 }
 
 .ship-img{
-    max-width:190px;
-    max-height:90px;
+    max-width: 190px;
+    max-height:170px;
 }

@@ -31,7 +31,7 @@ const routes: Routes = [
   { path: 'amazon', component: AmazonComponent, canActivate:[AuthGuard] },
   { path: 'ebay', component: EbayComponent, canActivate:[AuthGuard],
     children: [
-      { path: '', redirectTo: 'calculations', pathMatch: 'full' },
+      { path: '', redirectTo: '/products/display', pathMatch: 'full' },
       { path: 'calculations', component: EbayCalculationsComponent },
       { path: 'listings', component: EbayListingsComponent },
       { path: 'calculator', component: EbayCalculatorComponent },

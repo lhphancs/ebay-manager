@@ -22,17 +22,6 @@
       <li *ngFor="let link of loggedRightLinks" class="nav-item" routerLinkActive="active">
           <a class="nav-link" [routerLink]="[link.href]">{{link.text}}</a>
       </li>
-      <li class="nav-item ">
-        <button mat-icon-button class="grey-icon" [matMenuTriggerFor]="menu">
-          <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #menu="matMenu">
-          <button *ngFor="let menuItemLink of menuItemLinks" mat-menu-item routerLink={{menuItemLink.href}} class="hover-highlight">
-            <mat-icon>{{menuItemLink.icon}}</mat-icon>
-            <span>{{menuItemLink.text}}</span>
-          </button>
-        </mat-menu>
-      </li>
     </ul>
   </div>
 </nav>
